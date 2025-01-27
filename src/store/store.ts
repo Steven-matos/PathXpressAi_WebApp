@@ -1,6 +1,9 @@
 import { configureStore } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
 import { createSlice } from "@reduxjs/toolkit";
+import eventsReducer from "./eventsSlice";
+import languageReducer from "./languageSlice";
+import { useSelector, useDispatch } from "react-redux";
 
 interface Event {
   id: string;
@@ -23,15 +26,20 @@ const eventsSlice = createSlice({
   },
 });
 
-const eventsReducer = eventsSlice.reducer;
+export const makeStore = () => {
+  return configureStore({
+    reducer: {
+      events: eventsReducer,
+      language: languageReducer,
+    },
+  });
+};
 
-const store = configureStore({
-  reducer: {
-    events: eventsReducer,
-  },
-});
+export type AppStore = ReturnType<typeof makeStore>;
+export type RootState = ReturnType<AppStore["getState"]>;
+export type AppDispatch = AppStore["dispatch"];
 
-export type RootState = ReturnType<typeof store.getState>;
-export type AppDispatch = typeof store.dispatch;
+export const useAppSelector = useSelector.withTypes<RootState>();
+export const useAppDispatch = useDispatch.withTypes<AppDispatch>();
 
-export default store;
+export default makeStore();

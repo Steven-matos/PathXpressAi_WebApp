@@ -1,0 +1,23 @@
+{
+  "title": "Calendario",
+  "date": "Fecha",
+  "startTime": "Hora de inicio",
+  "endTime": "Hora de fin",
+  "street": "Calle",
+  "city": "Ciudad",
+  "state": "Estado",
+  "zip": "Código postal",
+  "addRoute": "Agregar ruta",
+  "routeScheduler": "Programador de Rutas",
+  "allDay": "Todo el día",
+  "previous": "Anterior",
+  "next": "Siguiente",
+  "today": "Hoy",
+  "month": "Mes",
+  "week": "Semana",
+  "day": "Día",
+  "agenda": "Agenda",
+  "showMore": "Mostrar más",
+  "noEventsInRange": "No hay rutas en este rango",
+  "event": "Ruta"
+}

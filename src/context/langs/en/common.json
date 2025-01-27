@@ -1,0 +1,23 @@
+{
+  "title": "Calendar",
+  "date": "Date",
+  "startTime": "Start Time",
+  "endTime": "End Time",
+  "street": "Street",
+  "city": "City",
+  "state": "State",
+  "zip": "Zip Code",
+  "addRoute": "Add Route",
+  "routeScheduler": "Route Scheduler",
+  "allDay": "All Day",
+  "previous": "Previous",
+  "next": "Next",
+  "today": "Today",
+  "month": "Month",
+  "week": "Week",
+  "day": "Day",
+  "agenda": "Agenda",
+  "showMore": "Show More",
+  "noEventsInRange": "No Routes in this range",
+  "event": "Route"
+}

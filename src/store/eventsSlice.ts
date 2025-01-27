@@ -1,10 +1,12 @@
-import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-interface Event {
+export interface Event {
   id: string;
   title: string;
   start: Date;
   end: Date;
+  allDay?: boolean;
+  description?: string;
   address: string;
 }
 
@@ -16,28 +18,26 @@ const initialState: EventsState = {
   events: [],
 };
 
-const eventsSlice = createSlice({
+export const eventsSlice = createSlice({
   name: "events",
   initialState,
   reducers: {
-    addEvent: (state: EventsState, action: PayloadAction<Event>) => {
+    addEvent: (state, action: PayloadAction<Event>) => {
       state.events.push(action.payload);
     },
-    updateEvent: (state: EventsState, action: PayloadAction<Event>) => {
-      const index = state.events.findIndex(
-        (event: Event) => event.id === action.payload.id
-      );
+    updateEvent: (state, action: PayloadAction<Event>) => {
+      const index = state.events.findIndex((e) => e.id === action.payload.id);
       if (index !== -1) {
         state.events[index] = action.payload;
       }
     },
-    removeEvent: (state: EventsState, action: PayloadAction<string>) => {
+    deleteEvent: (state, action: PayloadAction<string>) => {
       state.events = state.events.filter(
-        (event: Event) => event.id !== action.payload
+        (event) => event.id !== action.payload
       );
     },
   },
 });
 
-export const { addEvent, updateEvent, removeEvent } = eventsSlice.actions;
+export const { addEvent, updateEvent, deleteEvent } = eventsSlice.actions;
 export default eventsSlice.reducer;
