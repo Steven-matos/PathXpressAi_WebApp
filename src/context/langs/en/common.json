@@ -19,5 +19,16 @@
   "agenda": "Agenda",
   "showMore": "Show More",
   "noEventsInRange": "No Routes in this range",
-  "event": "Route"
+  "event": "Route",
+  "routesForTomorrow": "Routes for Tomorrow",
+  "noRoutesForTomorrow": "No Routes for Tomorrow",
+  "settings": "Settings",
+  "name": "Name",
+  "language": "Language",
+  "english": "English",
+  "spanish": "Spanish",
+  "dashboard": "Dashboard",
+  "calendar": "Calendar",
+  "home": "Home",
+  "welcome": "Welcome"
 }

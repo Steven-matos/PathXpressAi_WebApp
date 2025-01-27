@@ -40,6 +40,8 @@ export default function Calendar() {
   const [selectedDate, setSelectedDate] = useState<Date>(new Date());
   const { t, setLang } = useTranslation();
   const lang = useSelector((state: RootState) => state.language.lang);
+  const username = useSelector((state: RootState) => state.user.name);
+  const routes = useSelector((state: RootState) => state.routes.tomorrow);
 
   const handleSelectSlot = (slotInfo: any) => {
     setSelectedDate(slotInfo.start);

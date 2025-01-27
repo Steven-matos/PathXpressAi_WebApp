@@ -1,36 +1,17 @@
 import { configureStore } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
 import { createSlice } from "@reduxjs/toolkit";
-import eventsReducer from "./eventsSlice";
+import routesReducer from "./routesSlice";
 import languageReducer from "./languageSlice";
+import userReducer from "./userSlice";
 import { useSelector, useDispatch } from "react-redux";
-
-interface Event {
-  id: string;
-  title: string;
-  start: Date;
-  end: Date;
-  address: string;
-}
-
-const initialState: Event[] = [];
-
-const eventsSlice = createSlice({
-  name: "events",
-  initialState,
-  reducers: {
-    // Add basic reducers - can be expanded based on needs
-    addEvent: (state: Event[], action: PayloadAction<Event>) => {
-      state.push(action.payload);
-    },
-  },
-});
 
 export const makeStore = () => {
   return configureStore({
     reducer: {
-      events: eventsReducer,
+      routes: routesReducer,
       language: languageReducer,
+      user: userReducer,
     },
   });
 };

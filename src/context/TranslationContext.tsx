@@ -18,7 +18,6 @@ interface Translations {
   [key: string]: { [key: string]: string };
 }
 
-// Ensure default language is 'en'
 const translations: Translations = translationConfig.languages.reduce(
   (acc, lang) => {
     acc[lang] = require(`./langs/${lang}/common.json`);

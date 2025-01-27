@@ -19,5 +19,16 @@
   "agenda": "Agenda",
   "showMore": "Mostrar más",
   "noEventsInRange": "No hay rutas en este rango",
-  "event": "Ruta"
+  "event": "Ruta",
+  "routesForTomorrow": "Rutas para el día siguiente",
+  "noRoutesForTomorrow": "No hay rutas para el día siguiente",
+  "settings": "Configuración",
+  "name": "Nombre",
+  "language": "Idioma",
+  "english": "Inglés",
+  "spanish": "Español",
+  "dashboard": "Tablero",
+  "calendar": "Calendario",
+  "home": "Inicio",
+  "welcome": "Bienvenido"
 }
