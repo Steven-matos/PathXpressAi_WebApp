@@ -30,5 +30,68 @@
   "dashboard": "Dashboard",
   "calendar": "Calendar",
   "home": "Home",
-  "welcome": "Welcome"
+  "welcome": "Welcome",
+  "heroTitle": "SchedulPath.ai",
+  "heroSubtitle": "AI-powered route optimization that adapts to real-time traffic, weather, and your schedule",
+  "featuresTitle": "Why Choose SchedulPath.ai?",
+  "pricingTitle": "Simple Pricing",
+  "pricingSubtitle": "Start optimizing your routes today. Cancel anytime.",
+  "startTrial": "Start Free Trial",
+  "getStarted": "Get Started",
+  "mostPopular": "Most Popular",
+  "basicRouting": "Basic routing",
+  "dailyUpdates": "Daily updates",
+  "emailSupport": "Email support",
+  "advancedRouting": "Advanced routing",
+  "unlimitedUpdates": "Unlimited updates",
+  "prioritySupport": "Priority support",
+  "fullFeatures": "Full features",
+  "vipSupport": "VIP support",
+  "teamManagement": "Team management",
+  "betaAccess": "Beta access",
+  "plans": {
+    "weekly": {
+      "name": "Weekly",
+      "features": [
+        "Basic routing",
+        "5 daily updates",
+        "Email support"
+      ]
+    },
+    "monthly": {
+      "name": "Monthly",
+      "features": [
+        "Advanced routing",
+        "Unlimited updates",
+        "Priority support"
+      ]
+    },
+    "yearly": {
+      "name": "Yearly",
+      "features": [
+        "Full features",
+        "VIP support",
+        "Team management",
+        "Beta access"
+      ]
+    }
+  },
+  "features": {
+    "aiRouting": {
+      "title": "AI-Powered Routing",
+      "description": "Real-time traffic analysis and dynamic route optimization"
+    },
+    "multiStop": {
+      "title": "Multi-Stop Planning",
+      "description": "Efficiently schedule unlimited stops with smart sequencing"
+    },
+    "mobileSync": {
+      "title": "Mobile Sync",
+      "description": "Seamless integration with companion mobile app (coming soon)"
+    },
+    "liveUpdates": {
+      "title": "Live Updates",
+      "description": "Continuous route adjustments based on changing conditions"
+    }
+  }
 }

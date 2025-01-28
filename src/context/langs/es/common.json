@@ -30,5 +30,68 @@
   "dashboard": "Tablero",
   "calendar": "Calendario",
   "home": "Inicio",
-  "welcome": "Bienvenido"
+  "welcome": "Bienvenido",
+  "heroTitle": "SchedulPath.ai",
+  "heroSubtitle": "Optimización de rutas impulsada por IA que se adapta al tráfico en tiempo real, clima y tu horario",
+  "featuresTitle": "¿Por qué elegir SchedulPath.ai?",
+  "pricingTitle": "Precios Simples",
+  "pricingSubtitle": "Comienza a optimizar tus rutas hoy. Cancela cuando quieras.",
+  "startTrial": "Comienza Prueba Gratis",
+  "getStarted": "Comenzar",
+  "mostPopular": "Más popular",
+  "basicRouting": "Rutas básicas",
+  "dailyUpdates": "Actualizaciones diarias",
+  "emailSupport": "Soporte por correo electrónico",
+  "advancedRouting": "Rutas avanzadas",
+  "unlimitedUpdates": "Actualizaciones ilimitadas",
+  "prioritySupport": "Soporte prioritario",
+  "fullFeatures": "Todas las funciones",
+  "vipSupport": "Soporte VIP",
+  "teamManagement": "Gestión de equipos",
+  "betaAccess": "Acceso beta",
+  "plans": {
+    "weekly": {
+      "name": "Semanal",
+      "features": [
+        "Enrutamiento básico",
+        "5 actualizaciones diarias",
+        "Soporte por correo electrónico"
+      ]
+    },
+    "monthly": {
+      "name": "Mensual",
+      "features": [
+        "Enrutamiento avanzado",
+        "Actualizaciones ilimitadas",
+        "Soporte prioritario"
+      ]
+    },
+    "yearly": {
+      "name": "Anual",
+      "features": [
+        "Todas las funciones",
+        "Soporte VIP",
+        "Gestión de equipos",
+        "Acceso beta"
+      ]
+    }
+  },
+  "features": {
+    "aiRouting": {
+      "title": "Enrutamiento con IA",
+      "description": "Análisis de tráfico en tiempo real y optimización dinámica de rutas"
+    },
+    "multiStop": {
+      "title": "Planificación de múltiples paradas",
+      "description": "Programa paradas ilimitadas con secuenciación inteligente"
+    },
+    "mobileSync": {
+      "title": "Sincronización móvil",
+      "description": "Integración perfecta con aplicación móvil (próximamente)"
+    },
+    "liveUpdates": {
+      "title": "Actualizaciones en vivo",
+      "description": "Ajustes continuos de rutas basados en condiciones cambiantes"
+    }
+  }
 }

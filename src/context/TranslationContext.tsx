@@ -1,16 +1,16 @@
+"use client"
+
 // src/context/TranslationContext.tsx
 import React, { createContext, useContext, useState, ReactNode } from "react";
 import { translationConfig } from "./translationConfig";
 
 interface TranslationContextProps {
+  language: string;
+  setLang: (lang: string) => void;
   t: (key: string) => string;
-  lang: Language;
-  setLang: (lang: Language) => void;
 }
 
-const TranslationContext = createContext<TranslationContextProps | undefined>(
-  undefined
-);
+const TranslationContext = createContext<TranslationContextProps | null>(null);
 
 type Language = (typeof translationConfig.languages)[number];
 
@@ -26,27 +26,32 @@ const translations: Translations = translationConfig.languages.reduce(
   {} as Translations
 );
 
-export const TranslationProvider: React.FC<{ children: ReactNode }> = ({
-  children,
-}) => {
-  const [language, setLanguage] = useState<Language>(
+export function TranslationProvider({ children }: { children: React.ReactNode }) {
+  const [language, setLang] = useState<Language>(
     translationConfig.defaultLanguage
   );
 
   const t = (key: string) => {
-    return translations[language][key] || key;
-  };
+    const keys = key.split('.');
+    let result: any = translations[language];
+    
+    for (const k of keys) {
+      if (!result) break;
+      const arrayIndex = parseInt(k, 10);
+      result = !isNaN(arrayIndex) && Array.isArray(result) 
+        ? result[arrayIndex]
+        : result[k];
+    }
 
-  const setLang = (lang: Language) => {
-    setLanguage(lang);
+    return result || key;
   };
 
   return (
-    <TranslationContext.Provider value={{ t, lang: language, setLang }}>
+    <TranslationContext.Provider value={{ language, setLang, t }}>
       {children}
     </TranslationContext.Provider>
   );
-};
+}
 
 export const useTranslation = () => {
   const context = useContext(TranslationContext);
