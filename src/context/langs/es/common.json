@@ -31,11 +31,11 @@
   "calendar": "Calendario",
   "home": "Inicio",
   "welcome": "Bienvenido",
-  "heroTitle": "SchedulPath.ai",
-  "heroSubtitle": "Optimización de rutas impulsada por IA que se adapta al tráfico en tiempo real, clima y tu horario",
-  "featuresTitle": "¿Por qué elegir SchedulPath.ai?",
-  "pricingTitle": "Precios Simples",
-  "pricingSubtitle": "Comienza a optimizar tus rutas hoy. Cancela cuando quieras.",
+  "heroTitle": "Software de optimización de rutas con IA | SchedulPath.ai",
+  "heroSubtitle": "Optimiza tus rutas en tiempo real con IA, adaptándote al tráfico, clima y tu horario",
+  "featuresTitle": "Características clave de nuestro software de optimización de rutas",
+  "pricingTitle": "Precios transparentes para la optimización de rutas",
+  "pricingSubtitle": "Comienza a optimizar tus rutas hoy con nuestra prueba gratuita. Cancela cuando quieras.",
   "startTrial": "Comienza Prueba Gratis",
   "getStarted": "Comenzar",
   "mostPopular": "Más popular",
@@ -93,5 +93,23 @@
       "title": "Actualizaciones en vivo",
       "description": "Ajustes continuos de rutas basados en condiciones cambiantes"
     }
-  }
+  },
+  "footer": {
+    "contactUs": "Contactanos",
+    "termsAndConditions": "Términos y condiciones",
+    "privacyPolicy": "Política de privacidad",
+    "copyright": "Todos los derechos reservados Trident Innovations & Investments LLC"
+  },
+  "contactTitle": "Contactanos",
+  "emailAddress": "Correo electrónico",
+  "emailPlaceholder": "Tu correo electrónico",
+  "message": "Mensaje",
+  "messagePlaceholder": "Tu mensaje",
+  "send": "Enviar",
+  "firstName": "Nombre",
+  "lastName": "Apellido",
+  "lastNamePlaceholder": "Tu apellido",
+  "firstNamePlaceholder": "Tu nombre",
+  "sendMessage": "Enviar mensaje",
+  "contactSubtitle": "¡Nos encantaría escucharte!"
 }

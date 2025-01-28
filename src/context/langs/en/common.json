@@ -31,11 +31,11 @@
   "calendar": "Calendar",
   "home": "Home",
   "welcome": "Welcome",
-  "heroTitle": "SchedulPath.ai",
-  "heroSubtitle": "AI-powered route optimization that adapts to real-time traffic, weather, and your schedule",
-  "featuresTitle": "Why Choose SchedulPath.ai?",
-  "pricingTitle": "Simple Pricing",
-  "pricingSubtitle": "Start optimizing your routes today. Cancel anytime.",
+  "heroTitle": "AI Route Optimization Software | SchedulPath.ai",
+  "heroSubtitle": "Reduce delivery times by up to 40% with real-time AI-powered logistics planning and traffic-aware routing",
+  "featuresTitle": "Key Features of Our Route Optimization Software",
+  "pricingTitle": "Transparent Pricing Plans for Logistics Optimization",
+  "pricingSubtitle": "Start optimizing delivery routes today with our risk-free trial. Cancel anytime.",
   "startTrial": "Start Free Trial",
   "getStarted": "Get Started",
   "mostPopular": "Most Popular",
@@ -93,5 +93,23 @@
       "title": "Live Updates",
       "description": "Continuous route adjustments based on changing conditions"
     }
-  }
+  },
+  "footer": {
+    "contactUs": "Contact Us",
+    "termsAndConditions": "Terms & Conditions",
+    "privacyPolicy": "Privacy Policy",
+    "copyright": "All Rights Reserved Trident Innovations & Investments LLC"
+  },
+  "contactTitle": "Contact Us",
+  "emailAddress": "Email Address",
+  "emailPlaceholder": "Your email address",
+  "message": "Message",
+  "messagePlaceholder": "Your message",
+  "send": "Send",
+  "firstName": "First Name",
+  "lastName": "Last Name",
+  "lastNamePlaceholder": "Your last name",
+  "firstNamePlaceholder": "Your first name",
+  "sendMessage": "Send Message",
+  "contactSubtitle": "We'd love to hear from you!"
 }
