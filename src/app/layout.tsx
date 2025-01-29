@@ -2,10 +2,9 @@ import "../styles/globals.css";
 import { Inter } from "next/font/google";
 import { ReduxProvider } from "@/providers/redux-provider";
 import { ThemeProvider } from "@/providers/theme-provider";
-import { LanguageSwitcher } from '../components/language-switcher';
 import { TranslationProvider } from "@/context/TranslationContext";
 import { Footer } from '../components/footer';
-import Link from "next/link";
+import { Header } from '../components/header';
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -57,15 +56,7 @@ export default function RootLayout({
         <ThemeProvider>
           <ReduxProvider>
             <TranslationProvider>
-              <header className="absolute w-full top-4 z-10 flex justify-between items-center px-4">
-                <Link 
-                  href="#" 
-                  className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors text-sm font-medium"
-                >
-                  Log In
-                </Link>
-                <LanguageSwitcher />
-              </header>
+              <Header />
               <main className="flex-1">{children}</main>
               <Footer />
             </TranslationProvider>

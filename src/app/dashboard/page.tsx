@@ -1,8 +1,8 @@
 "use client";
 import { useSelector } from "react-redux";
-import { RootState } from "../store/store";
-import { useTranslation } from "../context/TranslationContext";
-import Navigation from "../components/Navigation";
+import { RootState } from "../../store/store";
+import { useTranslation } from "../../context/TranslationContext";
+import Navigation from "../../components/Navigation";
 
 export default function Dashboard() {
   const { t } = useTranslation();

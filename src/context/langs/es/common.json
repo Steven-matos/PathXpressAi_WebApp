@@ -1,5 +1,6 @@
 {
   "title": "Calendario",
+  "signIn": "Iniciar sesión",
   "date": "Fecha",
   "startTime": "Hora de inicio",
   "endTime": "Hora de fin",
@@ -111,5 +112,56 @@
   "lastNamePlaceholder": "Tu apellido",
   "firstNamePlaceholder": "Tu nombre",
   "sendMessage": "Enviar mensaje",
-  "contactSubtitle": "¡Nos encantaría escucharte!"
+  "contactSubtitle": "¡Nos encantaría escucharte!",
+  "termsTitle": "Términos y Condiciones",
+  "termsSections": {
+    "acceptanceOfTerms": "Aceptación de los Términos",
+    "serviceDescription": "Descripción del Servicio",
+    "userResponsibilities": "Responsabilidades del Usuario",
+    "paymentTerms": "Términos de Pago",
+    "ipRights": "Derechos de Propiedad Intelectual",
+    "disclaimer": "Renuncia de Garantías",
+    "liability": "Limitación de Responsabilidad",
+    "termination": "Terminación",
+    "governingLaw": "Ley Aplicable",
+    "changes": "Cambios en los Términos",
+    "dataUsage": "Recopilación y Uso de Datos",
+    "subscriptionTerms": "Términos de Suscripción",
+    "userFeedback": "Comentarios de Usuarios"
+  },
+  "termsContent": {
+    "dataUsage": [
+      "Al usar nuestros servicios, acepta la recopilación y procesamiento de:",
+      "Datos de ubicación en tiempo real para optimización de rutas",
+      "Especificaciones del vehículo para cálculos de eficiencia de combustible",
+      "Datos históricos de rutas para mejorar modelos de IA"
+    ],
+    "subscriptionTerms": [
+      "Todos los planes se renuevan automáticamente hasta ser cancelados",
+      "Las cancelaciones deben realizarse 48 horas antes de la renovación",
+      "No hay reembolsos por períodos de facturación parciales",
+      "Cambios de precio comunicados con 30 días de anticipación"
+    ],
+    "userFeedback": [
+      "Los comentarios voluntarios proporcionados a través de nuestra plataforma se convierten en propiedad exclusiva nuestra. Al enviar comentarios, nos otorga una licencia perpetua y libre de regalías para usar, modificar e incorporarlos en nuestros servicios sin compensación.",
+      "Usted renuncia a cualquier derecho de atribución o compensación por comentarios utilizados en mejoras de servicios o desarrollo de funciones."
+    ],
+    "userResponsibilities": [
+      "Proporcionar información de ubicación y vehículo exacta",
+      "Mantener cobertura de seguros adecuada para operaciones comerciales",
+      "Cumplir con todas las leyes y regulaciones de tráfico locales"
+    ],
+    "acceptanceOfTerms": [
+      "Al usar nuestros servicios, acepta la recopilación y procesamiento de:",
+      "Datos de ubicación en tiempo real para optimización de rutas",
+      "Especificaciones del vehículo para cálculos de eficiencia de combustible",
+      "Datos históricos de rutas para mejorar modelos de IA"
+    ],
+    "serviceDescription": [
+      "Nosotros nos esforzamos por proporcionar una experiencia de usuario fluida y eficiente. Al usar nuestros servicios, acepta que:",
+      "Podemos registrar y almacenar datos de uso de la aplicación",
+      "Podemos mostrar anuncios y promociones en la aplicación",
+      "Podemos usar datos de ubicación para mejorar nuestros servicios"
+    ]
+  }
 }

@@ -1,8 +1,7 @@
 "use client";
-import "../styles/globals.css";
-import { TranslationProvider } from "../context/TranslationContext";
-import Calendar from "../components/Calendar";
-import Navigation from "../components/Navigation";
+import { TranslationProvider } from "../../context/TranslationContext";
+import Calendar from "../../components/Calendar";
+import Navigation from "../../components/Navigation";
 import { ReduxProvider } from "@/providers/redux-provider";
 
 export default function CalendarPage() {

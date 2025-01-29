@@ -1,5 +1,4 @@
 "use client";
-import Dashboard from "../pages/dashboard";
 import { useTranslation } from "../context/TranslationContext";
 import Link from 'next/link'
 import { UserIcon, EnvelopeIcon, ChatBubbleLeftIcon, PaperAirplaneIcon } from '@heroicons/react/24/outline'
