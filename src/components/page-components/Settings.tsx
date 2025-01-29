@@ -1,11 +1,11 @@
 // src/components/Settings.tsx
 "use client";
 import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "../store/store";
-import { setName } from "../store/userSlice";
-import { setLanguage } from "../store/languageSlice";
-import Navigation from "./Navigation";
-import { useTranslation } from "../context/TranslationContext";
+import { RootState } from "../../store/store";
+import { setName } from "../../store/userSlice";
+import { setLanguage } from "../../store/languageSlice";
+import Navigation from "../Navigation";
+import { useTranslation } from "../../context/TranslationContext";
 
 export default function Settings() {
   const dispatch = useDispatch();

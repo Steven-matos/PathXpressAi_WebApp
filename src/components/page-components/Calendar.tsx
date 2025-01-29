@@ -7,14 +7,14 @@ import {
   Views,
 } from "react-big-calendar";
 import { DateTime } from "luxon";
-import AddRouteModal from "./AddRouteModal";
+import AddRouteModal from "../AddRouteModal";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
-import EventDetailsModal from "./EventDetailsModal";
-import { useTranslation } from "../context/TranslationContext";
+import EventDetailsModal from "../EventDetailsModal";
+import { useTranslation } from "../../context/TranslationContext";
 import { useSelector } from "react-redux";
-import { RootState } from "../store/store";
+import { RootState } from "../../store/store";
 
 // Set Luxon locale based on current language
 const localizer = luxonLocalizer(DateTime);

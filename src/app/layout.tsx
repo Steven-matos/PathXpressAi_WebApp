@@ -1,10 +1,5 @@
 import "../styles/globals.css";
 import { Inter } from "next/font/google";
-import { ReduxProvider } from "@/providers/redux-provider";
-import { ThemeProvider } from "@/providers/theme-provider";
-import { TranslationProvider } from "@/context/TranslationContext";
-import { Footer } from '../components/footer';
-import { Header } from '../components/header';
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -51,17 +46,9 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className="h-full">
-      <body className={`${inter.className} flex flex-col min-h-screen`}>
-        <ThemeProvider>
-          <ReduxProvider>
-            <TranslationProvider>
-              <Header />
-              <main className="flex-1">{children}</main>
-              <Footer />
-            </TranslationProvider>
-          </ReduxProvider>
-        </ThemeProvider>
+    <html lang="en">
+      <body>
+        {children}
       </body>
     </html>
   );

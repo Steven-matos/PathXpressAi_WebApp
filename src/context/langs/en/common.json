@@ -131,9 +131,8 @@
   },
   "termsContent": {
     "acceptanceOfTerms": [
-      "By using our services, you agree to the collection and processing of: ",
+      "By using our services, you agree to the collection and processing of:",
       "Real-time location data for route optimization",
-      "Vehicle specifications for fuel efficiency calculations",
       "Historical routing data to improve AI models"
     ],
     "serviceDescription": [
