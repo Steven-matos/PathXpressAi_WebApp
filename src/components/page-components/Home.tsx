@@ -236,9 +236,9 @@ export function Home() {
           {JSON.stringify({
             "@context": "https://schema.org",
             "@type": "Organization",
-            "name": "SchedulPath.ai",
-            "url": "https://schedulpath.ai",
-            "logo": "https://schedulpath.ai/logo.png",
+            "name": "Path Xpress Ai",
+            "url": "https://Path Xpress Ai",
+            "logo": "https://Path Xpress Ai/logo.png",
             "description": "AI-powered route optimization platform",
             "sameAs": [
               "https://twitter.com/schedulpath",
