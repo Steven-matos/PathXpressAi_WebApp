@@ -107,8 +107,6 @@ npm run build && npm run start
 # Linting
 npm run lint
 
-# Formatting
-npm run format
 ```
 
 ## 🤝 Contributing
@@ -126,7 +124,7 @@ We welcome contributions! Please follow these guidelines:
 git checkout -b feature/your-feature
 
 # After making changes
-npm run format && npm run lint
+npm run lint
 
 # Commit with message
 git commit -m "feat: add new route optimization view"
@@ -185,11 +183,13 @@ async function fetchOptimalRoute(waypoints: LatLng[]) {
 
 ### Testing
 
+if creating new tests, run the following command to update the coverage report:
+
 ```bash
 # Run unit tests
 npm test
 
-# Generate coverage report
+# Run coverage
 npm test:coverage
 ```
 
