@@ -12,11 +12,8 @@ export const ReduxProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
   useEffect(() => {
-    // Load language from local storage on client side
-    const savedLanguage = localStorage.getItem("language");
-    console.log("savedLanguage", savedLanguage);
-    const initialLanguage = savedLanguage || translationConfig.defaultLanguage;
-    console.log("initialLanguage", initialLanguage);
+    const langFromCookie = document.cookie.match(/preferredLang=([^;]+)/)?.[1];
+    const initialLanguage = langFromCookie || translationConfig.defaultLanguage;
     store.dispatch(setLanguage(initialLanguage));
   }, []);
 

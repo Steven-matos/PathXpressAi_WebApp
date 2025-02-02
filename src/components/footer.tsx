@@ -1,7 +1,8 @@
-'use client'
+"use client";
 
-import Link from 'next/link';
-import { useTranslation } from '@/context/TranslationContext';
+import Link from "next/link";
+import { useTranslation } from "@/context/TranslationContext";
+import { LanguageSwitcher } from "./language-switcher";
 
 export function Footer() {
   const { t } = useTranslation();
@@ -19,20 +20,30 @@ export function Footer() {
 
           {/* Navigation Links */}
           <nav className="flex flex-col md:flex-row items-center space-y-4 md:space-y-0 md:space-x-6">
-            <Link href="/terms-and-conditions" className="text-gray-300 hover:text-white transition-colors">
-              {t('footer.termsAndConditions')}
+            <Link
+              href="/terms-and-conditions"
+              className="text-gray-300 hover:text-white transition-colors"
+            >
+              {t("footer.termsAndConditions")}
             </Link>
-            <Link href="/privacy-policy" className="text-gray-300 hover:text-white transition-colors">
-              {t('footer.privacyPolicy')}
+            <Link
+              href="/privacy-policy"
+              className="text-gray-300 hover:text-white transition-colors"
+            >
+              {t("footer.privacyPolicy")}
             </Link>
           </nav>
         </div>
 
         {/* Copyright Section */}
         <div className="mt-8 text-center text-gray-400 text-sm">
-          &copy; {new Date().getFullYear()} {t('footer.copyright')}
+          &copy; {new Date().getFullYear()} {t("footer.copyright")}
+        </div>
+
+        <div className="flex items-center gap-4 md:self-end">
+          <LanguageSwitcher />
         </div>
       </div>
     </footer>
   );
-} 
+}

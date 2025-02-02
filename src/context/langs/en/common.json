@@ -53,19 +53,11 @@
   "plans": {
     "weekly": {
       "name": "Weekly",
-      "features": [
-        "Basic routing",
-        "5 daily updates",
-        "Email support"
-      ]
+      "features": ["Basic routing", "5 daily updates", "Email support"]
     },
     "monthly": {
       "name": "Monthly",
-      "features": [
-        "Advanced routing",
-        "Unlimited updates",
-        "Priority support"
-      ]
+      "features": ["Advanced routing", "Unlimited updates", "Priority support"]
     },
     "yearly": {
       "name": "Yearly",
@@ -161,5 +153,78 @@
       "Maintain proper insurance coverage for commercial operations",
       "Comply with all local traffic laws and regulations"
     ]
+  },
+  "privacy_policy": {
+    "title": "Privacy Policy",
+    "sections": [
+      {
+        "title": "Introduction",
+        "content": "At Path Xpress Ai, we are committed to protecting the privacy of our users and customers. This Privacy Policy explains how we collect, store, and use personal information about individuals who interact with our website, services, or products."
+      },
+      {
+        "title": "What Information Do We Collect?",
+        "content": "We may collect personal information from you in various ways, including:",
+        "subcontent": [
+          "1) Visitors to our website: When you visit our website, we may collect information such as your IP address, browser type, and operating system.",
+          "2) Users of our services: If you use our services or products, we may collect additional information such as:",
+          "• Contact information (name, email address, phone number)",
+          "• Demographic information (age, gender, location)",
+          "• Usage data (data on how you interact with our services or products)",
+          "3) Customers: When you purchase a product or service from us, we may collect additional information such as:",
+          "• Payment and billing information",
+          "• Order history and details"
+        ]
+      },
+      {
+        "title": "How Do We Use Your Information?",
+        "content": "We use your personal information to:",
+        "subcontent": [
+          "1) Improve our services: We analyze usage data and customer feedback to improve our products and services.",
+          "2) Provide support: We use contact information to respond to inquiries, resolve issues, and provide general support.",
+          "3) Marketing and advertising: We may use demographic information and usage data to tailor marketing messages and ads to your interests.",
+          "4) Comply with legal obligations: We may share information with regulatory bodies or authorities as required by law."
+        ]
+      },
+      {
+        "title": "How Do We Protect Your Information?",
+        "content": "We take the security and confidentiality of your personal information seriously. To protect it:",
+        "subcontent": [
+          "1) Secure servers: We store information on secure servers protected by robust security measures.",
+          "2) Encryption: We use encryption to safeguard sensitive data (e.g., payment information).",
+          "3) Access controls: We limit access to personal information based on job responsibilities and need-to-know."
+        ]
+      },
+      {
+        "title": "Your Rights and Choices",
+        "content": "You have the right to:",
+        "subcontent": [
+          "1) Request access: Obtain a copy of your personal information.",
+          "2) Correct errors: Update or correct inaccurate information.",
+          "3) Delete data: Request that we delete your personal information (subject to legal and regulatory requirements).",
+          "4) Object to processing: Express concerns about how we use your information."
+        ]
+      },
+      {
+        "title": "Changes to This Policy",
+        "content": "We may update this Privacy Policy from time to time. We will notify you of any changes by posting an updated version on our website and/or by sending you a notice via email."
+      },
+      {
+        "title": "Contact Us",
+        "content": "If you have questions, concerns, or requests related to this Privacy Policy, please contact us at:",
+        "subcontent": ["Email: info@pathxpressai.com"]
+      },
+      {
+        "title": "Effective Date",
+        "content": "This Privacy Policy is effective as of 01.01.2025 and applies to all personal information collected by Path Xpress Ai."
+      }
+    ]
+  },
+  "pricing": {
+    "per": "per"
+  },
+  "duration": {
+    "week": "week",
+    "month": "month",
+    "year": "year"
   }
 }

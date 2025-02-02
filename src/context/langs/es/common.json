@@ -162,5 +162,78 @@
       "Podemos mostrar anuncios y promociones en la aplicación",
       "Podemos usar datos de ubicación para mejorar nuestros servicios"
     ]
+  },
+  "privacy_policy": {
+    "title": "Política de Privacidad",
+    "sections": [
+      {
+        "title": "Introducción",
+        "content": "En Path Xpress Ai, estamos comprometidos a proteger la privacidad de nuestros usuarios y clientes. Esta Política de Privacidad explica cómo recopilamos, almacenamos y utilizamos la información personal de las personas que interactúan con nuestro sitio web, servicios o productos."
+      },
+      {
+        "title": "¿Qué información recopilamos?",
+        "content": "Podemos recopilar información personal de usted de varias maneras, incluyendo:",
+        "subcontent": [
+          "1) Visitantes de nuestro sitio web: Cuando visita nuestro sitio web, podemos recopilar información como su dirección IP, tipo de navegador y sistema operativo.",
+          "2) Usuarios de nuestros servicios: Si utiliza nuestros servicios o productos, podemos recopilar información adicional como:",
+          "• Información de contacto (nombre, dirección de correo electrónico, número de teléfono)",
+          "• Información demográfica (edad, género, ubicación)",
+          "• Datos de uso (información sobre cómo interactúa con nuestros servicios o productos)",
+          "3) Clientes: Cuando compra un producto o servicio de nosotros, podemos recopilar información adicional como:",
+          "• Información de pago y facturación",
+          "• Historial y detalles de pedidos"
+        ]
+      },
+      {
+        "title": "¿Cómo utilizamos su información?",
+        "content": "Utilizamos su información personal para:",
+        "subcontent": [
+          "1) Mejorar nuestros servicios: Analizamos datos de uso y comentarios de clientes para mejorar nuestros productos y servicios.",
+          "2) Brindar soporte: Utilizamos información de contacto para responder consultas, resolver problemas y brindar asistencia general.",
+          "3) Marketing y publicidad: Podemos utilizar información demográfica y datos de uso para personalizar mensajes publicitarios y anuncios según sus intereses.",
+          "4) Cumplir con obligaciones legales: Podemos compartir información con organismos reguladores o autoridades según lo exija la ley."
+        ]
+      },
+      {
+        "title": "¿Cómo protegemos su información?",
+        "content": "Tomamos en serio la seguridad y confidencialidad de su información personal. Para protegerla:",
+        "subcontent": [
+          "1) Servidores seguros: Almacenamos información en servidores seguros protegidos con medidas robustas de seguridad.",
+          "2) Encriptación: Utilizamos encriptación para proteger datos sensibles (ej. información de pago).",
+          "3) Controles de acceso: Limitamos el acceso a información personal según responsabilidades laborales y necesidad de conocer."
+        ]
+      },
+      {
+        "title": "Sus derechos y opciones",
+        "content": "Usted tiene derecho a:",
+        "subcontent": [
+          "1) Solicitar acceso: Obtener una copia de su información personal.",
+          "2) Corregir errores: Actualizar o corregir información inexacta.",
+          "3) Eliminar datos: Solicitar que eliminemos su información personal (sujeto a requisitos legales y regulatorios).",
+          "4) Oponerse al procesamiento: Expresar inquietudes sobre cómo utilizamos su información."
+        ]
+      },
+      {
+        "title": "Cambios a esta política",
+        "content": "Podemos actualizar esta Política de Privacidad periódicamente. Le notificaremos cualquier cambio publicando una versión actualizada en nuestro sitio web y/o enviándole un aviso por correo electrónico."
+      },
+      {
+        "title": "Contáctenos",
+        "content": "Si tiene preguntas, inquietudes o solicitudes relacionadas con esta Política de Privacidad, contáctenos en:",
+        "subcontent": ["Correo electrónico: info@pathxpressai.com"]
+      },
+      {
+        "title": "Fecha de vigencia",
+        "content": "Esta Política de Privacidad es efectiva a partir del 01.01.2025 y se aplica a toda la información personal recopilada por Path Xpress Ai."
+      }
+    ]
+  },
+  "pricing": {
+    "per": "por"
+  },
+  "duration": {
+    "week": "semana",
+    "month": "mes",
+    "year": "año"
   }
 }
