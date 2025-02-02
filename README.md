@@ -40,19 +40,19 @@ PathXpress AI is an intelligent delivery route optimization platform that levera
 
 ### Frontend
 
-| Technology      | Version | Purpose               |
-| --------------- | ------- | --------------------- |
-| Next.js         | 13.5    | App Router & SSR      |
-| TypeScript      | 5.2     | Type Safety           |
-| Tailwind CSS    | 3.3     | Styling               |
-| Shadcn UI       | 0.5     | Accessible Components |
-| Radix UI        | 1.3     | Primitives            |
-| React Hook Form | 7.4     | Form Management       |
-| Zod             | 3.2     | Validation            |
+| Technology      | Version | Purpose          |
+| --------------- | ------- | ---------------- |
+| Next.js         | 13.5    | App Router & SSR |
+| TypeScript      | 5.2     | Type Safety      |
+| Tailwind CSS    | 3.3     | Styling          |
+| Radix UI        | 1.3     | Primitives       |
+| React Hook Form | 7.4     | Form Management  |
 
 ### Backend
 
 See [Backend Repository](https://github.com/Steven-matos/PathXpressAi_Backend) for details:
+
+- AWS (Lambda, CloudFormation, S3, IAM, DynamoDB)
 
 ## 📦 Installation
 
