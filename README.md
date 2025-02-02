@@ -4,8 +4,6 @@
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.2.2-3178C6?logo=typescript)](https://www.typescriptlang.org/)
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-3.3.3-06B6D4?logo=tailwind-css)](https://tailwindcss.com/)
 
-![PathXpress AI Demo](public/demo-screenshot.png)
-
 ## 📖 Table of Contents
 
 - [Project Overview](#-project-overview)
