@@ -1,6 +1,8 @@
 {
   "title": "Calendar",
   "signIn": "Log In",
+  "signOut": "Log Out",
+  "dashboard": "Dashboard",
   "date": "Date",
   "startTime": "Start Time",
   "endTime": "End Time",
@@ -28,7 +30,6 @@
   "language": "Language",
   "english": "English",
   "spanish": "Spanish",
-  "dashboard": "Dashboard",
   "calendar": "Calendar",
   "home": "Home",
   "welcome": "Welcome",
@@ -226,5 +227,37 @@
     "week": "week",
     "month": "month",
     "year": "year"
+  },
+  "login": {
+    "title": "AI Route Optimization",
+    "email": "Email",
+    "password": "Password",
+    "signIn": "Sign In",
+    "description": "Start optimizing your routes with AI-powered precision."
+  },
+  "signUp": "Sign Up",
+  "dontHaveAccount": "Don't have an account?",
+  "alreadyHaveAccount": "Already have an account?",
+  "signup": {
+    "title": "Create Account",
+    "description": "Start optimizing your routes with AI-powered precision",
+    "name": "Full Name",
+    "homeBase": "Home Base Address",
+    "addressPlaceholder": "Enter your primary operation address",
+    "confirmPassword": "Confirm Password",
+    "address": "Street Address",
+    "city": "City",
+    "cityPlaceholder": "Orlando",
+    "state": "State",
+    "statePlaceholder": "FL",
+    "zip": "ZIP Code",
+    "zipPlaceholder": "12345"
+  },
+  "errors": {
+    "invalidEmail": "Invalid email address",
+    "passwordLength": "Password must be at least 8 characters",
+    "nameLength": "Name must be at least 2 characters",
+    "addressLength": "Please enter a valid address",
+    "passwordMismatch": "Passwords do not match"
   }
 }

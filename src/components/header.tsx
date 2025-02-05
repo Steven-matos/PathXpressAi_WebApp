@@ -2,15 +2,18 @@
 
 import Link from "next/link";
 import { useTranslation } from "@/context/TranslationContext";
+import { useAuth } from "@/hooks/auth-context";
+import { Button } from "@/components/ui/button";
 
 export function Header() {
   const { t } = useTranslation();
+  const { token, setToken } = useAuth();
 
   return (
     <header className="absolute w-full top-4 z-10 flex justify-between items-center px-4">
       <Link
         href="/"
-        className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors text-sm font-medium flex items-center gap-1"
+        className="bg-accent text-white px-4 py-2 rounded-lg hover:bg-accent-dark transition-colors text-sm font-medium flex items-center gap-1"
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -25,12 +28,38 @@ export function Header() {
         </span>
       </Link>
       <div className="flex items-center gap-4">
-        <Link
-          href="#"
-          className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors text-sm font-medium"
-        >
-          {t("signIn")}
-        </Link>
+        {token ? (
+          <>
+            <Link
+              href="/dashboard"
+              className="bg-accent text-white px-4 py-2 rounded-lg hover:bg-accent-dark transition-colors text-sm font-medium"
+            >
+              {t("dashboard")}
+            </Link>
+            <Button
+              onClick={() => setToken(null)}
+              variant="destructive"
+              className="text-sm font-medium"
+            >
+              {t("signOut")}
+            </Button>
+          </>
+        ) : (
+          <div className="flex gap-2">
+            <Link
+              href="/login"
+              className="bg-accent text-white px-4 py-2 rounded-lg hover:bg-accent-dark transition-colors text-sm font-medium"
+            >
+              {t("signIn")}
+            </Link>
+            <Link
+              href="/signup"
+              className="bg-secondary text-white px-4 py-2 rounded-lg hover:bg-secondary-dark transition-colors text-sm font-medium"
+            >
+              {t("signUp")}
+            </Link>
+          </div>
+        )}
       </div>
     </header>
   );

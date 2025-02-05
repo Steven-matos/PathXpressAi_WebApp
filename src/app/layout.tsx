@@ -2,6 +2,7 @@ import "../styles/globals.css";
 import { Inter } from "next/font/google";
 import { TranslationProvider } from "@/context/TranslationContext";
 import { ReduxProvider } from "@/providers/redux-provider";
+import { AuthProvider } from "@/hooks/auth-context";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -52,10 +53,12 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body>
-        <TranslationProvider>
-          <ReduxProvider>{children}</ReduxProvider>
-        </TranslationProvider>
+      <body className={inter.className}>
+        <AuthProvider>
+          <TranslationProvider>
+            <ReduxProvider>{children}</ReduxProvider>
+          </TranslationProvider>
+        </AuthProvider>
       </body>
     </html>
   );

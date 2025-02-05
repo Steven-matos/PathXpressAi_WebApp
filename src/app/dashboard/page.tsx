@@ -3,16 +3,25 @@ import { useSelector } from "react-redux";
 import { RootState } from "../../store/store";
 import { useTranslation } from "../../context/TranslationContext";
 import Navigation from "../../components/Navigation";
+import { useAuth } from "@/hooks/auth-context";
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
 
 export default function Dashboard() {
   const { t } = useTranslation();
   const username = useSelector((state: RootState) => state.user.name);
   const routes = useSelector((state: RootState) => state.routes.tomorrow);
+  const { token } = useAuth();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (!token) router.push("/login");
+  }, [token, router]);
 
   return (
     <div>
       <Navigation />
-      <div className="container mx-auto mt-8 p-6 bg-white shadow-lg rounded-lg">
+      <div className="container mx-auto p-6 bg-secondary shadow-lg rounded-lg">
         <h1 className="text-2xl font-bold">
           {t("welcome")}, {username}!
         </h1>

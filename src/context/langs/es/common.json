@@ -1,6 +1,8 @@
 {
   "title": "Calendario",
   "signIn": "Iniciar sesión",
+  "signOut": "Cerrar sesión",
+  "dashboard": "Tablero",
   "date": "Fecha",
   "startTime": "Hora de inicio",
   "endTime": "Hora de fin",
@@ -28,7 +30,6 @@
   "language": "Idioma",
   "english": "Inglés",
   "spanish": "Español",
-  "dashboard": "Tablero",
   "calendar": "Calendario",
   "home": "Inicio",
   "welcome": "Bienvenido",
@@ -235,5 +236,37 @@
     "week": "semana",
     "month": "mes",
     "year": "año"
+  },
+  "login": {
+    "title": "Iniciar sesión",
+    "email": "Correo electrónico",
+    "password": "Contraseña",
+    "signIn": "Iniciar sesión",
+    "description": "Comienza a optimizar tus rutas con precisión AI."
+  },
+  "signUp": "Registrarse",
+  "dontHaveAccount": "No tienes una cuenta?",
+  "alreadyHaveAccount": "¿Ya tienes una cuenta?",
+  "signup": {
+    "title": "Crear Cuenta",
+    "description": "Comience a optimizar sus rutas con precisión impulsada por IA",
+    "name": "Nombre Completo",
+    "homeBase": "Dirección de Base Principal",
+    "addressPlaceholder": "Calle Principal 123",
+    "confirmPassword": "Confirmar Contraseña",
+    "address": "Dirección",
+    "city": "Ciudad",
+    "cityPlaceholder": "Orlando",
+    "state": "Estado",
+    "statePlaceholder": "FL",
+    "zip": "Código Postal",
+    "zipPlaceholder": "12345"
+  },
+  "errors": {
+    "invalidEmail": "Dirección de correo electrónico inválida",
+    "passwordLength": "La contraseña debe tener al menos 8 caracteres",
+    "nameLength": "El nombre debe tener al menos 2 caracteres",
+    "addressLength": "Por favor ingrese una dirección válida",
+    "passwordMismatch": "Las contraseñas no coinciden"
   }
 }
