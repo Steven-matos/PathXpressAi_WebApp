@@ -16,20 +16,10 @@ const config: Config = {
           DEFAULT: "hsl(var(--popover))",
           foreground: "hsl(var(--popover-foreground))",
         },
-        primary: {
-          DEFAULT: '#2D3859',
-          light: '#D9A78B',
-          dark: '#731007'
-        },
-        secondary: {
-          DEFAULT: '#D9A78B',
-          light: '#e9c4b8',
-          dark: '#c9876a'
-        },
-        accent: {
-          DEFAULT: '#F26D3D',
-          dark: '#F2441D'
-        },
+        primary: '#2D3859',
+        'primary-100': '#E8E9ED',
+        secondary: '#D9A78B',
+        accent: '#F26D3D',
         muted: {
           DEFAULT: "hsl(var(--muted))",
           foreground: "hsl(var(--muted-foreground))",

@@ -33,9 +33,12 @@
   "calendar": "Calendar",
   "home": "Home",
   "welcome": "Welcome",
-  "heroTitle": "AI Route Optimization Software | Path Xpress Ai",
+  "heroTitle": "Path Xpress AI",
+  "heroTitle2": "AI Route Optimization Software",
   "heroSubtitle": "Reduce delivery times by up to 40% with real-time AI-powered logistics planning and traffic-aware routing",
+  "featuresTagline": "Intelligent Route Optimization",
   "featuresTitle": "Key Features of Our Route Optimization Software",
+  "featuresSubtitle": "Transform your logistics operations with our cutting-edge AI technology. Our platform seamlessly integrates real-time data analytics with advanced route optimization to maximize efficiency and reduce operational costs.",
   "pricingTitle": "Transparent Pricing Plans for Logistics Optimization",
   "pricingSubtitle": "Start optimizing delivery routes today with our risk-free trial. Cancel anytime.",
   "startTrial": "Start Free Trial",
@@ -86,13 +89,18 @@
     "liveUpdates": {
       "title": "Live Updates",
       "description": "Continuous route adjustments based on changing conditions"
+    },
+    "fleetOptimization": {
+      "title": "Fleet Route Optimization",
+      "description": "Efficiently manage and optimize routes for entire fleets with AI-powered scheduling and real-time adjustments."
     }
   },
   "footer": {
     "contactUs": "Contact Us",
     "termsAndConditions": "Terms & Conditions",
     "privacyPolicy": "Privacy Policy",
-    "copyright": "All Rights Reserved Trident Innovations & Investments LLC"
+    "copyright": "All Rights Reserved Trident Innovations & Investments LLC",
+    "title": "Path Xpress Ai"
   },
   "contactTitle": "Contact Us",
   "emailAddress": "Email Address",

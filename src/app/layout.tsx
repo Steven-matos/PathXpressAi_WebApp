@@ -4,6 +4,7 @@ import { TranslationProvider } from "@/context/TranslationContext";
 import { ReduxProvider } from "@/providers/redux-provider";
 import { AuthProvider } from "@/hooks/auth-context";
 
+
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata = {
@@ -53,6 +54,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
+      <meta name="apple-mobile-web-app-title" content="Path Xpress Ai" />
       <body className={inter.className}>
         <AuthProvider>
           <TranslationProvider>

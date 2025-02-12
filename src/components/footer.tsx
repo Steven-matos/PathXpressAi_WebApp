@@ -3,6 +3,8 @@
 import Link from "next/link";
 import { useTranslation } from "@/context/TranslationContext";
 import { LanguageSwitcher } from "./language-switcher";
+import Image from "next/image";
+import LogoPhase1 from "../../public/logo_phase1.png";
 
 interface FooterProps {
   className?: string;
@@ -11,41 +13,59 @@ interface FooterProps {
 export function Footer({ className }: FooterProps) {
   const { t } = useTranslation();
 
+  const navigation = {
+    company: [
+      { name: t("footer.termsAndConditions"), href: "/terms-and-conditions" },
+      { name: t("footer.privacyPolicy"), href: "/privacy-policy" },
+    ],
+  };
+
   return (
-    <footer className={`bg-primary text-white mt-auto w-full ${className}`}>
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0 py-4">
-          {/* Logo Section */}
-          <div className="flex items-center">
-            <div className="bg-gray-700 h-8 w-8 rounded-full flex items-center justify-center">
-              <span className="text-sm text-gray-300">Logo</span>
+    <footer className="bg-gray-900" aria-labelledby="footer-heading">
+      <h2 id="footer-heading" className="sr-only">
+        Footer
+      </h2>
+      <div className="mx-auto max-w-7xl px-6 pb-8 pt-16 sm:pt-24 lg:px-8">
+        <div className="xl:grid xl:grid-cols-2 xl:gap-8">
+          <div className="space-y-8">
+            <div className="flex items-center">
+              <div className="h-20 w-20 rounded-full overflow-hidden bg-white flex items-center justify-center">
+                <Image
+                  src={LogoPhase1}
+                  alt="Path Xpress AI Logo"
+                  width={68}
+                  height={68}
+                  className="object-contain"
+                  priority
+                />
+              </div>
             </div>
           </div>
-
-          {/* Navigation Links */}
-          <nav className="flex flex-col md:flex-row items-center space-y-2 md:space-y-0 md:space-x-4">
-            <Link
-              href="/terms-and-conditions"
-              className="text-secondary hover:text-accent transition-colors"
-            >
-              {t("footer.termsAndConditions")}
-            </Link>
-            <Link
-              href="/privacy-policy"
-              className="text-secondary hover:text-accent transition-colors"
-            >
-              {t("footer.privacyPolicy")}
-            </Link>
-          </nav>
+          <div>
+            <h3 className="text-sm font-semibold leading-6 text-white">
+              {t("footer.title")}
+            </h3>
+            <ul role="list" className="mt-6 space-y-4">
+              {navigation.company.map((item) => (
+                <li key={item.name}>
+                  <Link
+                    href={item.href}
+                    className="text-sm leading-6 text-gray-300 hover:text-white"
+                  >
+                    {item.name}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
         </div>
-
-        {/* Copyright Section */}
-        <div className="mt-4 text-center text-gray-400 text-sm">
-          &copy; {new Date().getFullYear()} {t("footer.copyright")}
-        </div>
-
-        <div className="flex items-center gap-2 md:self-end py-2">
-          <LanguageSwitcher />
+        <div className="mt-8 border-t border-gray-700 pt-8 flex flex-col-reverse sm:flex-row justify-between items-center">
+          <p className="mt-8 text-xs leading-5 text-gray-400 sm:mt-0">
+            &copy; {new Date().getFullYear()} {t("footer.copyright")}
+          </p>
+          <div className="flex items-center">
+            <LanguageSwitcher />
+          </div>
         </div>
       </div>
     </footer>

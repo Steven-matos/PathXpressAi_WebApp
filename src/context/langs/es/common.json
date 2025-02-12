@@ -33,9 +33,12 @@
   "calendar": "Calendario",
   "home": "Inicio",
   "welcome": "Bienvenido",
-  "heroTitle": "Software de optimización de rutas con IA | Path Xpress Ai",
+  "heroTitle": "Path Xpress AI",
+  "heroTitle2": "Software de optimización de rutas con IA",
   "heroSubtitle": "Optimiza tus rutas en tiempo real con IA, adaptándote al tráfico, clima y tu horario",
   "featuresTitle": "Características clave de nuestro software de optimización de rutas",
+  "featuresTagline": "Optimización de rutas con IA",
+  "featuresSubtitle": "Transforma tus operaciones logísticas con nuestra tecnología de IA. Nuestra plataforma integra análisis de datos en tiempo real con optimización de rutas avanzada para maximizar la eficiencia y reducir costos operativos.",
   "pricingTitle": "Precios transparentes para la optimización de rutas",
   "pricingSubtitle": "Comienza a optimizar tus rutas hoy con nuestra prueba gratuita. Cancela cuando quieras.",
   "startTrial": "Comienza Prueba Gratis",
@@ -94,13 +97,18 @@
     "liveUpdates": {
       "title": "Actualizaciones en vivo",
       "description": "Ajustes continuos de rutas basados en condiciones cambiantes"
+    },
+    "fleetOptimization": {
+      "title": "Optimización de rutas de flota",
+      "description": "Administra y optimiza rutas para toda la flota con programación y ajustes en tiempo real."
     }
   },
   "footer": {
     "contactUs": "Contactanos",
     "termsAndConditions": "Términos y condiciones",
     "privacyPolicy": "Política de privacidad",
-    "copyright": "Todos los derechos reservados Trident Innovations & Investments LLC"
+    "copyright": "Todos los derechos reservados Trident Innovations & Investments LLC",
+    "title": "Path Xpress AI"
   },
   "contactTitle": "Contactanos",
   "emailAddress": "Correo electrónico",

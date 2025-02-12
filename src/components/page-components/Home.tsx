@@ -8,15 +8,20 @@ import {
   ChatBubbleLeftIcon,
   PaperAirplaneIcon,
 } from "@heroicons/react/24/outline";
+import { useResponsiveVideo } from '@/hooks/useResponsiveVideo';
+import Image from "next/image";
+import DriverPhone from "../../../public/driver-phone.jpg";
 
 export function Home() {
   const { t } = useTranslation();
+  const videoSources = useResponsiveVideo();
 
   const features = [
     { id: "aiRouting" },
     { id: "multiStop" },
     { id: "mobileSync" },
     { id: "liveUpdates" },
+    { id: "fleetOptimization" },
   ];
 
   const plans = [
@@ -58,60 +63,140 @@ export function Home() {
     <div className="bg-white">
       {/* Hero Section */}
       <section aria-label="Main product introduction">
-        <div className="relative bg-gradient-to-b from-blue-600 to-blue-700">
-          <div className="max-w-7xl mx-auto py-24 px-4 sm:px-6 lg:px-8 text-center">
-            <h1 className="text-4xl font-extrabold text-white sm:text-5xl lg:text-6xl">
+        <div className="relative overflow-hidden">
+          {/* Background Video */}
+          <div className="absolute inset-0 w-full h-full">
+            <video
+              autoPlay
+              muted
+              loop
+              playsInline
+              className="object-cover w-full h-full"
+              poster="/video-poster.jpg"
+              preload="metadata"
+            >
+              <source
+                src={videoSources.webm}
+                type="video/webm"
+              />
+              <source
+                src={videoSources.mp4}
+                type="video/mp4"
+              />
+            </video>
+            {/* Semi-transparent overlay for better text readability */}
+            <div className="absolute inset-0 bg-black/30"></div>
+          </div>
+          
+          {/* Content */}
+          <div className="relative max-w-7xl mx-auto py-24 px-4 sm:px-6 lg:px-8 text-center">
+            <h1 className="text-4xl font-extrabold text-white sm:text-5xl lg:text-6xl [text-shadow:_0_1px_12px_rgb(0_0_0_/_40%)]">
               {t("heroTitle")}
             </h1>
-            <p className="mt-6 text-xl text-blue-100 max-w-3xl mx-auto">
+            <h1 className="text-4xl font-extrabold text-accent sm:text-5xl lg:text-6xl [text-shadow:_0_1px_12px_rgb(0_0_0_/_40%)]">
+              {t("heroTitle2")}
+            </h1>
+            <p className="mt-6 text-xl text-white max-w-3xl mx-auto [text-shadow:_0_1px_8px_rgb(0_0_0_/_40%)]">
               {t("heroSubtitle")}
             </p>
             <div className="mt-10">
               <Link
                 href="#"
-                className="bg-white text-blue-600 px-8 py-3 rounded-md font-medium hover:bg-blue-50 transition-colors"
+                className="bg-white text-blue-600 px-8 py-3 rounded-md font-medium hover:bg-blue-50 transition-colors shadow-lg"
               >
                 {t("startTrial")}
               </Link>
-            </div>
-            <div className="mt-20 max-w-4xl mx-auto bg-gray-200 h-96 rounded-lg flex items-center justify-center">
-              {/* Placeholder for route visualization */}
-              <span className="text-gray-500">Route Preview Visualization</span>
             </div>
           </div>
         </div>
       </section>
 
       {/* Features Section */}
-      <div className="py-24 bg-gray-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="lg:text-center">
-            <h2 className="text-3xl font-extrabold text-gray-900 sm:text-4xl">
-              {t("featuresTitle")}
+      <div className="relative isolate overflow-hidden bg-white py-24 sm:py-32">
+        {/* Background gradient effect */}
+        <div className="absolute inset-0 -z-10 bg-[radial-gradient(45rem_50rem_at_top,theme(colors.primary.100),white)]" />
+        
+        <div className="mx-auto max-w-7xl px-6 lg:px-8">
+          <div className="mx-auto max-w-2xl lg:text-center">
+            <h2 className="text-base font-semibold leading-7 text-accent">
+              {t("featuresTagline")}
             </h2>
+            <p className="mt-2 text-3xl font-bold tracking-tight text-primary sm:text-4xl">
+              {t("featuresTitle")}
+            </p>
+            <p className="mt-6 text-lg leading-8 text-gray-600">
+              {t("featuresSubtitle")}
+            </p>
           </div>
-          <section
-            aria-label="Key features"
-            itemScope
-            itemType="https://schema.org/ItemList"
-          >
-            <div className="mt-16 grid grid-cols-1 gap-12 sm:grid-cols-2 lg:grid-cols-4 lg:gap-x-8">
+
+          <div className="mx-auto mt-16 max-w-2xl sm:mt-20 lg:mt-24 lg:max-w-none">
+            {/* Image Section */}
+            <div className="relative mb-16 lg:mb-24">
+              <div className="aspect-[16/9] w-full overflow-hidden rounded-xl bg-gray-100 shadow-xl ring-1 ring-gray-400/10 sm:aspect-[3/2] lg:aspect-[2/1]">
+                <Image
+                  src={DriverPhone}
+                  alt="Driver using mobile app"
+                  className="absolute left-0 top-0 w-full h-full object-cover"
+                  quality={90}
+                  priority
+                  placeholder="blur"
+                />
+                {/* Premium gradient overlay */}
+                <div className="absolute inset-0 bg-gradient-to-r from-primary/20 to-accent/20 mix-blend-multiply" />
+              </div>
+              {/* Decorative elements */}
+              <div className="absolute -top-4 -left-4 -right-4 -bottom-4 rounded-2xl bg-primary/5 ring-1 ring-inset ring-primary/10 lg:-top-6 lg:-left-6 lg:-right-6 lg:-bottom-6" />
+            </div>
+
+            <dl className="grid max-w-xl grid-cols-1 gap-x-8 gap-y-16 lg:max-w-none lg:grid-cols-5">
               {features.map((feature) => (
-                <div
-                  itemProp="itemListElement"
+                <div 
                   key={feature.id}
-                  className="bg-white p-6 rounded-lg shadow-sm"
+                  className="group relative transform transition-all duration-300 hover:-translate-y-2"
                 >
-                  <h3 className="text-lg font-medium text-gray-900">
-                    {t(`features.${feature.id}.title`)}
-                  </h3>
-                  <p className="mt-2 text-gray-500">
-                    {t(`features.${feature.id}.description`)}
-                  </p>
+                  <div className="relative pl-16">
+                    <div className="absolute left-0 top-0 flex h-12 w-12 items-center justify-center rounded-xl bg-primary group-hover:bg-accent transition-colors">
+                      <div className="h-8 w-8 text-white" aria-hidden="true">
+                        {feature.id === "aiRouting" && (
+                          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M9 6.75V15m6-6v8.25m.503 3.498 4.875-2.437c.381-.19.622-.58.622-1.006V4.82c0-.836-.88-1.38-1.628-1.006l-3.869 1.934c-.317.159-.69.159-1.006 0L9.503 3.252a1.125 1.125 0 0 0-1.006 0L3.622 5.689C3.24 5.88 3 6.27 3 6.695V19.18c0 .836.88 1.38 1.628 1.006l3.869-1.934c.317-.159.69-.159 1.006 0l4.994 2.497c.317.158.69.158 1.006 0Z" />
+                          </svg>
+                        )}
+                        {feature.id === "multiStop" && (
+                          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 6.75h12M8.25 12h12m-12 5.25h12M3.75 6.75h.007v.008H3.75V6.75Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0ZM3.75 12h.007v.008H3.75V12Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm-.375 5.25h.007v.008H3.75v-.008Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z" />
+                          </svg>
+                        )}
+                        {feature.id === "mobileSync" && (
+                          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 1.5H8.25A2.25 2.25 0 0 0 6 3.75v16.5a2.25 2.25 0 0 0 2.25 2.25h7.5A2.25 2.25 0 0 0 18 20.25V3.75a2.25 2.25 0 0 0-2.25-2.25H13.5m-3 0V3h3V1.5m-3 0h3m-3 18.75h3" />
+                          </svg>
+                        )}
+                        {feature.id === "liveUpdates" && (
+                          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M9.348 14.651a3.75 3.75 0 0 1 0-5.303m5.304 0a3.75 3.75 0 0 1 0 5.303m-7.425 2.122a6.75 6.75 0 0 1 0-9.546m9.546 0a6.75 6.75 0 0 1 0 9.546M5.106 18.894c-3.808-3.808-3.808-9.98 0-13.789m13.788 0c3.808 3.808 3.808 9.981 0 13.79M12 12h.008v.007H12V12Z" />
+                          </svg>
+                        )}
+                        {feature.id === "fleetOptimization" && (
+                          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 18.75a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m3 0h6m-9 0H3.375a1.125 1.125 0 0 1-1.125-1.125V14.25m17.25 4.5a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m3 0h1.125c.621 0 1.129-.504 1.09-1.124a17.902 17.902 0 0 0-3.213-9.193 2.056 2.056 0 0 0-1.58-.86H14.25M16.5 18.75h-2.25m0-11.177v-.958c0-.568-.422-1.048-.987-1.106a48.554 48.554 0 0 0-10.026 0 1.106 1.106 0 0 0-.987 1.106v7.635m12-6.677v6.677m0 4.5v-4.5m0 0h-12" />
+                          </svg>
+                        )}
+                      </div>
+                    </div>
+                    <dt className="text-lg font-semibold leading-7 text-primary">
+                      {t(`features.${feature.id}.title`)}
+                    </dt>
+                    <dd className="mt-2 text-base leading-7 text-gray-600">
+                      {t(`features.${feature.id}.description`)}
+                    </dd>
+                  </div>
+                  {/* Decorative gradient line */}
+                  <div className="absolute bottom-0 left-0 h-0.5 w-full bg-gradient-to-r from-primary via-secondary to-accent transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300" />
                 </div>
               ))}
-            </div>
-          </section>
+            </dl>
+          </div>
         </div>
       </div>
 
