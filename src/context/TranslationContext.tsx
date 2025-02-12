@@ -39,8 +39,8 @@ export function TranslationProvider({
       try {
         const newTranslations: Translations = {};
         for (const lang of translationConfig.languages) {
-          const module = await import(`./langs/${lang}/common.json`);
-          newTranslations[lang] = module.default;
+          const translationModule = await import(`./langs/${lang}/common.json`);
+          newTranslations[lang] = translationModule.default;
         }
         setTranslations(newTranslations);
       } catch (error) {
