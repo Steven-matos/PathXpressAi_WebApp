@@ -1,6 +1,7 @@
 module.exports = {
   parser: '@typescript-eslint/parser',
   extends: [
+    'next/core-web-vitals',
     'eslint:recommended',
     'plugin:@typescript-eslint/recommended',
     'plugin:react/recommended',
@@ -19,6 +20,14 @@ module.exports = {
   },
   rules: {
     '@typescript-eslint/explicit-module-boundary-types': 'off',
-    'react/prop-types': 'off'
+    'react/prop-types': 'off',
+    '@typescript-eslint/no-explicit-any': 'error',
+    '@typescript-eslint/no-unused-vars': ['error', { 
+      'varsIgnorePattern': '^_',
+      'argsIgnorePattern': '^_'
+    }],
+    '@typescript-eslint/no-require-imports': 'off',
+    'no-console': ['warn', { allow: ['warn', 'error'] }],
+    'react/no-unescaped-entities': 'off'
   }
 }; 

@@ -13,16 +13,16 @@ import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
 import EventDetailsModal from "../EventDetailsModal";
 import { useTranslation } from "../../context/TranslationContext";
-import { useSelector } from "react-redux";
-import { RootState } from "../../store/store";
 
 // Set Luxon locale based on current language
 const localizer = luxonLocalizer(DateTime);
 
 interface CalendarEvent {
+  id: string;
   title: string;
   start: Date;
   end: Date;
+  date: Date;
   street: string;
   city: string;
   state: string;
@@ -30,45 +30,29 @@ interface CalendarEvent {
   address: string;
 }
 
-export default function Calendar() {
-  const [events, setEvents] = useState<CalendarEvent[]>([]);
+interface SlotInfo {
+  start: Date;
+  end: Date;
+  slots: Date[];
+  action: 'select' | 'click' | 'doubleClick';
+}
+
+export function Calendar() {
+  const { t } = useTranslation();
+  const [events] = useState<CalendarEvent[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState<CalendarEvent | null>(
     null
   );
   const [isEventModalOpen, setIsEventModalOpen] = useState(false);
   const [selectedDate, setSelectedDate] = useState<Date>(new Date());
-  const { t, setLang } = useTranslation();
-  const lang = useSelector((state: RootState) => state.language.lang);
-  const username = useSelector((state: RootState) => state.user.name);
-  const routes = useSelector((state: RootState) => state.routes.tomorrow);
 
-  const handleSelectSlot = (slotInfo: any) => {
+  const handleSelectSlot = (slotInfo: SlotInfo) => {
     setSelectedDate(slotInfo.start);
     setIsModalOpen(true);
   };
 
-  const handleAddEvent = (event: {
-    title: string;
-    start: Date;
-    end: Date;
-    street: string;
-    city: string;
-    state: string;
-    zip: string;
-  }) => {
-    const newEvent: CalendarEvent = {
-      title: event.title,
-      start: event.start,
-      end: event.end,
-      street: event.street,
-      city: event.city,
-      state: event.state,
-      zip: event.zip,
-      address: `${event.street}, ${event.city}, ${event.state}, ${event.zip}`,
-    };
-
-    setEvents((prevEvents) => [...prevEvents, newEvent]);
+  const handleAddEvent = () => {
     setIsModalOpen(false);
   };
 
@@ -82,12 +66,7 @@ export default function Calendar() {
     setIsEventModalOpen(true);
   };
 
-  const eventStyleGetter = (
-    event: CalendarEvent,
-    start: Date,
-    end: Date,
-    isSelected: boolean
-  ) => {
+  const eventStyleGetter = () => {
     return {
       style: {
         backgroundColor: "#3174ad",

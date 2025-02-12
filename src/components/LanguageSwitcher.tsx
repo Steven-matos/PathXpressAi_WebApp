@@ -1,25 +1,28 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useTranslation } from '@/context/TranslationContext';
+import { useEffect, useState } from 'react';
 
 export function LanguageSwitcher() {
+  const { setLang } = useTranslation();
   const [mounted, setMounted] = useState(false);
-  const [currentLang, setCurrentLang] = useState<string | null>(null);
 
   useEffect(() => {
     setMounted(true);
-    const cookieLang = document.cookie.match(/preferred_language=(\w+)/)?.[1];
-    setCurrentLang(cookieLang || 'en');
   }, []);
 
   if (!mounted) return null;
-  
+
+  const handleLanguageChange = (lang: string) => {
+    document.cookie = `preferredLang=${lang}; path=/; max-age=31536000`;
+    setLang(lang);
+    window.location.reload();
+  };
+
   return (
     <div>
-      <button onClick={() => {
-        document.cookie = 'preferred_language=en; path=/';
-        window.location.reload();
-      }}>English</button>
+      <button onClick={() => handleLanguageChange('en')}>English</button>
+      <button onClick={() => handleLanguageChange('es')}>Español</button>
     </div>
   );
 } 

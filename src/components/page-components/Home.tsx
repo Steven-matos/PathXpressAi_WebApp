@@ -2,12 +2,7 @@
 
 import { useTranslation } from "@/context/TranslationContext";
 import Link from "next/link";
-import {
-  UserIcon,
-  EnvelopeIcon,
-  ChatBubbleLeftIcon,
-  PaperAirplaneIcon,
-} from "@heroicons/react/24/outline";
+import { EnvelopeIcon } from "@heroicons/react/24/outline";
 import { useResponsiveVideo } from '@/hooks/useResponsiveVideo';
 import Image from "next/image";
 import DriverPhone from "../../../public/driver-phone.jpg";
@@ -278,7 +273,7 @@ export function Home() {
         <div className="absolute inset-0 -z-10 bg-gradient-radial from-primary-100 to-white" />
         <div className="mx-auto max-w-7xl px-6 lg:px-8 py-24 sm:py-32">
           <div className="max-w-2xl lg:mx-0">
-            <h2 className="text-3xl font-bold tracking-tight text-primary sm:text-4xl">Let's optimize your routes</h2>
+            <h2 className="text-3xl font-bold tracking-tight text-primary sm:text-4xl">Let&apos;s optimize your routes</h2>
             <p className="mt-6 text-lg leading-8 text-gray-600">
               {t("contactSubtitle")}
             </p>
@@ -366,7 +361,7 @@ export function Home() {
                   <div>
                     <h3 className="text-base font-semibold leading-7 text-primary">Email us</h3>
                     <p className="mt-2 text-base leading-7 text-gray-600">
-                      We'll respond within 24 hours
+                      We&apos;ll respond within 24 hours
                     </p>
                     <p className="mt-4">
                       <a href="mailto:customerservice@pathxpressai.com" className="text-sm font-semibold text-accent hover:text-accent/80">
@@ -387,8 +382,8 @@ export function Home() {
           "@context": "https://schema.org",
           "@type": "Organization",
           name: "Path Xpress Ai",
-          url: process.env.NEXT_PUBLIC_BASE_URL,
-          logo: `${process.env.NEXT_PUBLIC_BASE_URL}/logo.png`,
+          url: process.env['NEXT_PUBLIC_BASE_URL'],
+          logo: `${process.env['NEXT_PUBLIC_BASE_URL']}/logo.png`,
           description: "AI-powered route optimization platform",
           sameAs: [
             "https://twitter.com/pathxpressai",

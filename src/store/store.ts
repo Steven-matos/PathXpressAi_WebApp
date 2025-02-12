@@ -2,14 +2,16 @@ import { configureStore } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
 import { createSlice } from "@reduxjs/toolkit";
 import routesReducer from "./routesSlice";
-import languageReducer from "./languageSlice";
 import userReducer from "./userSlice";
 import { useSelector, useDispatch } from "react-redux";
 
-// Strongly typed language state
+interface Translation {
+  [key: string]: string | Translation;
+}
+
 interface LanguageState {
   currentLang: 'en' | 'es';
-  translations: Record<string, any>;
+  translations: Record<string, Translation>;
 }
 
 const initialState: LanguageState = {
@@ -24,7 +26,7 @@ const languageSlice = createSlice({
     setLanguage: (state, action: PayloadAction<'en' | 'es'>) => {
       state.currentLang = action.payload;
     },
-    loadTranslations: (state, action: PayloadAction<Record<string, any>>) => {
+    loadTranslations: (state, action: PayloadAction<Record<string, Translation>>) => {
       state.translations = action.payload;
     }
   },

@@ -6,11 +6,7 @@ import { LanguageSwitcher } from "./language-switcher";
 import Image from "next/image";
 import LogoPhase1 from "../../public/logo_phase1.png";
 
-interface FooterProps {
-  className?: string;
-}
-
-export function Footer({ className }: FooterProps) {
+export function Footer(): JSX.Element {
   const { t } = useTranslation();
 
   const navigation = {

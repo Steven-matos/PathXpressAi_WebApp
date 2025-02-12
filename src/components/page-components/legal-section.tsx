@@ -3,8 +3,13 @@
 import { cn } from "@/lib/utils";
 import { useTranslation } from "@/context/TranslationContext";
 
+interface LegalContent {
+  title: string;
+  content: string[];
+}
+
 interface LegalSectionProps {
-  contentKey: string;
+  content: Record<string, LegalContent>;
 }
 
 interface Section {
@@ -13,9 +18,9 @@ interface Section {
   subcontent?: string[];
 }
 
-export function LegalSection({ contentKey }: LegalSectionProps) {
+export function LegalSection({ content }: LegalSectionProps) {
   const { t } = useTranslation();
-  const sections = (t(contentKey) as { sections?: Section[] })?.sections || [];
+  const sections = (t(content.legalContentKey) as { sections?: Section[] })?.sections || [];
 
   return (
     <div className="space-y-8">
@@ -32,7 +37,7 @@ export function LegalSection({ contentKey }: LegalSectionProps) {
             </p>
             {section.subcontent && (
               <div className="space-y-2 pl-4">
-                {section.subcontent.map((item: any, itemIndex: any) => {
+                {section.subcontent.map((item: string, itemIndex: number) => {
                   const isNumbered = /^\d+\)/.test(item);
                   return (
                     <p

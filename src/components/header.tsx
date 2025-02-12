@@ -1,13 +1,11 @@
 "use client";
 
-import { Fragment, useRef, useEffect } from "react";
-import { Disclosure, Menu, Transition } from "@headlessui/react";
+import { useRef, useEffect } from "react";
+import { Disclosure } from "@headlessui/react";
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 import Link from "next/link";
 import { useTranslation } from "@/context/TranslationContext";
 import { LanguageSwitcher } from "./language-switcher";
-import Image from "next/image";
-import LogoPhase1 from "../../public/logo_phase1.png";
 
 export function Header() {
   const { t } = useTranslation();

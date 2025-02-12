@@ -5,32 +5,24 @@ import React, {
   createContext,
   useContext,
   useState,
-  ReactNode,
   useEffect,
 } from "react";
 import { translationConfig } from "./translationConfig";
+import type { Translations } from './types';
 
-interface TranslationContextProps {
+interface TranslationContextType {
   language: string;
   setLang: (lang: string) => void;
   t: (key: string) => string;
 }
 
-const TranslationContext = createContext<TranslationContextProps | null>(null);
+const TranslationContext = createContext<TranslationContextType>({
+  language: 'en',
+  setLang: () => {},
+  t: (key) => key,
+});
 
 type Language = (typeof translationConfig.languages)[number];
-
-interface Translations {
-  [key: string]: { [key: string]: string };
-}
-
-const translations: Translations = translationConfig.languages.reduce(
-  (acc, lang) => {
-    acc[lang] = require(`./langs/${lang}/common.json`);
-    return acc;
-  },
-  {} as Translations
-);
 
 export function TranslationProvider({
   children,
@@ -40,6 +32,7 @@ export function TranslationProvider({
   const [language, setLang] = useState<Language>(
     translationConfig.defaultLanguage
   );
+  const [translations, setTranslations] = useState<Translations>({});
 
   useEffect(() => {
     if (typeof window === "undefined") return;
@@ -60,20 +53,27 @@ export function TranslationProvider({
     }
   }, [language]);
 
-  const t = (key: string) => {
+  useEffect(() => {
+    const loadTranslations = async () => {
+      const newTranslations: Translations = {};
+      for (const lang of translationConfig.languages) {
+        newTranslations[lang] = (await import(`./langs/${lang}/common.json`)).default;
+      }
+      setTranslations(newTranslations);
+    };
+    loadTranslations();
+  }, []);
+
+  const t = (key: string): string => {
     const keys = key.split(".");
-    let result: any = translations[language];
+    let result: unknown = translations[language] || {};
 
     for (const k of keys) {
-      if (!result) break;
-      const arrayIndex = parseInt(k, 10);
-      result =
-        !isNaN(arrayIndex) && Array.isArray(result)
-          ? result[arrayIndex]
-          : result[k];
+      if (!result || typeof result !== 'object') break;
+      result = (result as Record<string, unknown>)[k];
     }
 
-    return result || key;
+    return (result as string) || key;
   };
 
   return (

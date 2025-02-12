@@ -1,0 +1,1 @@
+newTranslations[lang] = await import(`./langs/${lang}/common.json`).then(m => m.default); 
