@@ -13,4 +13,6 @@ frontend:
       - '**/*'
   cache:
     paths:
-      - node_modules/**/* 
+      - node_modules/**/*
+environment:
+  AMPLIFY_SKIP_SSM_SECRETS: true 
