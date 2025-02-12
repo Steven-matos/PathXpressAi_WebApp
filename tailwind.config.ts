@@ -77,6 +77,9 @@ const config: Config = {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
       },
+      backgroundImage: {
+        'gradient-radial': 'radial-gradient(45rem 50rem at top, var(--tw-gradient-from), var(--tw-gradient-to))',
+      },
     },
   },
   plugins: [],

@@ -25,27 +25,27 @@ export function Footer({ className }: FooterProps) {
       <h2 id="footer-heading" className="sr-only">
         Footer
       </h2>
-      <div className="mx-auto max-w-7xl px-6 pb-8 pt-16 sm:pt-24 lg:px-8">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pb-6 pt-10 sm:pt-12">
         <div className="xl:grid xl:grid-cols-2 xl:gap-8">
-          <div className="space-y-8">
-            <div className="flex items-center">
-              <div className="h-20 w-20 rounded-full overflow-hidden bg-white flex items-center justify-center">
+          <div className="space-y-4 sm:space-y-6">
+            <div className="flex justify-center sm:justify-start">
+              <div className="h-16 w-16 sm:h-20 sm:w-20 rounded-full overflow-hidden bg-white flex items-center justify-center">
                 <Image
                   src={LogoPhase1}
                   alt="Path Xpress AI Logo"
-                  width={68}
-                  height={68}
-                  className="object-contain"
+                  width={52}
+                  height={52}
+                  className="object-contain sm:w-[68px] sm:h-[68px]"
                   priority
                 />
               </div>
             </div>
           </div>
-          <div>
-            <h3 className="text-sm font-semibold leading-6 text-white">
+          <div className="mt-8 sm:mt-0">
+            <h3 className="text-sm font-semibold leading-6 text-white text-center sm:text-left">
               {t("footer.title")}
             </h3>
-            <ul role="list" className="mt-6 space-y-4">
+            <ul role="list" className="mt-4 space-y-2 sm:space-y-3 flex flex-col items-center sm:items-start">
               {navigation.company.map((item) => (
                 <li key={item.name}>
                   <Link
@@ -59,11 +59,11 @@ export function Footer({ className }: FooterProps) {
             </ul>
           </div>
         </div>
-        <div className="mt-8 border-t border-gray-700 pt-8 flex flex-col-reverse sm:flex-row justify-between items-center">
-          <p className="mt-8 text-xs leading-5 text-gray-400 sm:mt-0">
+        <div className="mt-6 border-t border-gray-700 pt-6 flex flex-col items-center sm:flex-row sm:justify-between sm:items-center">
+          <p className="text-xs leading-5 text-gray-400 text-center sm:text-left order-2 sm:order-1 mt-4 sm:mt-0">
             &copy; {new Date().getFullYear()} {t("footer.copyright")}
           </p>
-          <div className="flex items-center">
+          <div className="flex items-center order-1 sm:order-2">
             <LanguageSwitcher />
           </div>
         </div>

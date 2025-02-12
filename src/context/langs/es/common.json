@@ -58,16 +58,16 @@
     "weekly": {
       "name": "Semanal",
       "features": [
-        "Enrutamiento básico",
-        "5 actualizaciones diarias",
-        "Soporte por correo electrónico"
+        "Rutas básicas",
+        "Direcciones limitadas",
+        "Soporte por correo"
       ]
     },
     "monthly": {
       "name": "Mensual",
       "features": [
-        "Enrutamiento avanzado",
-        "Actualizaciones ilimitadas",
+        "Rutas optimizadas",
+        "Direcciones ilimitadas",
         "Soporte prioritario"
       ]
     },
@@ -76,31 +76,30 @@
       "features": [
         "Todas las funciones",
         "Soporte VIP",
-        "Gestión de equipos",
         "Acceso beta"
       ]
     }
   },
   "features": {
     "aiRouting": {
-      "title": "Enrutamiento con IA",
+      "title": "Rutas con IA",
       "description": "Análisis de tráfico en tiempo real y optimización dinámica de rutas"
     },
     "multiStop": {
-      "title": "Planificación de múltiples paradas",
+      "title": "Planificación Multi-Parada",
       "description": "Programa paradas ilimitadas con secuenciación inteligente"
     },
     "mobileSync": {
-      "title": "Sincronización móvil",
-      "description": "Integración perfecta con aplicación móvil (próximamente)"
+      "title": "Sincronización Móvil",
+      "description": "Integración perfecta con la aplicación móvil (próximamente)"
     },
     "liveUpdates": {
-      "title": "Actualizaciones en vivo",
-      "description": "Ajustes continuos de rutas basados en condiciones cambiantes"
+      "title": "Actualizaciones en Vivo",
+      "description": "Ajustes continuos de ruta basados en condiciones cambiantes"
     },
     "fleetOptimization": {
-      "title": "Optimización de rutas de flota",
-      "description": "Administra y optimiza rutas para toda la flota con programación y ajustes en tiempo real."
+      "title": "Optimización de Flota",
+      "description": "Gestiona y optimiza rutas para flotas completas con programación basada en IA y ajustes en tiempo real. (próximamente)"
     }
   },
   "footer": {
@@ -110,18 +109,18 @@
     "copyright": "Todos los derechos reservados Trident Innovations & Investments LLC",
     "title": "Path Xpress AI"
   },
-  "contactTitle": "Contactanos",
-  "emailAddress": "Correo electrónico",
-  "emailPlaceholder": "Tu correo electrónico",
+  "contactTitle": "Optimicemos tus rutas",
+  "contactSubtitle": "¡Nos encantaría saber de ti! Nuestro equipo está listo para ayudarte a optimizar tus rutas de entrega y mejorar la eficiencia de tu logística.",
+  "emailAddress": "Correo Electrónico",
+  "emailPlaceholder": "tu.correo@ejemplo.com",
   "message": "Mensaje",
-  "messagePlaceholder": "Tu mensaje",
+  "messagePlaceholder": "Cuéntanos sobre tus necesidades logísticas...",
   "send": "Enviar",
   "firstName": "Nombre",
   "lastName": "Apellido",
   "lastNamePlaceholder": "Tu apellido",
   "firstNamePlaceholder": "Tu nombre",
-  "sendMessage": "Enviar mensaje",
-  "contactSubtitle": "¡Nos encantaría escucharte!",
+  "sendMessage": "Enviar Mensaje",
   "termsTitle": "Términos y Condiciones",
   "termsSections": {
     "acceptanceOfTerms": "Aceptación de los Términos",
@@ -276,5 +275,10 @@
     "nameLength": "El nombre debe tener al menos 2 caracteres",
     "addressLength": "Por favor ingrese una dirección válida",
     "passwordMismatch": "Las contraseñas no coinciden"
-  }
+  },
+  "emailUs": "Envíanos un correo",
+  "emailResponse": "Responderemos dentro de 24 horas",
+  "liveChat": "Chat en vivo",
+  "chatAvailability": "Nuestro equipo está disponible Lun-Vie, 9am-6pm EST",
+  "startChat": "Iniciar conversación"
 }

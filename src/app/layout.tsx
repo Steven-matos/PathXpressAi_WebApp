@@ -3,11 +3,13 @@ import { Inter } from "next/font/google";
 import { TranslationProvider } from "@/context/TranslationContext";
 import { ReduxProvider } from "@/providers/redux-provider";
 import { AuthProvider } from "@/hooks/auth-context";
+import { Metadata } from 'next'
 
 
 const inter = Inter({ subsets: ["latin"] });
 
-export const metadata = {
+export const metadata: Metadata = {
+  metadataBase: new URL(process.env.NEXT_PUBLIC_BASE_URL || 'https://pathxpressai.com'),
   title: {
     default: "Path Xpress Ai - AI-Powered Route Optimization",
     template: "%s | Path Xpress Ai",

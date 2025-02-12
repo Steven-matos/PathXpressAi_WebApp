@@ -57,18 +57,17 @@
   "plans": {
     "weekly": {
       "name": "Weekly",
-      "features": ["Basic routing", "5 daily updates", "Email support"]
+      "features": ["Basic routing", "limited Addresses", "Email support"]
     },
     "monthly": {
       "name": "Monthly",
-      "features": ["Advanced routing", "Unlimited updates", "Priority support"]
+      "features": ["Optimized routing", "Unlimited Addresses", "Priority support"]
     },
     "yearly": {
       "name": "Yearly",
       "features": [
         "Full features",
         "VIP support",
-        "Team management",
         "Beta access"
       ]
     }
@@ -92,7 +91,7 @@
     },
     "fleetOptimization": {
       "title": "Fleet Route Optimization",
-      "description": "Efficiently manage and optimize routes for entire fleets with AI-powered scheduling and real-time adjustments."
+      "description": "Efficiently manage and optimize routes for entire fleets with AI-powered scheduling and real-time adjustments. (coming soon)"
     }
   },
   "footer": {
@@ -102,18 +101,18 @@
     "copyright": "All Rights Reserved Trident Innovations & Investments LLC",
     "title": "Path Xpress Ai"
   },
-  "contactTitle": "Contact Us",
+  "contactTitle": "Let's optimize your routes",
+  "contactSubtitle": "We'd love to hear from you! Our team is ready to help optimize your delivery routes and improve your logistics efficiency.",
   "emailAddress": "Email Address",
-  "emailPlaceholder": "Your email address",
+  "emailPlaceholder": "your.email@example.com",
   "message": "Message",
-  "messagePlaceholder": "Your message",
+  "messagePlaceholder": "Tell us about your logistics needs...",
   "send": "Send",
   "firstName": "First Name",
   "lastName": "Last Name",
   "lastNamePlaceholder": "Your last name",
   "firstNamePlaceholder": "Your first name",
   "sendMessage": "Send Message",
-  "contactSubtitle": "We'd love to hear from you!",
   "termsTitle": "Terms and Conditions",
   "termsSections": {
     "acceptanceOfTerms": "Acceptance of Terms",
