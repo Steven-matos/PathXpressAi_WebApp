@@ -3,11 +3,6 @@
 import { cn } from "@/lib/utils";
 import { useTranslation } from "@/context/TranslationContext";
 
-interface LegalContent {
-  title: string;
-  content: string[];
-}
-
 interface LegalSectionProps {
   content: string;
 }
