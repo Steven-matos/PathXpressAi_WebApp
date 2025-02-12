@@ -9,7 +9,7 @@ export function LanguageSwitcher() {
     setMounted(true); // Indicates component is mounted
   }, []);
 
-  if (!mounted) {
+  if (!mounted) {    
     return null; // Return placeholder during SSR
   }
 
@@ -18,5 +18,11 @@ export function LanguageSwitcher() {
   
   return (
     // Render based on preferredLang
+    <div>
+      <button onClick={() => {
+        document.cookie = 'preferred_language=en; path=/';
+        window.location.reload();
+      }}>English</button>
+    </div>
   );
 } 
