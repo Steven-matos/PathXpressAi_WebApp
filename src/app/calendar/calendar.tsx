@@ -1,6 +1,6 @@
 "use client";
 import { TranslationProvider } from "../../context/TranslationContext";
-import Calendar from "../../components/page-components/Calendar";
+import { Calendar } from "../../components/page-components/Calendar";
 import Navigation from "../../components/Navigation";
 import { ReduxProvider } from "@/providers/redux-provider";
 
