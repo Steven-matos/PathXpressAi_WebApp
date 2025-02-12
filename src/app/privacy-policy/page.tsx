@@ -14,7 +14,7 @@ function PrivacyPolicyContent() {
         <h1 className="mb-8 text-3xl font-bold tracking-tight md:text-4xl underline">
           {t("privacy_policy.title")}
         </h1>
-        <LegalSection contentKey="privacy_policy" />
+        <LegalSection content="privacy_policy" />
       </main>
       <Footer />
     </div>

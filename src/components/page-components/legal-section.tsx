@@ -9,7 +9,7 @@ interface LegalContent {
 }
 
 interface LegalSectionProps {
-  content: Record<string, LegalContent>;
+  content: string;
 }
 
 interface Section {
@@ -20,7 +20,7 @@ interface Section {
 
 export function LegalSection({ content }: LegalSectionProps) {
   const { t } = useTranslation();
-  const sections = (t(content.legalContentKey) as { sections?: Section[] })?.sections || [];
+  const sections = (t(`${content}.sections`) as unknown as Section[]) || [];
 
   return (
     <div className="space-y-8">
