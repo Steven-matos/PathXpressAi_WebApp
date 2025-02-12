@@ -10,6 +10,8 @@ import React, {
 import { translationConfig } from "./translationConfig";
 import type { Translations } from './types';
 
+type Language = (typeof translationConfig.languages)[number];
+
 interface TranslationContextType {
   language: string;
   setLang: (lang: string) => void;
@@ -22,8 +24,6 @@ const TranslationContext = createContext<TranslationContextType>({
   t: (key) => key,
 });
 
-type Language = (typeof translationConfig.languages)[number];
-
 export function TranslationProvider({
   children,
 }: {
@@ -35,14 +35,28 @@ export function TranslationProvider({
   const [translations, setTranslations] = useState<Translations>({});
 
   useEffect(() => {
+    const loadTranslations = async () => {
+      try {
+        const newTranslations: Translations = {};
+        for (const lang of translationConfig.languages) {
+          const module = await import(`./langs/${lang}/common.json`);
+          newTranslations[lang] = module.default;
+        }
+        setTranslations(newTranslations);
+      } catch (error) {
+        console.error('Failed to load translations:', error);
+      }
+    };
+    loadTranslations();
+  }, []);
+
+  useEffect(() => {
     if (typeof window === "undefined") return;
 
-    // Sync with Redux store
     const savedLang = localStorage.getItem("preferredLang");
     const initialLang = savedLang || translationConfig.defaultLanguage;
-    setLang(initialLang);
+    setLang(initialLang as Language);
 
-    // Set cookie for server-side consistency
     document.cookie = `preferredLang=${initialLang}; path=/; max-age=31536000`;
   }, []);
 
@@ -52,17 +66,6 @@ export function TranslationProvider({
       document.cookie = `preferredLang=${language}; path=/; max-age=31536000`;
     }
   }, [language]);
-
-  useEffect(() => {
-    const loadTranslations = async () => {
-      const newTranslations: Translations = {};
-      for (const lang of translationConfig.languages) {
-        newTranslations[lang] = (await import(`./langs/${lang}/common.json`)).default;
-      }
-      setTranslations(newTranslations);
-    };
-    loadTranslations();
-  }, []);
 
   const t = (key: string): string => {
     const keys = key.split(".");
