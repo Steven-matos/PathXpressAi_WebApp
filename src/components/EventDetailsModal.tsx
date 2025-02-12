@@ -1,7 +1,22 @@
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { Button } from "@/components/ui/button"
 
-export default function EventDetailsModal({ isOpen, onClose, event }) {
+interface Event {
+  id: string;
+  title: string;
+  start: Date;
+  end: Date;
+  address: string;
+  date: Date;
+}
+
+interface EventDetailsModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  event: Event | null;
+}
+
+export default function EventDetailsModal({ isOpen, onClose, event }: EventDetailsModalProps) {
   if (!event) return null
 
   return (
