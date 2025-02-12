@@ -9,7 +9,7 @@ import { Metadata } from 'next'
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  metadataBase: new URL(process.env.NEXT_PUBLIC_BASE_URL || 'https://pathxpressai.com'),
+  metadataBase: new URL('https://pathxpressai.com'),
   title: {
     default: "Path Xpress Ai - AI-Powered Route Optimization",
     template: "%s | Path Xpress Ai",
@@ -63,6 +63,10 @@ export default function RootLayout({
             <ReduxProvider>{children}</ReduxProvider>
           </TranslationProvider>
         </AuthProvider>
+        <meta
+          property="og:image"
+          content={`https://pathxpressai.com/og-image.jpg`}
+        />
       </body>
     </html>
   );
