@@ -40,7 +40,7 @@ export function TranslationProvider({
         const newTranslations: Translations = {};
         for (const lang of translationConfig.languages) {
           const translationModule = await import(`./langs/${lang}/common.json`);
-          newTranslations[lang] = translationModule.default;
+          newTranslations[lang] = translationModule.default || 'en';
         }
         setTranslations(newTranslations);
       } catch (error) {
