@@ -7,24 +7,17 @@ import {
   DialogHeader,
   DialogTitle,
   DialogFooter,
-} from "./ui/dialog";
-import { Button } from "./ui/button";
-import { Input } from "./ui/input";
-import { Label } from "./ui/label";
-import { useTranslation } from "../context/TranslationContext";
+} from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { useTranslation } from "@/context/TranslationContext";
+import type { CalendarEvent } from "@/types/calendar";
 
 interface AddRouteModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onAddRoute: (event: {
-    title: string;
-    start: Date;
-    end: Date;
-    street: string;
-    city: string;
-    state: string;
-    zip: string;
-  }) => void;
+  onAddRoute: (event: Omit<CalendarEvent, 'id' | 'address' | 'date'>) => void;
   defaultDate: Date;
 }
 
@@ -36,37 +29,55 @@ export default function AddRouteModal({
 }: AddRouteModalProps) {
   const { t } = useTranslation();
 
-  const [title, setTitle] = useState("");
-  const [start, setStart] = useState("");
-  const [end, setEnd] = useState("");
-  const [date, setDate] = useState(defaultDate.toISOString().split("T")[0]);
-  const [street, setStreet] = useState("");
-  const [city, setCity] = useState("");
-  const [state, setState] = useState("");
-  const [zip, setZip] = useState("");
+  const [formData, setFormData] = useState({
+    title: "",
+    start: "",
+    end: "",
+    date: defaultDate.toISOString().split("T")[0],
+    street: "",
+    city: "",
+    state: "",
+    zip: "",
+  });
 
   useEffect(() => {
-    setDate(defaultDate.toISOString().split("T")[0]);
+    setFormData(prev => ({
+      ...prev,
+      date: defaultDate.toISOString().split("T")[0]
+    }));
   }, [defaultDate]);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     onAddRoute({
-      title,
-      start: new Date(`${date}T${start}`),
-      end: new Date(`${date}T${end}`),
-      street,
-      city,
-      state,
-      zip,
+      title: formData.title,
+      start: new Date(`${formData.date}T${formData.start}`),
+      end: new Date(`${formData.date}T${formData.end}`),
+      street: formData.street,
+      city: formData.city,
+      state: formData.state,
+      zip: formData.zip,
     });
-    setTitle("");
-    setStart("");
-    setEnd("");
-    setStreet("");
-    setCity("");
-    setState("");
-    setZip("");
+    
+    setFormData({
+      title: "",
+      start: "",
+      end: "",
+      date: defaultDate.toISOString().split("T")[0],
+      street: "",
+      city: "",
+      state: "",
+      zip: "",
+    });
+    onClose();
+  };
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { id, value } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [id]: value
+    }));
   };
 
   return (
@@ -80,8 +91,8 @@ export default function AddRouteModal({
             <Label htmlFor="title">{t("title")}</Label>
             <Input
               id="title"
-              value={title}
-              onChange={(e) => setTitle(e.target.value)}
+              value={formData.title}
+              onChange={handleChange}
               required
             />
           </div>
@@ -90,8 +101,8 @@ export default function AddRouteModal({
             <Input
               id="date"
               type="date"
-              value={date}
-              onChange={(e) => setDate(e.target.value)}
+              value={formData.date}
+              onChange={handleChange}
               required
             />
           </div>
@@ -100,8 +111,8 @@ export default function AddRouteModal({
             <Input
               id="start"
               type="time"
-              value={start}
-              onChange={(e) => setStart(e.target.value)}
+              value={formData.start}
+              onChange={handleChange}
               required
             />
           </div>
@@ -110,8 +121,8 @@ export default function AddRouteModal({
             <Input
               id="end"
               type="time"
-              value={end}
-              onChange={(e) => setEnd(e.target.value)}
+              value={formData.end}
+              onChange={handleChange}
               required
             />
           </div>
@@ -119,8 +130,8 @@ export default function AddRouteModal({
             <Label htmlFor="street">{t("street")}</Label>
             <Input
               id="street"
-              value={street}
-              onChange={(e) => setStreet(e.target.value)}
+              value={formData.street}
+              onChange={handleChange}
               required
             />
           </div>
@@ -128,8 +139,8 @@ export default function AddRouteModal({
             <Label htmlFor="city">{t("city")}</Label>
             <Input
               id="city"
-              value={city}
-              onChange={(e) => setCity(e.target.value)}
+              value={formData.city}
+              onChange={handleChange}
               required
             />
           </div>
@@ -137,8 +148,8 @@ export default function AddRouteModal({
             <Label htmlFor="state">{t("state")}</Label>
             <Input
               id="state"
-              value={state}
-              onChange={(e) => setState(e.target.value)}
+              value={formData.state}
+              onChange={handleChange}
               required
             />
           </div>
@@ -146,8 +157,8 @@ export default function AddRouteModal({
             <Label htmlFor="zip">{t("zip")}</Label>
             <Input
               id="zip"
-              value={zip}
-              onChange={(e) => setZip(e.target.value)}
+              value={formData.zip}
+              onChange={handleChange}
               required
             />
           </div>
