@@ -34,11 +34,10 @@ export function TranslationProvider({
   );
   const [translations, setTranslations] = useState<Translations>({});
 
-  const newTranslations: Translations = {};
-
   useEffect(() => {
     const loadTranslations = async () => {
       try {
+        const newTranslations: Translations = {};
         for (const lang of translationConfig.languages) {
           const translationModule = await import(`./langs/${lang}/common.json`);
           newTranslations[lang] = translationModule.default || { error: 'Translation not found' };
