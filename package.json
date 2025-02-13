@@ -8,8 +8,7 @@
     "start": "next start",
     "lint": "next lint",
     "test": "jest",
-    "test:coverage": "jest --coverage",
-    "preinstall": "npx npm-force-resolutions"
+    "test:coverage": "jest --coverage"
   },
   "dependencies": {
     "@eslint/eslintrc": "^3.2.0",
@@ -86,11 +85,5 @@
     "postcss": "8.4.35",
     "tailwindcss": "^3.4.17",
     "typescript": "^5"
-  },
-  "resolutions": {
-    "inflight": "2.0.0",
-    "glob": "10.3.10",
-    "abab": "2.0.6",
-    "domexception": "5.0.0"
   }
 }
