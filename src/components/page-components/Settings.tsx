@@ -10,7 +10,7 @@ import { useTranslation } from "../../context/TranslationContext";
 export default function Settings() {
   const dispatch = useDispatch();
   const username = useSelector((state: RootState) => state.user.name);
-  const lang = useSelector((state: RootState) => state.language.lang);
+  const lang = useSelector((state: RootState) => state.language.currentLang);
   const { t, setLang } = useTranslation();
 
   const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
