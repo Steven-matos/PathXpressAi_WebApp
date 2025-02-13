@@ -10,18 +10,27 @@ export const useLocalizedContent = () => {
     let result = translations[currentLang];
     
     for (const k of keys) {
-      if (!result) break;
+      if (!result) {
+        return key;
+      }
       const arrayMatch = k.match(/(\w+)\[(\d+)\]/);
       
       if (arrayMatch) {
-        const [, prop, index] = arrayMatch;
-        result = result[prop]?.[parseInt(index)];
+        const [, prop, indexStr] = arrayMatch;
+        const index = indexStr ? parseInt(indexStr) : 0;
+        const obj = result as Record<string, any>;
+        const propVal = obj[prop as keyof typeof obj];
+        if (Array.isArray(propVal)) {
+          result = propVal[index] ?? propVal[0];
+        } else {
+          result = undefined;
+        }
       } else {
-        result = result[k];
+        result = (result as Record<string, any>)[k];
       }
     }
     
-    return result || key;
+    return result !== undefined ? String(result) : key;
   };
 
   return { t, currentLang };
