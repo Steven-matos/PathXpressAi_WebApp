@@ -88,9 +88,9 @@
     "typescript": "^5"
   },
   "resolutions": {
-    "inflight": "^2.0.0",
-    "glob": "^10.3.10",
-    "abab": "^2.0.6",
-    "domexception": "^5.0.0"
+    "inflight": "2.0.0",
+    "glob": "10.3.10",
+    "abab": "2.0.6",
+    "domexception": "5.0.0"
   }
 }
