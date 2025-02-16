@@ -55,21 +55,25 @@
   "teamManagement": "Team management",
   "betaAccess": "Beta access",
   "plans": {
+    "free": {
+      "name": "Free",
+      "features": ["Basic routing", "limited Addresses", "Email support"]
+    },
     "weekly": {
       "name": "Weekly",
       "features": ["Basic routing", "limited Addresses", "Email support"]
     },
     "monthly": {
       "name": "Monthly",
-      "features": ["Optimized routing", "Unlimited Addresses", "Priority support"]
+      "features": [
+        "Optimized routing",
+        "Unlimited Addresses",
+        "Priority support"
+      ]
     },
     "yearly": {
       "name": "Yearly",
-      "features": [
-        "Full features",
-        "VIP support",
-        "Beta access"
-      ]
+      "features": ["Full features", "VIP support", "Beta access"]
     }
   },
   "features": {
@@ -266,5 +270,6 @@
     "nameLength": "Name must be at least 2 characters",
     "addressLength": "Please enter a valid address",
     "passwordMismatch": "Passwords do not match"
-  }
+  },
+  "comingSoon": "Coming Soon"
 }

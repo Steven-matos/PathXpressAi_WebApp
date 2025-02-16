@@ -3,13 +3,13 @@ import { Inter } from "next/font/google";
 import { TranslationProvider } from "@/context/TranslationContext";
 import { ReduxProvider } from "@/providers/redux-provider";
 import { AuthProvider } from "@/hooks/auth-context";
-import { Metadata } from 'next'
-
+import { Metadata } from "next";
+import { Toaster } from "@/components/ui/toaster";
 
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  metadataBase: new URL('https://pathxpressai.com'),
+  metadataBase: new URL("https://pathxpressai.com"),
   title: {
     default: "Path Xpress Ai - AI-Powered Route Optimization",
     template: "%s | Path Xpress Ai",
@@ -63,6 +63,7 @@ export default function RootLayout({
             <ReduxProvider>{children}</ReduxProvider>
           </TranslationProvider>
         </AuthProvider>
+        <Toaster />
         <meta
           property="og:image"
           content={`https://pathxpressai.com/og-image.jpg`}

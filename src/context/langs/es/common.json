@@ -55,6 +55,14 @@
   "teamManagement": "Gestión de equipos",
   "betaAccess": "Acceso beta",
   "plans": {
+    "free": {
+      "name": "Gratuito",
+      "features": [
+        "Rutas básicas",
+        "Direcciones limitadas",
+        "Soporte por correo"
+      ]
+    },
     "weekly": {
       "name": "Semanal",
       "features": [
@@ -73,11 +81,7 @@
     },
     "yearly": {
       "name": "Anual",
-      "features": [
-        "Todas las funciones",
-        "Soporte VIP",
-        "Acceso beta"
-      ]
+      "features": ["Todas las funciones", "Soporte VIP", "Acceso beta"]
     }
   },
   "features": {
@@ -280,5 +284,6 @@
   "emailResponse": "Responderemos dentro de 24 horas",
   "liveChat": "Chat en vivo",
   "chatAvailability": "Nuestro equipo está disponible Lun-Vie, 9am-6pm EST",
-  "startChat": "Iniciar conversación"
+  "startChat": "Iniciar conversación",
+  "comingSoon": "Próximamente"
 }

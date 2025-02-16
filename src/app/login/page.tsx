@@ -4,18 +4,41 @@ import { Suspense } from "react";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { useTranslation } from "@/context/TranslationContext";
 import Link from "next/link";
+import { useToast } from "@/hooks/use-toast";
 
 export default function LoginPage() {
   const { t } = useTranslation();
+  const { toast } = useToast();
+
+  const handleSignupClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    toast({
+      title: "Product Not Live",
+      description:
+        "Product not live yet. Feel free to reach out via email for any questions.",
+      duration: 5000,
+    });
+  };
+
   return (
     <div className="min-h-screen flex flex-col">
       <div className="flex-1 flex">
-        {/* Left side with background */}
-        <div className="hidden md:block w-1/2 bg-gradient-to-r from-blue-600 to-indigo-600">
-          <div className="h-full flex items-center justify-center p-12">
-            <div className="text-white space-y-4">
-              <h2 className="text-4xl font-bold">{t("login.title")}</h2>
-              <p className="text-xl opacity-90">
+        {/* Left side with background image */}
+        <div className="hidden md:block w-1/2 relative">
+          <div
+            className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+            style={{ backgroundImage: 'url("/gps.jpg")' }}
+          />
+          <div className="absolute inset-0 backdrop-blur-sm" />
+          <div className="relative h-full flex items-center justify-center p-12">
+            <div className="text-white space-y-6">
+              <h2
+                className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold text-accent 
+                             [text-shadow:_0_1px_12px_rgb(0_0_0_/_40%)] mb-4"
+              >
+                {t("login.title")}
+              </h2>
+              <p className="text-xl opacity-90 leading-relaxed max-w-lg">
                 {t("login.description")}
               </p>
             </div>
@@ -23,10 +46,10 @@ export default function LoginPage() {
         </div>
 
         {/* Right side with card */}
-        <div className="w-full md:w-1/2 flex items-center justify-center p-4">
-          <Card className="w-full max-w-md shadow-xl rounded-2xl">
-            <CardHeader>
-              <CardTitle className="text-2xl font-bold text-center">
+        <div className="w-full md:w-1/2 flex items-center justify-center p-8 bg-gray-50/50">
+          <Card className="w-full max-w-md shadow-2xl rounded-2xl border-0">
+            <CardHeader className="space-y-2">
+              <CardTitle className="text-3xl font-bold text-center">
                 {t("login.signIn")}
               </CardTitle>
             </CardHeader>
@@ -35,8 +58,12 @@ export default function LoginPage() {
                 <AuthForm mode="login" />
               </Suspense>
               <div className="text-center text-sm mt-4">
-                {t("dontHaveAccount")}{' '}
-                <Link href="/signup" className="text-accent hover:text-accent-dark font-medium">
+                {t("dontHaveAccount")}{" "}
+                <Link
+                  href="#"
+                  className="text-accent hover:text-accent-dark font-medium"
+                  onClick={handleSignupClick}
+                >
                   {t("signUp")}
                 </Link>
               </div>
@@ -46,4 +73,4 @@ export default function LoginPage() {
       </div>
     </div>
   );
-} 
+}

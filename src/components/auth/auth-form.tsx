@@ -5,37 +5,50 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { Button } from "@/components/ui/button";
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { useAuth } from "@/hooks/auth-context";
 import { useTranslation } from "@/context/TranslationContext";
+import { useToast } from "@/hooks/use-toast";
 
 const loginSchema = z.object({
   email: z.string().email("Invalid email address"),
   password: z.string().min(8, "Password must be at least 8 characters"),
 });
 
-const signupSchema = loginSchema.extend({
-  name: z.string().min(2, "Name must be at least 2 characters"),
-  address: z.string().min(5, "Please enter a valid street address"),
-  city: z.string().min(2, "Please enter a valid city"),
-  state: z.string().length(2, "State must be 2-letter abbreviation"),
-  zip: z.string().regex(/^\d{5}$/, "ZIP must be 5 digits"),
-  language: z.enum(["en", "es"]),
-  confirmPassword: z.string().min(8, "Confirm Password must be at least 8 characters"),
-}).refine(data => data.password === data.confirmPassword, {
-  message: "Passwords do not match",
-  path: ["confirmPassword"]
-});
+const signupSchema = loginSchema
+  .extend({
+    name: z.string().min(2, "Name must be at least 2 characters"),
+    address: z.string().min(5, "Please enter a valid street address"),
+    city: z.string().min(2, "Please enter a valid city"),
+    state: z.string().length(2, "State must be 2-letter abbreviation"),
+    zip: z.string().regex(/^\d{5}$/, "ZIP must be 5 digits"),
+    language: z.enum(["en", "es"]),
+    confirmPassword: z
+      .string()
+      .min(8, "Confirm Password must be at least 8 characters"),
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    message: "Passwords do not match",
+    path: ["confirmPassword"],
+  });
 
 interface AuthFormProps {
   mode: "login" | "signup";
 }
 
 export function AuthForm({ mode }: AuthFormProps) {
-  const { t, language  } = useTranslation();
+  const { t, language } = useTranslation();
   const router = useRouter();
   const { setToken } = useAuth();
+  const { toast } = useToast();
 
   type FormValues = z.infer<typeof loginSchema | typeof signupSchema>;
 
@@ -51,26 +64,36 @@ export function AuthForm({ mode }: AuthFormProps) {
         city: "",
         state: "",
         zip: "",
-        language: "en"
-      })
+        language: "en",
+      }),
     },
   });
 
   async function onSubmit(values: FormValues) {
+    if (mode === "signup") {
+      toast({
+        title: "Product Not Live",
+        description:
+          "Product not live yet. Feel free to reach out via email for any questions.",
+        duration: 5000,
+      });
+      return;
+    }
+
     try {
-      const endpoint = mode === "login" ? "login" : "user";
+      const endpoint = "login";
       const body = {
         email: values.email,
         password: values.password,
-        name: (values as z.infer<typeof signupSchema>).name,
-        homeBase: `${(values as z.infer<typeof signupSchema>).address}, ${(values as z.infer<typeof signupSchema>).city}, ${(values as z.infer<typeof signupSchema>).state} ${(values as z.infer<typeof signupSchema>).zip}`,
-        language: 'en'
       };
-      const response = await fetch(`https://2p74yk9yn0.execute-api.us-east-1.amazonaws.com/v1/${endpoint}`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(body),
-      });
+      const response = await fetch(
+        `https://2p74yk9yn0.execute-api.us-east-1.amazonaws.com/v1/${endpoint}`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(body),
+        }
+      );
 
       if (!response.ok) throw new Error("Authentication failed");
 
@@ -78,7 +101,10 @@ export function AuthForm({ mode }: AuthFormProps) {
       setToken(data.apiKey);
       router.push("/dashboard");
     } catch (error) {
-      form.setError("root", { message: error instanceof Error ? error.message : "Authentication error" });
+      form.setError("root", {
+        message:
+          error instanceof Error ? error.message : "Authentication error",
+      });
     }
   }
 
@@ -175,7 +201,10 @@ export function AuthForm({ mode }: AuthFormProps) {
                 <FormItem>
                   <FormLabel>{t("signup.address")}</FormLabel>
                   <FormControl>
-                    <Input placeholder={t("signup.addressPlaceholder")} {...field} />
+                    <Input
+                      placeholder={t("signup.addressPlaceholder")}
+                      {...field}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -188,7 +217,10 @@ export function AuthForm({ mode }: AuthFormProps) {
                 <FormItem>
                   <FormLabel>{t("signup.city")}</FormLabel>
                   <FormControl>
-                    <Input placeholder={t("signup.cityPlaceholder")} {...field} />
+                    <Input
+                      placeholder={t("signup.cityPlaceholder")}
+                      {...field}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -202,7 +234,10 @@ export function AuthForm({ mode }: AuthFormProps) {
                   <FormItem>
                     <FormLabel>{t("signup.state")}</FormLabel>
                     <FormControl>
-                      <Input placeholder={t("signup.statePlaceholder")} {...field} />
+                      <Input
+                        placeholder={t("signup.statePlaceholder")}
+                        {...field}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -215,7 +250,10 @@ export function AuthForm({ mode }: AuthFormProps) {
                   <FormItem>
                     <FormLabel>{t("signup.zip")}</FormLabel>
                     <FormControl>
-                      <Input placeholder={t("signup.zipPlaceholder")} {...field} />
+                      <Input
+                        placeholder={t("signup.zipPlaceholder")}
+                        {...field}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -240,10 +278,14 @@ export function AuthForm({ mode }: AuthFormProps) {
             {form.formState.errors.root.message}
           </p>
         )}
-        <Button type="submit" className="w-full bg-blue-500 hover:bg-blue-600 text-white" disabled={form.formState.isSubmitting}>
+        <Button
+          type="submit"
+          className="w-full bg-primary hover:bg-accent text-white"
+          disabled={form.formState.isSubmitting}
+        >
           {mode === "login" ? t("login.signIn") : t("signUp")}
         </Button>
       </form>
     </Form>
   );
-} 
+}
