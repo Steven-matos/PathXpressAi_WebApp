@@ -71,6 +71,7 @@ export function AuthForm({ mode }: AuthFormProps) {
 
   async function onSubmit(values: FormValues) {
     if (mode === "signup") {
+      // Show toast for now since signup is disabled
       toast({
         title: "Product Not Live",
         description:
@@ -78,28 +79,111 @@ export function AuthForm({ mode }: AuthFormProps) {
         duration: 5000,
       });
       return;
+
+      /* Commented out signup implementation for future use
+      try {
+        // Create user
+        const userResponse = await fetch(
+          `https://2p74yk9yn0.execute-api.us-east-1.amazonaws.com/v1/user`,
+          {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              email: values.email,
+              name: values.name,
+              preferences: {
+                routeOptimization: "FASTEST",
+                language: values.language,
+              },
+              homeBase: `${values.address}, ${values.city}, ${values.state} ${values.zip}`,
+            }),
+          }
+        );
+
+        if (!userResponse.ok) throw new Error("Failed to create user");
+
+        // After successful signup, authenticate user
+        const loginResponse = await fetch(
+          `https://2p74yk9yn0.execute-api.us-east-1.amazonaws.com/v1/login`,
+          {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              email: values.email,
+              password: values.password,
+            }),
+          }
+        );
+
+        if (!loginResponse.ok) throw new Error("Authentication failed");
+        const loginData = await loginResponse.json();
+
+        // Generate API key for the new user
+        const apiKeyResponse = await fetch(
+          `https://2p74yk9yn0.execute-api.us-east-1.amazonaws.com/v1/api-keys`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${loginData.token}`,
+            },
+          }
+        );
+
+        if (!apiKeyResponse.ok) throw new Error("Failed to generate API key");
+        const apiKeyData = await apiKeyResponse.json();
+
+        // Set the API key in auth context
+        setToken(apiKeyData.apiKey);
+
+        // Navigate to dashboard with user ID
+        router.push(`/dashboard/${loginData.userId}`);
+      } catch (error) {
+        form.setError("root", {
+          message: error instanceof Error ? error.message : "Signup error",
+        });
+      }
+      */
     }
 
+    // Login flow
     try {
-      const endpoint = "login";
-      const body = {
-        email: values.email,
-        password: values.password,
-      };
-      const response = await fetch(
-        `https://2p74yk9yn0.execute-api.us-east-1.amazonaws.com/v1/${endpoint}`,
+      // First, authenticate user
+      const loginResponse = await fetch(
+        `https://2p74yk9yn0.execute-api.us-east-1.amazonaws.com/v1/login`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(body),
+          body: JSON.stringify({
+            email: values.email,
+            password: values.password,
+          }),
         }
       );
 
-      if (!response.ok) throw new Error("Authentication failed");
+      if (!loginResponse.ok) throw new Error("Authentication failed");
+      const loginData = await loginResponse.json();
 
-      const data = await response.json();
-      setToken(data.apiKey);
-      router.push("/dashboard");
+      // Generate API key for the authenticated user
+      const apiKeyResponse = await fetch(
+        `https://2p74yk9yn0.execute-api.us-east-1.amazonaws.com/v1/api-keys`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${loginData.token}`,
+          },
+        }
+      );
+
+      if (!apiKeyResponse.ok) throw new Error("Failed to generate API key");
+      const apiKeyData = await apiKeyResponse.json();
+
+      // Set the API key in auth context
+      setToken(apiKeyData.apiKey);
+
+      // Navigate to dashboard with user ID
+      router.push(`/dashboard/${loginData.userId}`);
     } catch (error) {
       form.setError("root", {
         message:
