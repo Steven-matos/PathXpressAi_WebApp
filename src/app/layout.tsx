@@ -49,6 +49,10 @@ export const metadata: Metadata = {
     "fuel cost reduction",
     "smart scheduling",
   ],
+  icons: {
+    icon: '/assets/favicons/favicon.ico',
+    apple: '/assets/images/apple-icon.png',
+  },
   openGraph: {
     title: "Path Xpress Ai - Intelligent Route Planning",
     description:
@@ -57,7 +61,7 @@ export const metadata: Metadata = {
     siteName: "Path Xpress Ai",
     images: [
       {
-        url: "/og-image.jpg",
+        url: "/assets/images/og-image.jpg",
         width: 1200,
         height: 630,
       },
@@ -70,7 +74,7 @@ export const metadata: Metadata = {
     title: "Path Xpress Ai - Smart Logistics Solution",
     description:
       "Transform your delivery routes with AI-powered real-time optimization",
-    images: ["/twitter-image.jpg"],
+    images: ["/assets/images/twitter-image.jpg"],
   },
 };
 
@@ -83,6 +87,8 @@ export default function RootLayout({
     <html lang="en">
       <head>
         <meta name="apple-mobile-web-app-title" content="Path Xpress Ai" />
+        <link rel="apple-touch-icon" href="/assets/images/apple-icon.png" />
+        <link rel="icon" href="/assets/favicons/favicon.ico" />
         {/* Add the language detector script */}
         <script dangerouslySetInnerHTML={{ __html: languageDetectorScript }} />
       </head>
@@ -97,7 +103,7 @@ export default function RootLayout({
         <Toaster />
         <meta
           property="og:image"
-          content={`https://pathxpressai.com/og-image.jpg`}
+          content={`https://pathxpressai.com/assets/images/og-image.jpg`}
         />
       </body>
     </html>

@@ -5,7 +5,7 @@ import Link from "next/link";
 import { EnvelopeIcon } from "@heroicons/react/24/outline";
 import { useResponsiveVideo } from "@/hooks/useResponsiveVideo";
 import Image from "next/image";
-import DriverPhone from "../../../public/driver-phone.jpg";
+import DriverPhone from "../../../public/assets/images/driver-phone.jpg";
 import { useToast } from "@/hooks/use-toast";
 
 export function Home() {
@@ -78,7 +78,7 @@ export function Home() {
               loop
               playsInline
               className="object-cover w-full h-full"
-              poster="/video-poster.jpg"
+              poster="/assets/images/video-poster.jpg"
               preload="metadata"
             >
               <source src={videoSources.webm} type="video/webm" />
@@ -486,7 +486,7 @@ export function Home() {
             "@type": "Organization",
             name: "Path Xpress Ai",
             url: process.env["NEXT_PUBLIC_BASE_URL"],
-            logo: `${process.env["NEXT_PUBLIC_BASE_URL"]}/logo.png`,
+            logo: `${process.env["NEXT_PUBLIC_BASE_URL"]}/assets/images/logo.png`,
             description: "AI-powered route optimization platform",
             sameAs: [
               "https://twitter.com/pathxpressai",
