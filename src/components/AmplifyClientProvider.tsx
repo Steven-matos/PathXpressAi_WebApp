@@ -3,6 +3,7 @@
 import { useEffect } from 'react';
 import { configureAmplify } from '@/lib/amplifyConfig';
 import Script from 'next/script';
+import { preloadAllTranslations } from '@/lib/translationLoader';
 
 // Create a script to expose environment variables to client components
 const envScript = `
@@ -20,9 +21,17 @@ export default function AmplifyClientProvider({
 }: {
   children: React.ReactNode;
 }) {
-  // Initialize Amplify on component mount
+  // Initialize Amplify and preload translations on component mount
   useEffect(() => {
+    // Configure Amplify
     configureAmplify();
+    
+    // Preload translations for faster access
+    preloadAllTranslations().then(() => {
+      console.log('✅ Translations preloaded successfully');
+    }).catch(err => {
+      console.warn('⚠️ Error preloading translations:', err);
+    });
   }, []);
 
   return (

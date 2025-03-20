@@ -4,6 +4,7 @@ import { fetchAuthSession, getCurrentUser, type AuthUser } from 'aws-amplify/aut
 import { Hub } from 'aws-amplify/utils';
 import { auth } from '@/lib/authService';
 import { SignInParams, SignUpParams, ConfirmSignUpParams } from '@/lib/authService';
+import { useRouter } from 'next/navigation';
 
 interface AuthContextType {
   user: AuthUser | null;
@@ -24,6 +25,37 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [isLoading, setIsLoading] = useState(true);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [lastAuthCheck, setLastAuthCheck] = useState(Date.now());
+  const router = useRouter();
+
+  // Function to handle successful authentication
+  const handleAuthSuccess = (currentUser: AuthUser) => {
+    setUser(currentUser);
+    setIsAuthenticated(true);
+    setLastAuthCheck(Date.now());
+    
+    // Store user info in localStorage for persistence
+    try {
+      localStorage.setItem('isAuthenticated', 'true');
+      localStorage.setItem('lastAuthTime', Date.now().toString());
+      localStorage.setItem('userEmail', currentUser.username);
+      
+      // Update the URL to include user ID if we're in the browser
+      if (typeof window !== 'undefined') {
+        const currentPath = window.location.pathname;
+        if (currentPath === '/dashboard') {
+          // Only change the URL if we're on the dashboard
+          window.history.replaceState(
+            {}, 
+            '', 
+            `/dashboard/${currentUser.username}`
+          );
+        }
+      }
+    } catch (error) {
+      console.error('Error storing auth data:', error);
+      // Ignore localStorage errors (might be in incognito mode)
+    }
+  };
 
   useEffect(() => {
     // Check for existing authenticated user
@@ -38,6 +70,14 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         case 'signedOut':
           setUser(null);
           setIsAuthenticated(false);
+          // Clear stored auth data
+          try {
+            localStorage.removeItem('isAuthenticated');
+            localStorage.removeItem('lastAuthTime');
+            localStorage.removeItem('userEmail');
+          } catch (error) {
+            // Ignore localStorage errors
+          }
           break;
         case 'tokenRefresh':
           // Token has been refreshed, re-check auth state
@@ -82,18 +122,46 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   async function checkAuthState() {
     setIsLoading(true);
     try {
+      // First check localStorage for quick UI response
+      const isStoredAuthenticated = localStorage.getItem('isAuthenticated') === 'true';
+      const lastAuthTime = parseInt(localStorage.getItem('lastAuthTime') || '0', 10);
+      const isRecentAuth = Date.now() - lastAuthTime < 24 * 60 * 60 * 1000; // 24 hours
+      
+      if (isStoredAuthenticated && isRecentAuth) {
+        // Temporarily set authenticated for better UX while we verify with Amplify
+        setIsAuthenticated(true);
+      }
+      
       // Check if there's an authenticated user
       const currentUser = await getCurrentUser();
-      setUser(currentUser);
-      setIsAuthenticated(true);
+      
+      // User is authenticated, update state
+      handleAuthSuccess(currentUser);
       
       // Fetch the session to make sure it's valid
       await fetchAuthSession();
-      setLastAuthCheck(Date.now());
+      
+      // Update URL if we're on dashboard (this ensures URL is updated after page refresh)
+      if (typeof window !== 'undefined' && window.location.pathname === '/dashboard') {
+        window.history.replaceState(
+          {}, 
+          '', 
+          `/dashboard/${currentUser.username}`
+        );
+      }
     } catch (err) {
       console.log('Auth check error:', err);
       setUser(null);
       setIsAuthenticated(false);
+      
+      // Clear stored auth data
+      try {
+        localStorage.removeItem('isAuthenticated');
+        localStorage.removeItem('lastAuthTime');
+        localStorage.removeItem('userEmail');
+      } catch (storageError) {
+        // Ignore localStorage errors
+      }
       
       // If this is an error related to an existing session, try to sign out cleanly
       const error = err as any; // Type assertion for error properties

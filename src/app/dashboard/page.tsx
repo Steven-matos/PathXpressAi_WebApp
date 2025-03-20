@@ -18,10 +18,16 @@ export default function Dashboard() {
   const router = useRouter();
 
   useEffect(() => {
-    if (!isLoading && !isAuthenticated) {
-      router.push("/login");
+    if (!isLoading) {
+      if (!isAuthenticated) {
+        // Not authenticated, redirect to login
+        router.push("/login");
+      } else if (user) {
+        // Authenticated, redirect to user-specific dashboard
+        router.push(`/dashboard/${user.username}`);
+      }
     }
-  }, [isAuthenticated, isLoading, router]);
+  }, [isAuthenticated, isLoading, router, user]);
 
   if (isLoading) {
     return (
@@ -34,52 +40,11 @@ export default function Dashboard() {
     );
   }
 
-  if (!isAuthenticated) {
-    return null;
-  }
-
+  // This is just a fallback, should redirect before rendering
   return (
-    <div>
-      <Navigation />
-      <div className="container mx-auto p-6">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {/* Left Column */}
-          <div className="md:col-span-1 space-y-6">
-            <UserProfile />
-            <AmplifyStatus />
-            <CognitoTester />
-          </div>
-          
-          {/* Routes Preview */}
-          <div className="md:col-span-2 bg-secondary shadow-lg rounded-lg p-6">
-            <h1 className="text-2xl font-bold">
-              {t("welcome")}, {user?.username || username}!
-            </h1>
-            <h2 className="text-xl mt-4">{t("routesForTomorrow")}</h2>
-            {routes.length > 0 ? (
-              <table className="min-w-full mt-4">
-                <thead>
-                  <tr>
-                    <th>{t("route")}</th>
-                    <th>{t("startTime")}</th>
-                    <th>{t("endTime")}</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {routes.map((route, index) => (
-                    <tr key={index}>
-                      <td>{route.title}</td>
-                      <td>{route.start}</td>
-                      <td>{route.end}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            ) : (
-              <p className="mt-4">{t("noRoutesForTomorrow")}</p>
-            )}
-          </div>
-        </div>
+    <div className="flex items-center justify-center h-screen">
+      <div className="text-center">
+        <p>{t("redirecting")}...</p>
       </div>
     </div>
   );

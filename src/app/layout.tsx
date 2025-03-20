@@ -9,6 +9,30 @@ import AmplifyClientProvider from "@/components/AmplifyClientProvider";
 
 const inter = Inter({ subsets: ["latin"] });
 
+// Add this script to detect browser language and set it before the page loads
+const languageDetectorScript = `
+  try {
+    const getBrowserLanguage = () => {
+      const userLang = navigator.language || navigator.userLanguage;
+      return userLang.split('-')[0]; // Get primary language code
+    };
+
+    const savedLang = localStorage.getItem('preferredLang');
+    if (!savedLang) {
+      const browserLang = getBrowserLanguage();
+      const supportedLanguages = ['en', 'es'];
+      
+      // Only set if it's a supported language
+      if (supportedLanguages.includes(browserLang)) {
+        localStorage.setItem('preferredLang', browserLang);
+        document.cookie = \`preferredLang=\${browserLang}; path=/; max-age=31536000\`;
+      }
+    }
+  } catch (e) {
+    // Ignore errors in language detection
+  }
+`;
+
 export const metadata: Metadata = {
   metadataBase: new URL("https://pathxpressai.com"),
   title: {
@@ -59,6 +83,8 @@ export default function RootLayout({
     <html lang="en">
       <head>
         <meta name="apple-mobile-web-app-title" content="Path Xpress Ai" />
+        {/* Add the language detector script */}
+        <script dangerouslySetInnerHTML={{ __html: languageDetectorScript }} />
       </head>
       <body className={inter.className}>
         <AmplifyClientProvider>
