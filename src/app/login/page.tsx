@@ -4,21 +4,9 @@ import { Suspense } from "react";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { useTranslation } from "@/context/TranslationContext";
 import Link from "next/link";
-import { useToast } from "@/hooks/use-toast";
 
 export default function LoginPage() {
   const { t } = useTranslation();
-  const { toast } = useToast();
-
-  const handleSignupClick = (e: React.MouseEvent) => {
-    e.preventDefault();
-    toast({
-      title: "Product Not Live",
-      description:
-        "Product not live yet. Feel free to reach out via email for any questions.",
-      duration: 5000,
-    });
-  };
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -60,9 +48,8 @@ export default function LoginPage() {
               <div className="text-center text-sm mt-4">
                 {t("dontHaveAccount")}{" "}
                 <Link
-                  href="#"
+                  href="/signup"
                   className="text-accent hover:text-accent-dark font-medium"
-                  onClick={handleSignupClick}
                 >
                   {t("signUp")}
                 </Link>

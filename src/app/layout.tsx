@@ -2,9 +2,10 @@ import "../styles/globals.css";
 import { Inter } from "next/font/google";
 import { TranslationProvider } from "@/context/TranslationContext";
 import { ReduxProvider } from "@/providers/redux-provider";
-import { AuthProvider } from "@/hooks/auth-context";
+import { AuthProvider } from "@/context/AuthContext";
 import { Metadata } from "next";
 import { Toaster } from "@/components/ui/toaster";
+import AmplifyClientProvider from "@/components/AmplifyClientProvider";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -56,13 +57,17 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <meta name="apple-mobile-web-app-title" content="Path Xpress Ai" />
+      <head>
+        <meta name="apple-mobile-web-app-title" content="Path Xpress Ai" />
+      </head>
       <body className={inter.className}>
-        <AuthProvider>
-          <TranslationProvider>
-            <ReduxProvider>{children}</ReduxProvider>
-          </TranslationProvider>
-        </AuthProvider>
+        <AmplifyClientProvider>
+          <AuthProvider>
+            <TranslationProvider>
+              <ReduxProvider>{children}</ReduxProvider>
+            </TranslationProvider>
+          </AuthProvider>
+        </AmplifyClientProvider>
         <Toaster />
         <meta
           property="og:image"

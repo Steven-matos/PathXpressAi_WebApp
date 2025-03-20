@@ -4,6 +4,7 @@ import { Suspense } from "react";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { useTranslation } from "@/context/TranslationContext";
 import Link from "next/link";
+import AmplifyStatus from "@/components/AmplifyStatus";
 
 export default function SignupPage() {
   const { t } = useTranslation();
@@ -58,6 +59,9 @@ export default function SignupPage() {
           </Card>
         </div>
       </div>
+      
+      {/* Debug component */}
+      <AmplifyStatus />
     </div>
   );
 }

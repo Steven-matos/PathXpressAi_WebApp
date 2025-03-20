@@ -14,9 +14,10 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { useAuth } from "@/hooks/auth-context";
+import { useAuth } from "@/context/AuthContext";
 import { useTranslation } from "@/context/TranslationContext";
 import { useToast } from "@/hooks/use-toast";
+import { useState, useEffect } from "react";
 
 const loginSchema = z.object({
   email: z.string().email("Invalid email address"),
@@ -40,6 +41,11 @@ const signupSchema = loginSchema
     path: ["confirmPassword"],
   });
 
+const confirmationSchema = z.object({
+  email: z.string().email("Invalid email address"),
+  confirmationCode: z.string().min(6, "Confirmation code is required"),
+});
+
 interface AuthFormProps {
   mode: "login" | "signup";
 }
@@ -47,10 +53,13 @@ interface AuthFormProps {
 export function AuthForm({ mode }: AuthFormProps) {
   const { t, language } = useTranslation();
   const router = useRouter();
-  const { setToken } = useAuth();
+  const { signIn, signUp, confirmSignUp } = useAuth();
   const { toast } = useToast();
+  const [needsConfirmation, setNeedsConfirmation] = useState(false);
+  const [userEmail, setUserEmail] = useState("");
 
   type FormValues = z.infer<typeof loginSchema | typeof signupSchema>;
+  type ConfirmationValues = z.infer<typeof confirmationSchema>;
 
   const form = useForm<FormValues>({
     resolver: zodResolver(mode === "login" ? loginSchema : signupSchema),
@@ -69,127 +78,249 @@ export function AuthForm({ mode }: AuthFormProps) {
     },
   });
 
+  const confirmationForm = useForm<ConfirmationValues>({
+    resolver: zodResolver(confirmationSchema),
+    defaultValues: {
+      email: userEmail,
+      confirmationCode: "",
+    },
+  });
+
+  useEffect(() => {
+    confirmationForm.setValue("email", userEmail);
+    console.log("Updated confirmation form with email:", userEmail);
+  }, [userEmail, confirmationForm]);
+
   async function onSubmit(values: FormValues) {
     if (mode === "signup") {
-      // Show toast for now since signup is disabled
-      toast({
-        title: "Product Not Live",
-        description:
-          "Product not live yet. Feel free to reach out via email for any questions.",
-        duration: 5000,
-      });
-      return;
-
-      /* Commented out signup implementation for future use
       try {
-        // Create user
-        const userResponse = await fetch(
-          `https://2p74yk9yn0.execute-api.us-east-1.amazonaws.com/v1/user`,
-          {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              email: values.email,
-              name: values.name,
-              preferences: {
-                routeOptimization: "FASTEST",
-                language: values.language,
-              },
-              homeBase: `${values.address}, ${values.city}, ${values.state} ${values.zip}`,
-            }),
-          }
-        );
+        // Type assertion to ensure TypeScript knows we're dealing with signup form values
+        const signupValues = values as z.infer<typeof signupSchema>;
+        
+        const address = `${signupValues.address}, ${signupValues.city}, ${signupValues.state} ${signupValues.zip}`;
+        setUserEmail(signupValues.email);
 
-        if (!userResponse.ok) throw new Error("Failed to create user");
+        console.log('🔄 Attempting to sign up with:', { 
+          email: signupValues.email,
+          givenName: signupValues.name,
+          // Not logging password
+          addressLength: address.length
+        });
 
-        // After successful signup, authenticate user
-        const loginResponse = await fetch(
-          `https://2p74yk9yn0.execute-api.us-east-1.amazonaws.com/v1/login`,
-          {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              email: values.email,
-              password: values.password,
-            }),
-          }
-        );
+        // Sign up the user with Amplify
+        const result = await signUp({
+          email: signupValues.email,
+          password: signupValues.password,
+          givenName: signupValues.name,
+          address: address,
+        });
 
-        if (!loginResponse.ok) throw new Error("Authentication failed");
-        const loginData = await loginResponse.json();
+        console.log('✅ Sign up result:', { isSignUpComplete: result.isSignUpComplete });
 
-        // Generate API key for the new user
-        const apiKeyResponse = await fetch(
-          `https://2p74yk9yn0.execute-api.us-east-1.amazonaws.com/v1/api-keys`,
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${loginData.token}`,
-            },
-          }
-        );
+        if (result.isSignUpComplete) {
+          // If sign up is complete without confirmation (unlikely with Cognito)
+          toast({
+            title: "Sign Up Successful",
+            description: "You can now log in with your credentials.",
+            duration: 3000,
+          });
+          router.push("/login");
+        } else {
+          // User needs to confirm their account
+          setNeedsConfirmation(true);
+          toast({
+            title: "Confirmation Required",
+            description: "Please check your email for a confirmation code.",
+            duration: 5000,
+          });
+        }
+      } catch (error: any) {
+        console.error("❌ Sign up error:", error);
+        
+        // Log detailed error information to help with debugging
+        console.error('Error details:', {
+          name: error.name,
+          message: error.message,
+          code: error.code,
+          statusCode: error.$metadata?.httpStatusCode
+        });
 
-        if (!apiKeyResponse.ok) throw new Error("Failed to generate API key");
-        const apiKeyData = await apiKeyResponse.json();
+        // Handle specific error cases
+        let errorMessage = "An error occurred during sign up";
+        
+        if (error.name === 'UsernameExistsException') {
+          errorMessage = "This email is already registered. Please use a different email or try to log in.";
+        } else if (error.name === 'InvalidParameterException' && error.message.includes('password')) {
+          errorMessage = "Password does not meet requirements. Please use a stronger password."; 
+        } else if (error.name === 'InvalidPasswordException') {
+          errorMessage = "Password does not meet requirements. Please use a stronger password with numbers, special characters and uppercase letters.";
+        } else if (error.name === 'TokenProviderNotFoundException') {
+          errorMessage = "Authentication configuration error. User Pool credentials may be missing or invalid.";
+        } else if (error.name === 'AmplifyError' && error.message.includes('token provider')) {
+          errorMessage = "Authentication system is not properly configured. Please contact support.";
+        } else if (error.message) {
+          errorMessage = error.message;
+        }
 
-        // Set the API key in auth context
-        setToken(apiKeyData.apiKey);
-
-        // Navigate to dashboard with user ID
-        router.push(`/dashboard/${loginData.userId}`);
-      } catch (error) {
-        form.setError("root", {
-          message: error instanceof Error ? error.message : "Signup error",
+        toast({
+          title: "Sign Up Failed",
+          description: errorMessage,
+          variant: "destructive",
+          duration: 5000,
         });
       }
-      */
+    } else {
+      // Login flow
+      try {
+        const loginValues = values as z.infer<typeof loginSchema>;
+        
+        const result = await signIn({
+          email: loginValues.email,
+          password: loginValues.password,
+        });
+
+        if (result.isSignedIn) {
+          toast({
+            title: "Login Successful",
+            description: "Welcome back!",
+            duration: 3000,
+          });
+          router.push("/dashboard");
+        }
+      } catch (error) {
+        console.error("Login error:", error);
+        
+        // Handle specific errors
+        if (error instanceof Error && error.name === "UserNotConfirmedException") {
+          const loginValues = values as z.infer<typeof loginSchema>;
+          setUserEmail(loginValues.email);
+          setNeedsConfirmation(true);
+          toast({
+            title: "Account Not Confirmed",
+            description: "Please confirm your account with the code sent to your email",
+            duration: 5000,
+          });
+        } else {
+          toast({
+            title: "Login Failed",
+            description: error instanceof Error ? error.message : "Authentication error",
+            variant: "destructive",
+            duration: 3000,
+          });
+        }
+      }
     }
+  }
 
-    // Login flow
+  async function onConfirmationSubmit(values: ConfirmationValues) {
+    console.log("Submitting confirmation with:", values);
     try {
-      // First, authenticate user
-      const loginResponse = await fetch(
-        `https://2p74yk9yn0.execute-api.us-east-1.amazonaws.com/v1/login`,
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            email: values.email,
-            password: values.password,
-          }),
-        }
-      );
+      // Ensure we have a valid email
+      const emailToUse = userEmail || values.email;
+      console.log("Using email for confirmation:", emailToUse);
+      
+      const result = await confirmSignUp({
+        email: emailToUse,
+        confirmationCode: values.confirmationCode,
+      });
 
-      if (!loginResponse.ok) throw new Error("Authentication failed");
-      const loginData = await loginResponse.json();
+      console.log("Confirmation result:", result);
 
-      // Generate API key for the authenticated user
-      const apiKeyResponse = await fetch(
-        `https://2p74yk9yn0.execute-api.us-east-1.amazonaws.com/v1/api-keys`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${loginData.token}`,
-          },
-        }
-      );
-
-      if (!apiKeyResponse.ok) throw new Error("Failed to generate API key");
-      const apiKeyData = await apiKeyResponse.json();
-
-      // Set the API key in auth context
-      setToken(apiKeyData.apiKey);
-
-      // Navigate to dashboard with user ID
-      router.push(`/dashboard/${loginData.userId}`);
-    } catch (error) {
-      form.setError("root", {
-        message:
-          error instanceof Error ? error.message : "Authentication error",
+      if (result.isSignUpComplete) {
+        toast({
+          title: "Account Confirmed",
+          description: "Your account has been confirmed successfully. You can now log in.",
+          duration: 3000,
+        });
+        
+        // Wait a moment to ensure everything is processed
+        setTimeout(() => {
+          setNeedsConfirmation(false);
+          router.push("/login");
+        }, 1000);
+      }
+    } catch (error: any) {
+      console.error("Confirmation error:", error);
+      
+      // Log detailed error information to help with debugging
+      console.error('Confirmation error details:', {
+        name: error.name,
+        message: error.message,
+        code: error.code,
+        statusCode: error.$metadata?.httpStatusCode
+      });
+      
+      // Handle specific error cases
+      let errorMessage = "An error occurred during confirmation";
+      
+      if (error.name === 'CodeMismatchException') {
+        errorMessage = "Invalid confirmation code. Please check and try again.";
+      } else if (error.name === 'ExpiredCodeException') {
+        errorMessage = "Confirmation code has expired. Please request a new one.";
+      } else if (error.name === 'UserLambdaValidationException' && error.message.includes('GraphQL')) {
+        errorMessage = "Account was confirmed, but there was an issue with additional setup. You can try logging in.";
+        
+        // In this case, we might still want to redirect to login
+        setTimeout(() => {
+          setNeedsConfirmation(false);
+          router.push("/login");
+        }, 1000);
+        
+        return; // Exit early after scheduling the redirect
+      } else if (error.message) {
+        errorMessage = error.message;
+      }
+      
+      toast({
+        title: "Confirmation Failed",
+        description: errorMessage,
+        variant: "destructive",
+        duration: 5000,
       });
     }
+  }
+
+  if (needsConfirmation) {
+    return (
+      <Form {...confirmationForm}>
+        <form onSubmit={confirmationForm.handleSubmit(onConfirmationSubmit)} className="space-y-6">
+          <h2 className="text-2xl font-bold">{t("Confirm Your Account")}</h2>
+          <p className="text-muted-foreground">{t("Please enter the confirmation code sent to your email")}</p>
+          
+          <FormField
+            control={confirmationForm.control}
+            name="email"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>{t("Email")}</FormLabel>
+                <FormControl>
+                  <Input {...field} readOnly value={userEmail} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          
+          <FormField
+            control={confirmationForm.control}
+            name="confirmationCode"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>{t("Confirmation Code")}</FormLabel>
+                <FormControl>
+                  <Input {...field} placeholder={t("Enter your confirmation code")} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          
+          <Button type="submit" className="w-full" disabled={confirmationForm.formState.isSubmitting}>
+            {confirmationForm.formState.isSubmitting ? t("Confirming...") : t("Confirm Account")}
+          </Button>
+        </form>
+      </Form>
+    );
   }
 
   return (
