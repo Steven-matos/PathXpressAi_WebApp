@@ -1,7 +1,7 @@
 "use client";
-import { Footer } from "@/components/footer";
-import { Header } from "@/components/header";
-import { LegalSection } from "@/components/page-components/legal-section";
+import { Footer } from "@/components/layout/footer";
+import { Header } from "@/components/layout/header";
+import { LegalSection } from "@/features/legal-content";
 import { useTranslation } from "@/context/TranslationContext";
 
 function PrivacyPolicyContent() {

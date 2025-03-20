@@ -5,7 +5,7 @@ import { Disclosure } from "@headlessui/react";
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 import Link from "next/link";
 import { useTranslation } from "@/context/TranslationContext";
-import { LanguageSwitcher } from "./language-switcher";
+import { LanguageSwitcher } from "@/features/i18n";
 import { useToast } from "@/hooks/use-toast";
 
 export function Header() {
@@ -46,7 +46,7 @@ export function Header() {
                       playsInline
                       muted
                     >
-                      <source src="/logo-video.mp4" type="video/mp4" />
+                      <source src="/assets/videos/logo-video.mp4" type="video/mp4" />
                     </video>
                   </div>
                 </Link>

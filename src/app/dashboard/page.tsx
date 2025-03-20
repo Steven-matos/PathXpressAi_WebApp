@@ -1,14 +1,12 @@
 "use client";
 import { useSelector } from "react-redux";
-import { RootState } from "../../store/store";
-import { useTranslation } from "../../context/TranslationContext";
-import Navigation from "../../components/Navigation";
+import { RootState } from "@/store/store";
+import { useTranslation } from "@/context/TranslationContext";
+import Navigation from "@/features/navigation";
 import { useAuth } from "@/context/AuthContext";
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { UserProfile } from "@/components/auth/UserProfile";
-import AmplifyStatus from "@/components/AmplifyStatus";
-import { CognitoTester } from "@/components/CognitoTester";
+import { UserProfile, AmplifyStatus, CognitoTester } from "@/features/auth";
 
 export default function Dashboard() {
   const { t } = useTranslation();

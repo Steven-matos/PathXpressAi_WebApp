@@ -7,10 +7,8 @@ import { useRouter } from "next/navigation";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
 import { useTranslation } from "@/context/TranslationContext";
-import Navigation from "@/components/Navigation";
-import { UserProfile } from "@/components/auth/UserProfile";
-import AmplifyStatus from "@/components/AmplifyStatus";
-import { CognitoTester } from "@/components/CognitoTester";
+import Navigation from "@/features/navigation";
+import { UserProfile, AmplifyStatus, CognitoTester } from "@/features/auth";
 
 export default function DashboardUserPage() {
   const params = useParams();
