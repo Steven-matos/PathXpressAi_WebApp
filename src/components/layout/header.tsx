@@ -6,12 +6,10 @@ import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 import Link from "next/link";
 import { useTranslation } from "@/context/TranslationContext";
 import { LanguageSwitcher } from "@/features/i18n";
-import { useToast } from "@/hooks/use-toast";
 
 export function Header() {
   const { t } = useTranslation();
   const videoRef = useRef<HTMLVideoElement>(null);
-  const { toast } = useToast();
 
   useEffect(() => {
     // Play video once when component mounts
