@@ -20,16 +20,6 @@ export function Header() {
     }
   }, []);
 
-  const handleSignupClick = (e: React.MouseEvent) => {
-    e.preventDefault();
-    toast({
-      title: "Product Not Live",
-      description:
-        "Product not live yet. Feel free to reach out via email for any questions.",
-      duration: 5000,
-    });
-  };
-
   return (
     <Disclosure as="nav" className="bg-white shadow fixed w-full top-0 z-50">
       {({ open }) => (
@@ -62,9 +52,8 @@ export function Header() {
                   {t("signIn")}
                 </Link>
                 <Link
-                  href="#"
+                  href="/signup"
                   className="rounded-md bg-accent px-3.5 py-2 text-sm font-semibold text-white shadow-sm hover:bg-primary transition-colors duration-300"
-                  onClick={handleSignupClick}
                 >
                   {t("signUp")}
                 </Link>
@@ -98,9 +87,8 @@ export function Header() {
                   {t("signIn")}
                 </Link>
                 <Link
-                  href="#"
+                  href="/signup"
                   className="w-full rounded-md bg-accent px-3.5 py-2 text-sm font-semibold text-white shadow-sm hover:bg-primary transition-colors duration-300 text-center"
-                  onClick={handleSignupClick}
                 >
                   {t("signUp")}
                 </Link>
