@@ -5,7 +5,7 @@ import { ReduxProvider } from "@/providers/redux-provider";
 import { AuthProvider } from "@/context/AuthContext";
 import { Metadata } from "next";
 import { Toaster } from "@/components/ui/toaster";
-import AmplifyClientProvider from "@/components/AmplifyClientProvider";
+import { AmplifyClientProvider } from "@/features/auth";
 
 const inter = Inter({ subsets: ["latin"] });
 

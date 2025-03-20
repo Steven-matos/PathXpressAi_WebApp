@@ -1,12 +1,20 @@
-// src/components/Navigation.tsx
+// src/features/navigation/Navigation.tsx
 "use client";
 
 import Link from "next/link";
-import { useTranslation } from "../context/TranslationContext";
-import { Text } from "./ui/text";
+import { useTranslation } from "@/context/TranslationContext";
+import { Text } from "@/components/ui/text";
+import { useAuth } from "@/context/AuthContext";
+import { LogOutIcon } from "lucide-react";
 
 export default function Navigation() {
   const { t } = useTranslation();
+  const { signOut } = useAuth();
+
+  const handleLogout = async () => {
+    await signOut();
+    // The AuthContext will handle the redirect to login
+  };
 
   return (
     <nav className="bg-gray-800 p-4">
@@ -26,6 +34,13 @@ export default function Navigation() {
           <Link href="/settings" className="text-white">
             <Text id="settings" fallback="Settings" />
           </Link>
+          <button 
+            onClick={handleLogout} 
+            className="text-white flex items-center hover:text-red-300 transition-colors"
+          >
+            <LogOutIcon className="h-4 w-4 mr-1" />
+            <Text id="logout" fallback="Logout" />
+          </button>
         </div>
       </div>
     </nav>

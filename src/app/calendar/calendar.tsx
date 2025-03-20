@@ -1,7 +1,7 @@
 "use client";
-import { TranslationProvider } from "../../context/TranslationContext";
-import { Calendar } from "../../components/page-components/Calendar";
-import Navigation from "../../components/Navigation";
+import { TranslationProvider } from "@/context/TranslationContext";
+import { Calendar } from "@/features/calendar";
+import Navigation from "@/features/navigation";
 import { ReduxProvider } from "@/providers/redux-provider";
 
 export default function CalendarPage() {

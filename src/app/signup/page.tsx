@@ -1,10 +1,9 @@
 "use client";
-import { AuthForm } from "@/components/auth/auth-form";
+import { AuthForm, AmplifyStatus } from "@/features/auth";
 import { Suspense } from "react";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { useTranslation } from "@/context/TranslationContext";
 import Link from "next/link";
-import AmplifyStatus from "@/components/AmplifyStatus";
 
 export default function SignupPage() {
   const { t } = useTranslation();
