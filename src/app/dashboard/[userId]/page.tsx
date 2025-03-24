@@ -2,6 +2,7 @@
 
 import { useParams } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";
+import { useOnboarding } from "@/context/OnboardingContext";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useSelector } from "react-redux";
@@ -13,6 +14,7 @@ import { UserProfile, AmplifyStatus, CognitoTester } from "@/features/auth";
 export default function DashboardUserPage() {
   const params = useParams();
   const { isAuthenticated, isLoading, user } = useAuth();
+  const { isOnboardingComplete } = useOnboarding();
   const router = useRouter();
   const { t } = useTranslation();
   const username = useSelector((state: RootState) => state.user.name);
@@ -26,13 +28,19 @@ export default function DashboardUserPage() {
       return;
     }
 
+    // If onboarding is not complete, redirect to onboarding flow
+    if (!isLoading && isAuthenticated && !isOnboardingComplete) {
+      router.push("/onboarding");
+      return;
+    }
+
     // If user is authenticated but userId in URL doesn't match current user
     if (!isLoading && isAuthenticated && user && userId !== user.username) {
       console.log('URL user ID doesn\'t match authenticated user, redirecting...');
       // Redirect to correct user dashboard
       router.push(`/dashboard/${user.username}`);
     }
-  }, [isAuthenticated, isLoading, router, user, userId]);
+  }, [isAuthenticated, isLoading, isOnboardingComplete, router, user, userId]);
 
   if (isLoading) {
     return (
@@ -45,7 +53,8 @@ export default function DashboardUserPage() {
     );
   }
 
-  if (!isAuthenticated) {
+  // Don't render anything if user is not authenticated or onboarding is not complete
+  if (!isAuthenticated || !isOnboardingComplete) {
     return null;
   }
 

@@ -1,0 +1,40 @@
+[33mcommit 80b637c17174c6f4dc91d2edb8f4dce02d4e5902[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mlogin-signup-cleanup[m[33m, [m[1;31morigin/login-signup-cleanup[m[33m)[m
+Author: steven-matos <steven_matos@ymail.com>
+Date:   Thu Mar 20 20:02:20 2025 -0400
+
+    login states displaying
+
+src/features/auth/auth-form.tsx
+
+[33mcommit 27af0277af240fd3d3943cd97ae296ae49c7d632[m
+Author: steven-matos <steven_matos@ymail.com>
+Date:   Thu Mar 20 19:44:57 2025 -0400
+
+    mini code cleanup
+
+src/components/layout/header.tsx
+
+[33mcommit 1374ec3e45cfebef8297a6eea523f1c52badcc0a[m
+Author: steven-matos <steven_matos@ymail.com>
+Date:   Thu Mar 20 19:22:31 2025 -0400
+
+    fixed main page signup route
+
+src/components/layout/header.tsx
+
+[33mcommit 88eb5e72eec9b2f7001472dcdfaf5bf2bbcfb201[m
+Merge: 2cfb9a2 36a03d1
+Author: Steven A. Matos <steven_matos@ymail.com>
+Date:   Thu Mar 20 18:57:14 2025 -0400
+
+    Merge pull request #35 from Steven-matos/bug-fixes
+    
+    aws exports
+
+[33mcommit 36a03d128cea2f95a9ec82f29e45440ad0037eb1[m[33m ([m[1;31morigin/bug-fixes[m[33m, [m[1;32mbug-fixes[m[33m)[m
+Author: steven-matos <steven_matos@ymail.com>
+Date:   Thu Mar 20 18:56:52 2025 -0400
+
+    aws exports
+
+src/aws-exports.ts

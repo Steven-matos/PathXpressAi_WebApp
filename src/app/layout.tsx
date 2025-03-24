@@ -3,6 +3,7 @@ import { Inter } from "next/font/google";
 import { TranslationProvider } from "@/context/TranslationContext";
 import { ReduxProvider } from "@/providers/redux-provider";
 import { AuthProvider } from "@/context/AuthContext";
+import { OnboardingProvider } from "@/context/OnboardingContext";
 import { Metadata } from "next";
 import { Toaster } from "@/components/ui/toaster";
 import { AmplifyClientProvider } from "@/features/auth";
@@ -95,9 +96,11 @@ export default function RootLayout({
       <body className={inter.className}>
         <AmplifyClientProvider>
           <AuthProvider>
-            <TranslationProvider>
-              <ReduxProvider>{children}</ReduxProvider>
-            </TranslationProvider>
+            <OnboardingProvider>
+              <TranslationProvider>
+                <ReduxProvider>{children}</ReduxProvider>
+              </TranslationProvider>
+            </OnboardingProvider>
           </AuthProvider>
         </AmplifyClientProvider>
         <Toaster />

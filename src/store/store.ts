@@ -3,6 +3,7 @@ import type { PayloadAction } from "@reduxjs/toolkit";
 import { createSlice } from "@reduxjs/toolkit";
 import routesReducer from "./routesSlice";
 import userReducer from "./userSlice";
+import apiDataReducer from "./apiDataSlice";
 import { useSelector, useDispatch } from "react-redux";
 
 interface Translation {
@@ -42,6 +43,7 @@ export const makeStore = () => {
       routes: routesReducer,
       language: languageSlice.reducer,
       user: userReducer,
+      apiData: apiDataReducer,
     },
   });
 };
