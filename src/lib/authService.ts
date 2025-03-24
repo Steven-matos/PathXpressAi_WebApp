@@ -84,15 +84,29 @@ export const auth = {
    */
   signIn: async ({ email, password }: SignInParams) => {
     try {
-      // Try to sign out any existing sessions first to prevent "already logged in" errors
+      // Only try to sign out existing sessions if we're not already experiencing rate limiting
+      let previousRateLimitError = false;
+      
       try {
         await signOut({ global: true });
         console.log('Successfully signed out any existing sessions before new login attempt');
-      } catch (signOutError) {
-        // Ignore errors from signOut as the user might not be signed in
-        console.log('No active session to sign out or error signing out:', signOutError);
+      } catch (signOutError: any) {
+        // Check if this is a rate limit error
+        if (signOutError.name === 'TooManyRequestsException') {
+          console.warn('Rate limit detected during sign out - proceeding directly to sign in');
+          previousRateLimitError = true;
+        } else {
+          // Ignore other errors from signOut as the user might not be signed in
+          console.log('No active session to sign out or error signing out:', signOutError);
+        }
       }
 
+      // Add delay if we already hit rate limits
+      if (previousRateLimitError) {
+        console.log('Adding delay before sign in attempt due to previous rate limiting');
+        await new Promise(resolve => setTimeout(resolve, 1000));
+      }
+      
       // Now proceed with sign in
       console.log('Attempting to sign in user:', email);
       const result = await signIn({
@@ -101,7 +115,13 @@ export const auth = {
       });
       console.log('Sign in successful:', result.isSignedIn);
       return result;
-    } catch (error) {
+    } catch (error: any) {
+      // Handle rate limiting explicitly
+      if (error.name === 'TooManyRequestsException') {
+        console.error('Sign in failed due to rate limiting. Please wait a moment and try again.');
+        throw new Error('Too many login attempts. Please wait a moment and try again.');
+      }
+      
       console.error('Error signing in:', error);
       throw error;
     }
@@ -113,7 +133,13 @@ export const auth = {
   signOut: async () => {
     try {
       await signOut();
-    } catch (error) {
+    } catch (error: any) {
+      // Don't throw rate limiting errors during sign out
+      if (error.name === 'TooManyRequestsException') {
+        console.warn('Rate limit hit during sign out - will be handled on next session');
+        return; // Return silently without throwing
+      }
+      
       console.error('Error signing out:', error);
       throw error;
     }

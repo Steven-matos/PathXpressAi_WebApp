@@ -25,6 +25,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { useOnboarding } from "@/context/OnboardingContext";
 
 // US States array with abbreviations and full names
 const US_STATES = [
@@ -115,9 +116,13 @@ export function AuthForm({ mode }: AuthFormProps) {
   const { t, language } = useTranslation();
   const router = useRouter();
   const { signIn, signUp, confirmSignUp } = useAuth();
+  const { checkUserExists, forceCheckUserExists } = useOnboarding();
   const { toast } = useToast();
   const [needsConfirmation, setNeedsConfirmation] = useState(false);
   const [userEmail, setUserEmail] = useState("");
+  const [isRedirecting, setIsRedirecting] = useState(false);
+  const [hasCheckedUserExists, setHasCheckedUserExists] = useState(false);
+  const [userExistsResult, setUserExistsResult] = useState<boolean | null>(null);
 
   type FormValues = z.infer<typeof loginSchema | typeof signupSchema>;
   type ConfirmationValues = z.infer<typeof confirmationSchema>;
@@ -246,7 +251,86 @@ export function AuthForm({ mode }: AuthFormProps) {
             description: "Welcome back!",
             duration: 3000,
           });
-          router.push("/dashboard");
+          
+          // Prevent multiple redirects
+          if (isRedirecting) return;
+          setIsRedirecting(true);
+          
+          // Force a small delay before redirect to ensure auth state is properly updated
+          setTimeout(async () => {
+            try {
+              // Use cached result if available
+              if (userExistsResult !== null) {
+                console.log('Using cached user existence check result:', userExistsResult);
+                
+                if (userExistsResult) {
+                  router.push("/dashboard");
+                } else {
+                  router.push("/onboarding");
+                }
+                return;
+              }
+              
+              console.log('Checking if user exists in database...');
+              
+              try {
+                // Use forceCheckUserExists to ensure we get a fresh result
+                // but only on the first check
+                const userExists = hasCheckedUserExists 
+                  ? await checkUserExists() 
+                  : await forceCheckUserExists();
+                
+                console.log('User exists in database:', userExists);
+                
+                // Cache the result
+                setUserExistsResult(userExists);
+                setHasCheckedUserExists(true);
+                
+                // Update onboarding status in localStorage based on user existence
+                if (typeof window !== 'undefined') {
+                  localStorage.setItem('onboardingComplete', userExists ? 'true' : 'false');
+                  localStorage.setItem('userExistsChecked', 'true');
+                }
+                
+                // Redirect based on whether user exists in database
+                if (userExists) {
+                  console.log('User exists, redirecting to dashboard...');
+                  try {
+                    router.push("/dashboard");
+                  } catch (routerError) {
+                    console.error('Router error during dashboard redirect:', routerError);
+                    // Fallback to direct navigation if router.push fails
+                    window.location.href = '/dashboard';
+                  }
+                } else {
+                  console.log('User does not exist, redirecting to onboarding...');
+                  try {
+                    router.push("/onboarding");
+                  } catch (routerError) {
+                    console.error('Router error during onboarding redirect:', routerError);
+                    // Fallback to direct navigation if router.push fails
+                    window.location.href = '/onboarding';
+                  }
+                }
+                
+                // Add a safety timeout for redirect
+                setTimeout(() => {
+                  if (window.location.pathname === '/login') {
+                    console.log('Still on login page, forcing redirect...');
+                    window.location.href = userExists ? '/dashboard' : '/onboarding';
+                  }
+                }, 1000);
+              } catch (checkError) {
+                // If checking fails for any reason, assume user doesn't exist
+                console.error('Error checking if user exists:', checkError);
+                router.push("/onboarding");
+              }
+            } catch (routerError) {
+              console.error('Error during redirect:', routerError);
+              // Fallback to direct navigation
+              window.location.href = '/onboarding';
+            }
+          }, 500);
         }
       } catch (error) {
         console.error("Login error:", error);
@@ -290,14 +374,62 @@ export function AuthForm({ mode }: AuthFormProps) {
       if (result.isSignUpComplete) {
         toast({
           title: "Account Confirmed",
-          description: "Your account has been confirmed successfully. You can now log in.",
+          description: "Your account has been confirmed successfully.",
           duration: 3000,
         });
         
+        // Store the email for the login attempt
+        const confirmedEmail = emailToUse;
+        
         // Wait a moment to ensure everything is processed
-        setTimeout(() => {
+        setTimeout(async () => {
           setNeedsConfirmation(false);
-          router.push("/login");
+          
+          try {
+            // Get password based on which mode we're in
+            let password = '';
+            if (mode === 'signup') {
+              // Coming from signup flow
+              const signupValues = form.getValues() as z.infer<typeof signupSchema>;
+              password = signupValues.password;
+            } else {
+              // Coming from login flow with unconfirmed account
+              const loginValues = form.getValues() as z.infer<typeof loginSchema>;
+              password = loginValues.password;
+            }
+            
+            if (password) {
+              // Attempt to sign in automatically
+              const signInResult = await signIn({
+                email: confirmedEmail,
+                password: password,
+              });
+              
+              if (signInResult.isSignedIn) {
+                toast({
+                  title: "Auto Login Successful",
+                  description: "Welcome! Let's complete your profile setup.",
+                  duration: 3000,
+                });
+                
+                // Redirect to onboarding flow instead of login page
+                router.push("/onboarding");
+                return;
+              }
+            }
+            
+            // Fallback if auto-login fails or no password
+            router.push("/login");
+          } catch (loginError) {
+            console.error("Auto-login error:", loginError);
+            toast({
+              title: "Auto Login Failed",
+              description: "Your account is verified but we couldn't log you in automatically. Please log in manually.",
+              variant: "destructive",
+              duration: 5000,
+            });
+            router.push("/login");
+          }
         }, 1000);
       }
     } catch (error: any) {
@@ -512,7 +644,6 @@ export function AuthForm({ mode }: AuthFormProps) {
                     <FormControl>
                       <Select 
                         onValueChange={field.onChange} 
-                        defaultValue=""
                       >
                         <SelectTrigger>
                           <SelectValue placeholder={t("signup.statePlaceholder")} />

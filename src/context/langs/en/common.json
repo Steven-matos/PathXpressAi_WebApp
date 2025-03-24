@@ -271,5 +271,55 @@
     "addressLength": "Please enter a valid address",
     "passwordMismatch": "Passwords do not match"
   },
-  "comingSoon": "Coming Soon"
+  "comingSoon": "Coming Soon",
+  "loading": "Loading...",
+  "redirecting": "Redirecting",
+  
+  "onboarding": {
+    "steps": {
+      "profile": "Your Profile",
+      "address": "Home Base Address",
+      "subscription": "Subscription Plan"
+    },
+    "continue": "Continue",
+    "complete": "Complete Setup",
+    "saving": "Saving...",
+    "creatingAccount": "Creating account...",
+    "loading": "Loading",
+    "skipWaiting": "Skip waiting and continue",
+    "redirecting": "Redirecting",
+    
+    "profile": {
+      "title": "Welcome to Path Xpress AI",
+      "description": "Let's set up your profile to get started. Tell us what we should call you.",
+      "name": "Your Name",
+      "namePlaceholder": "Enter your full name",
+      "selectLanguage": "Select your preferred language"
+    },
+    
+    "address": {
+      "title": "Set Your Home Base Address",
+      "description": "We need your home address to help optimize your routes and calculate distances.",
+      "street": "Street Address",
+      "streetPlaceholder": "Enter your street address",
+      "city": "City",
+      "cityPlaceholder": "Enter your city",
+      "state": "State",
+      "statePlaceholder": "Select your state",
+      "zip": "ZIP Code",
+      "zipPlaceholder": "Enter your ZIP code"
+    },
+    
+    "subscription": {
+      "title": "Choose a Subscription Plan",
+      "description": "Select the plan that best fits your needs. You can always change this later.",
+      "tier": "Subscription Tier"
+    },
+    
+    "complete": {
+      "title": "Setup Complete!",
+      "description": "Your account is now ready to use. Let's get started with optimizing your routes.",
+      "goToDashboard": "Go to Dashboard"
+    }
+  }
 }

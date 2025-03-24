@@ -11,7 +11,8 @@ const envScript = `
     NEXT_PUBLIC_USER_POOL_ID: "${process.env['NEXT_PUBLIC_USER_POOL_ID']}",
     NEXT_PUBLIC_USER_POOL_CLIENT_ID: "${process.env['NEXT_PUBLIC_USER_POOL_CLIENT_ID']}",
     NEXT_PUBLIC_GRAPHQL_ENDPOINT: "${process.env['NEXT_PUBLIC_GRAPHQL_ENDPOINT']}",
-    NEXT_PUBLIC_IDENTITY_POOL_ID: "${process.env['NEXT_PUBLIC_IDENTITY_POOL_ID']}"
+    NEXT_PUBLIC_IDENTITY_POOL_ID: "${process.env['NEXT_PUBLIC_IDENTITY_POOL_ID']}",
+    NEXT_PUBLIC_API_REGION: "us-east-1"
   };
   console.log("Environment variables exposed to client:", window.__ENV);
 `;
@@ -23,8 +24,13 @@ export default function AmplifyClientProvider({
 }) {
   // Initialize Amplify and preload translations on component mount
   useEffect(() => {
-    // Configure Amplify
-    configureAmplify();
+    // Configure Amplify with specific PathXpressAI API settings
+    try {
+      configureAmplify();
+      console.log('✅ PathXpressAI API connection configured successfully');
+    } catch (error) {
+      console.error('❌ Failed to configure PathXpressAI API connection:', error);
+    }
     
     // Preload translations for faster access
     preloadAllTranslations().then(() => {
@@ -32,6 +38,13 @@ export default function AmplifyClientProvider({
     }).catch(err => {
       console.warn('⚠️ Error preloading translations:', err);
     });
+
+    // Log a reminder about required environment variables
+    if (!process.env['NEXT_PUBLIC_USER_POOL_ID'] || 
+        !process.env['NEXT_PUBLIC_USER_POOL_CLIENT_ID'] || 
+        !process.env['NEXT_PUBLIC_GRAPHQL_ENDPOINT']) {
+      console.warn('⚠️ Missing required environment variables for PathXpressAI API. Check your .env file.');
+    }
   }, []);
 
   return (
