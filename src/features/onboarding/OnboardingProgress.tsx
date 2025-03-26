@@ -11,6 +11,7 @@ export function OnboardingProgress() {
     { id: 'profile', label: t('onboarding.steps.profile') || 'Your Profile' },
     { id: 'address', label: t('onboarding.steps.address') || 'Home Base Address' },
     { id: 'subscription', label: t('onboarding.steps.subscription') || 'Subscription Plan' },
+    { id: 'review', label: t('onboarding.steps.review') || 'Review & Confirm' },
   ];
 
   // Calculate the step index (0-based)
@@ -33,8 +34,14 @@ export function OnboardingProgress() {
       </div>
       <div className="w-full bg-secondary h-2 rounded-full">
         <div
-          className="bg-primary h-2 rounded-full transition-all duration-300 ease-in-out"
-          style={{ width: `${progress}%` }}
+          className="h-2 rounded-full transition-all duration-300 ease-in-out"
+          style={{ 
+            width: `${progress}%`,
+            background: `linear-gradient(to right, 
+              hsl(var(--primary)) 0%, 
+              hsl(var(--accent)) ${progress}%
+            )`
+          }}
         ></div>
       </div>
     </div>

@@ -293,7 +293,8 @@
     "steps": {
       "profile": "Tu Perfil",
       "address": "Dirección Base",
-      "subscription": "Plan de Suscripción"
+      "subscription": "Plan de Suscripción",
+      "review": "Revisar y Confirmar"
     },
     "continue": "Continuar",
     "complete": "Completar configuración",
@@ -302,6 +303,8 @@
     "loading": "Cargando",
     "skipWaiting": "Omitir espera y continuar",
     "redirecting": "Redirigiendo",
+    "back": "Atrás",
+    "submit": "Enviar",
     
     "profile": {
       "title": "Bienvenido a Path Xpress AI",
@@ -328,6 +331,11 @@
       "title": "Elige un Plan de Suscripción",
       "description": "Selecciona el plan que mejor se adapte a tus necesidades. Puedes cambiarlo más tarde.",
       "tier": "Nivel de Suscripción"
+    },
+    
+    "review": {
+      "title": "Revisa tu Información",
+      "description": "Por favor, revisa tu información y acepta nuestros términos antes de continuar."
     },
     
     "complete": {

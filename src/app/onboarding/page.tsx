@@ -8,7 +8,9 @@ import {
   OnboardingProfileStep,
   OnboardingAddressStep,
   OnboardingSubscriptionStep,
-  OnboardingProgress 
+  OnboardingProgress,
+  OnboardingReviewStep,
+  OnboardingCompleteStep
 } from "@/features/onboarding";
 import { useTranslation } from "@/context/TranslationContext";
 
@@ -50,24 +52,16 @@ export default function OnboardingPage() {
   // Render the current step
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-50">
-      <div className="w-full max-w-lg px-6 py-8 bg-background rounded-lg shadow-lg">
+      <div className="w-full max-w-[1400px] px-4 sm:px-6 lg:px-8 py-8 bg-background rounded-lg shadow-lg">
         <OnboardingProgress />
         
-        {currentStep === "profile" && <OnboardingProfileStep />}
-        {currentStep === "address" && <OnboardingAddressStep />}
-        {currentStep === "subscription" && <OnboardingSubscriptionStep />}
-        {currentStep === "complete" && (
-          <div className="text-center py-8">
-            <h2 className="text-2xl font-bold mb-4">{t("onboarding.complete.title")}</h2>
-            <p className="mb-6">{t("onboarding.complete.description")}</p>
-            <button
-              onClick={() => router.push(`/dashboard/${user?.username}`)}
-              className="px-6 py-2 bg-primary text-primary-foreground rounded-md hover:bg-primary/90 transition-colors"
-            >
-              {t("onboarding.complete.goToDashboard")}
-            </button>
-          </div>
-        )}
+        <div className="flex-1 flex items-center justify-center py-12">
+          {currentStep === 'profile' && <OnboardingProfileStep />}
+          {currentStep === 'address' && <OnboardingAddressStep />}
+          {currentStep === 'subscription' && <OnboardingSubscriptionStep />}
+          {currentStep === 'review' && <OnboardingReviewStep />}
+          {currentStep === 'complete' && <OnboardingCompleteStep />}
+        </div>
       </div>
     </div>
   );
