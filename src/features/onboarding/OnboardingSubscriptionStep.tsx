@@ -20,6 +20,7 @@ import { useToast } from "@/hooks/use-toast";
 import { useState, useEffect } from "react";
 import { CheckIcon } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
+import { useRouter } from "next/navigation";
 
 const subscriptionSchema = z.object({
   subscriptionTier: z.enum(['free', 'monthly', 'yearly'] as const),
@@ -72,8 +73,7 @@ const subscriptionTiers: Array<{
 
 export function OnboardingSubscriptionStep() {
   const { t } = useTranslation();
-  const { userData, updateUserData, completeCurrentStep, goToPreviousStep } = useOnboarding();
-  const { user } = useAuth();
+  const { userData, updateUserData, goToPreviousStep, completeCurrentStep } = useOnboarding();
   const { toast } = useToast();
   const [isLoading, setIsLoading] = useState(false);
 
@@ -127,13 +127,19 @@ export function OnboardingSubscriptionStep() {
         subscriptionTier: values.subscriptionTier
       });
       
-      // Move to next step (review)
+      // Move to review step
       completeCurrentStep();
     } catch (error) {
       console.error("Error in subscription step:", error);
+      
+      // Provide more specific error messages based on the error type
+      const errorMessage = error instanceof Error 
+        ? error.message 
+        : "There was a problem saving your subscription. Please try again.";
+      
       toast({
         title: "Error",
-        description: "There was a problem saving your subscription. Please try again.",
+        description: errorMessage,
         variant: "destructive",
         duration: 5000,
       });
@@ -204,6 +210,9 @@ export function OnboardingSubscriptionStep() {
           </Button>
           <Button 
             type="submit" 
+            onClick={() => {
+              form.handleSubmit(onSubmit)();
+            }}
             className="flex-1 text-white text-lg py-6" 
             disabled={isLoading || form.formState.isSubmitting}
           >

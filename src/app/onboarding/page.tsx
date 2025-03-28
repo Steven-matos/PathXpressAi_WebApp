@@ -52,7 +52,11 @@ export default function OnboardingPage() {
   // Render the current step
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-50">
-      <div className="w-full max-w-[1400px] px-4 sm:px-6 lg:px-8 py-8 bg-background rounded-lg shadow-lg">
+      <div className={`w-full px-4 sm:px-6 lg:px-8 py-8 bg-background rounded-lg shadow-lg ${
+        currentStep === 'subscription' 
+          ? 'max-w-[1400px]' 
+          : 'max-w-[800px]'
+      }`}>
         <OnboardingProgress />
         
         <div className="flex-1 flex items-center justify-center py-12">

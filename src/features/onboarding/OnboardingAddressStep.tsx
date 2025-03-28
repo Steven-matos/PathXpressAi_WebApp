@@ -192,11 +192,11 @@ export function OnboardingAddressStep() {
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 w-full max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="w-full max-w-[800px] mx-auto">
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 w-full mx-auto">
+        <div className="w-full">
           <div className="text-center mb-8">
             <h2 className="text-2xl font-semibold mb-4">
-              {t("onboarding.address.title") || "Set Your Base Address"}
+              {t("onboarding.address.title") || "Set Your Home Base Address"}
             </h2>
             <p className="text-muted-foreground text-lg">
               {t("onboarding.address.description") || "We need your address to help optimize your routes and calculate distances."}

@@ -18,8 +18,7 @@ import { useOnboarding } from "@/context/OnboardingContext";
 import { useToast } from "@/hooks/use-toast";
 import { useState } from "react";
 import { Card } from "@/components/ui/card";
-import { CheckIcon, PencilIcon } from "lucide-react";
-import { useAuth } from "@/context/AuthContext";
+import { PencilIcon } from "lucide-react";
 import { updateUserAttributes } from "aws-amplify/auth";
 import { PolicyModal } from "@/components/modals/PolicyModal";
 import { termsAndConditions, privacyPolicy } from "@/content/policies";
@@ -37,10 +36,11 @@ type ReviewFormValues = z.infer<typeof reviewSchema>;
 
 export function OnboardingReviewStep() {
   const { t } = useTranslation();
-  const { userData, completeCurrentStep, goToPreviousStep, setCurrentStep } = useOnboarding();
-  const { user } = useAuth();
+  const { userData, completeCurrentStep, goToPreviousStep, setCurrentStep, updateUserData } = useOnboarding();
   const { toast } = useToast();
   const [isLoading, setIsLoading] = useState(false);
+  const [hasViewedTerms, setHasViewedTerms] = useState(false);
+  const [hasViewedPrivacy, setHasViewedPrivacy] = useState(false);
   const [modalState, setModalState] = useState<{
     isOpen: boolean;
     type: 'terms' | 'privacy' | null;
@@ -62,29 +62,38 @@ export function OnboardingReviewStep() {
   };
 
   const handleCloseModal = () => {
-    setModalState({ isOpen: false, type: null });
+    // Only allow closing through the agree button
+    return;
   };
 
   const handleAcceptPolicy = () => {
     if (modalState.type === 'terms') {
+      setHasViewedTerms(true);
       form.setValue('acceptTerms', true, {
         shouldValidate: true,
         shouldDirty: true,
         shouldTouch: true
       });
     } else if (modalState.type === 'privacy') {
+      setHasViewedPrivacy(true);
       form.setValue('acceptPrivacy', true, {
         shouldValidate: true,
         shouldDirty: true,
         shouldTouch: true
       });
     }
-    handleCloseModal();
+    setModalState({ isOpen: false, type: null });
   };
 
   async function onSubmit(values: ReviewFormValues) {
     try {
       setIsLoading(true);
+      
+      // Update user data with terms acceptance
+      await updateUserData({
+        terms: true,
+        privacy_policy: true
+      });
       
       // Update Cognito attributes with subscription information
       await updateUserAttributes({
@@ -118,13 +127,13 @@ export function OnboardingReviewStep() {
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 w-full max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8">
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 w-full mx-auto">
         <div className="w-full">
           <h2 className="text-2xl font-semibold mb-8 text-center">
             {t("onboarding.review.title") || "Review Your Information"}
           </h2>
 
-          <div className="space-y-6 max-w-[800px] mx-auto">
+          <div className="space-y-6">
             {/* Profile Information */}
             <Card className="p-6 relative">
               <button
@@ -211,7 +220,14 @@ export function OnboardingReviewStep() {
                     <FormControl>
                       <Checkbox
                         checked={field.value}
-                        onCheckedChange={field.onChange}
+                        onCheckedChange={(checked) => {
+                          if (checked && !hasViewedTerms) {
+                            handleOpenModal('terms');
+                            return;
+                          }
+                          field.onChange(checked);
+                        }}
+                        disabled={!hasViewedTerms}
                       />
                     </FormControl>
                     <div className="space-y-1 leading-none">
@@ -239,7 +255,14 @@ export function OnboardingReviewStep() {
                     <FormControl>
                       <Checkbox
                         checked={field.value}
-                        onCheckedChange={field.onChange}
+                        onCheckedChange={(checked) => {
+                          if (checked && !hasViewedPrivacy) {
+                            handleOpenModal('privacy');
+                            return;
+                          }
+                          field.onChange(checked);
+                        }}
+                        disabled={!hasViewedPrivacy}
                       />
                     </FormControl>
                     <div className="space-y-1 leading-none">
@@ -287,9 +310,10 @@ export function OnboardingReviewStep() {
         <PolicyModal
           isOpen={modalState.isOpen}
           onClose={handleCloseModal}
-          title={modalState.type === 'terms' ? 'Terms and Conditions' : 'Privacy Policy'}
-          content={modalState.type === 'terms' ? termsAndConditions : privacyPolicy}
           onAccept={handleAcceptPolicy}
+          type={modalState.type || 'privacy'}
+          content={modalState.type === 'terms' ? termsAndConditions : privacyPolicy}
+          closeOnOutsideClick={false}
         />
       </form>
     </Form>

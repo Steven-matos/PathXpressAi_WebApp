@@ -26,6 +26,8 @@ interface OnboardingContextType {
     state: string;
     zip: string;
     subscriptionTier: SubscriptionTier;
+    terms: boolean;
+    privacy_policy: boolean;
   };
   
   // Methods to update onboarding
@@ -49,6 +51,8 @@ const defaultUserData = {
   state: '',
   zip: '',
   subscriptionTier: 'free' as SubscriptionTier,
+  terms: false,
+  privacy_policy: false,
 };
 
 // GraphQL queries
@@ -219,21 +223,16 @@ export function OnboardingProvider({ children }: { children: ReactNode }) {
     }
   }, [isAuthenticated, user]);
 
-  // Save onboarding state to localStorage whenever it changes
+  // Save onboarding data to localStorage whenever it changes
   useEffect(() => {
-    // Skip saving if in server-side rendering
-    if (typeof window === 'undefined') return;
-    
-    // Save current onboarding state
-    try {
+    if (typeof window !== 'undefined') {
       localStorage.setItem('onboardingData', JSON.stringify({
         currentStep,
         userData,
+        isOnboardingComplete
       }));
-    } catch (error) {
-      console.error("Error saving onboarding data to localStorage:", error);
     }
-  }, [currentStep, userData]);
+  }, [currentStep, userData, isOnboardingComplete]);
 
   // Function to check if user exists in the database
   const checkUserExists = async (): Promise<boolean> => {
@@ -419,6 +418,10 @@ export function OnboardingProvider({ children }: { children: ReactNode }) {
       setIsOnboardingComplete(true);
       if (typeof window !== 'undefined') {
         localStorage.setItem('onboardingComplete', 'true');
+        
+        // Clean up temporary data
+        localStorage.removeItem('onboardingData');
+        localStorage.removeItem('userAttributes');
       }
       
       // Redirect to dashboard after completion if we have a user

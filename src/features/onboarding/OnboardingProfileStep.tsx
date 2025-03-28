@@ -385,8 +385,8 @@ export function OnboardingProfileStep() {
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 w-full max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="w-full max-w-[800px] mx-auto">
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 w-full mx-auto">
+        <div className="w-full">
           <div className="text-center mb-8">
             <h2 className="text-2xl font-semibold mb-4">
               {t("onboarding.profile.title") || "Welcome to Path Xpress AI"}

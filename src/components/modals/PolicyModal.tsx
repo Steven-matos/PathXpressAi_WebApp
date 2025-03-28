@@ -8,27 +8,41 @@ import {
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import ReactMarkdown from 'react-markdown';
+import { useTranslation } from '@/context/TranslationContext';
 
 interface PolicyModalProps {
   isOpen: boolean;
   onClose: () => void;
-  title: string;
-  content: string;
   onAccept: () => void;
+  type: 'terms' | 'privacy';
+  content: string;
+  closeOnOutsideClick?: boolean;
 }
 
 export function PolicyModal({
   isOpen,
   onClose,
-  title,
-  content,
   onAccept,
+  type,
+  content,
+  closeOnOutsideClick = false,
 }: PolicyModalProps) {
+  const { t } = useTranslation();
+
+  if (!isOpen) return null;
+
   return (
-    <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-3xl h-[80vh] flex flex-col">
+    <Dialog open={isOpen} onOpenChange={(open) => {
+      if (!open && !closeOnOutsideClick) {
+        return;
+      }
+      onClose();
+    }}>
+      <DialogContent className="max-w-4xl h-[80vh] flex flex-col">
         <DialogHeader>
-          <DialogTitle>{title}</DialogTitle>
+          <DialogTitle>
+            {type === 'terms' ? 'Terms and Conditions' : 'Privacy Policy'}
+          </DialogTitle>
         </DialogHeader>
         <ScrollArea className="flex-1 pr-4">
           <div className="prose prose-sm max-w-none dark:prose-invert">
@@ -36,7 +50,9 @@ export function PolicyModal({
           </div>
         </ScrollArea>
         <DialogFooter className="mt-4">
-          <Button onClick={onAccept}>I Accept</Button>
+          <Button onClick={onAccept}>
+            I Agree
+          </Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>
