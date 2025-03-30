@@ -19,7 +19,6 @@ import { useToast } from "@/hooks/use-toast";
 import { useState } from "react";
 import { Card } from "@/components/ui/card";
 import { PencilIcon } from "lucide-react";
-import { updateUserAttributes } from "aws-amplify/auth";
 import { PolicyModal } from "@/components/modals/PolicyModal";
 import { termsAndConditions, privacyPolicy } from "@/content/policies";
 
@@ -90,23 +89,16 @@ export function OnboardingReviewStep() {
       setIsLoading(true);
       
       // Update user data with terms acceptance
-      await updateUserData({
+      updateUserData({
         terms: true,
-        privacy_policy: true
-      });
-      
-      // Update Cognito attributes with subscription information
-      await updateUserAttributes({
-        userAttributes: {
-          'custom:subscription_tier': userData.subscriptionTier,
-        },
+        privacy_policy: true,
+        subscriptionPlan: userData.subscriptionPlan
       });
       
       // Update cached attributes
       const cachedAttributes = localStorage.getItem('userAttributes');
       if (cachedAttributes) {
         const attributes = JSON.parse(cachedAttributes);
-        attributes['custom:subscription_tier'] = userData.subscriptionTier;
         localStorage.setItem('userAttributes', JSON.stringify(attributes));
       }
       
@@ -199,12 +191,12 @@ export function OnboardingReviewStep() {
               <div className="space-y-3">
                 <div className="flex justify-between">
                   <span className="text-gray-600">Selected Plan</span>
-                  <span className="font-medium capitalize">{userData.subscriptionTier}</span>
+                  <span className="font-medium capitalize">{userData.subscriptionPlan.type}</span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-gray-600">Billing Period</span>
                   <span className="font-medium">
-                    {userData.subscriptionTier === 'yearly' ? 'Yearly' : 'Monthly'}
+                    {userData.subscriptionPlan.type === "yearly" ? 'Yearly' : 'Monthly'}
                   </span>
                 </div>
               </div>

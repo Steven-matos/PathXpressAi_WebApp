@@ -1,22 +1,49 @@
 import { Amplify } from 'aws-amplify';
+import { ResourcesConfig } from '@aws-amplify/core';
 import awsconfig from '../aws-exports';
 
+interface AmplifyConfig {
+  Auth: {
+    Cognito: {
+      userPoolId: string;
+      userPoolClientId: string;
+      signUpVerificationMethod: string;
+    };
+  };
+  API: {
+    GraphQL: {
+      endpoint: string;
+      region: string;
+      authenticationType: string;
+    };
+  };
+}
+
+const defaultConfig: AmplifyConfig = {
+  Auth: {
+    Cognito: {
+      userPoolId: process.env.NEXT_PUBLIC_USER_POOL_ID || '',
+      userPoolClientId: process.env.NEXT_PUBLIC_USER_POOL_CLIENT_ID || '',
+      signUpVerificationMethod: 'code',
+    },
+  },
+  API: {
+    GraphQL: {
+      endpoint: process.env.NEXT_PUBLIC_GRAPHQL_ENDPOINT || '',
+      region: process.env.NEXT_PUBLIC_REGION || 'us-east-1',
+      authenticationType: 'AMAZON_COGNITO_USER_POOLS',
+    },
+  },
+};
+
 // Initialize Amplify configuration
-export function configureAmplify() {
+export function configureAmplify(overrideConfig?: Partial<AmplifyConfig>) {
   console.log('🔄 Configuring Amplify...');
   
   // In a client component, access environment variables via window
-  const userPoolId = typeof window !== 'undefined' 
-    ? (window as any).__ENV?.NEXT_PUBLIC_USER_POOL_ID || process.env.NEXT_PUBLIC_USER_POOL_ID
-    : process.env.NEXT_PUBLIC_USER_POOL_ID;
-    
-  const userPoolClientId = typeof window !== 'undefined'
-    ? (window as any).__ENV?.NEXT_PUBLIC_USER_POOL_CLIENT_ID || process.env.NEXT_PUBLIC_USER_POOL_CLIENT_ID
-    : process.env.NEXT_PUBLIC_USER_POOL_CLIENT_ID;
-    
-  const graphqlEndpoint = typeof window !== 'undefined'
-    ? (window as any).__ENV?.NEXT_PUBLIC_GRAPHQL_ENDPOINT || process.env.NEXT_PUBLIC_GRAPHQL_ENDPOINT
-    : process.env.NEXT_PUBLIC_GRAPHQL_ENDPOINT;
+  const userPoolId = getUserPoolId();
+  const userPoolClientId = getUserPoolClientId();
+  const graphqlEndpoint = getGraphQLEndpoint();
 
   console.log('🔐 User Pool ID:', userPoolId || 'Not found');
   console.log('🔑 User Pool Client ID:', userPoolClientId || 'Not found');
@@ -29,42 +56,32 @@ export function configureAmplify() {
   const region = awsconfig.aws_appsync_region || 'us-east-1';
 
   // Configuration with our best attempt at getting the values
-  const overrideConfig = {
-    Auth: {
-      Cognito: {
-        userPoolId: finalUserPoolId,
-        userPoolClientId: finalUserPoolClientId,
-        loginWith: {
-          email: true,
-        },
-      },
-    },
-    API: {
-      GraphQL: {
-        endpoint: finalGraphqlEndpoint,
-        region: region,
-        defaultAuthMode: 'userPool',
-      },
-    },
-    // Providing all required configurations to avoid Lambda validation errors
-    // during the post-confirmation process
-    Storage: {
-      S3: {
-        region: region
-      }
-    }
+  const config: AmplifyConfig = {
+    ...defaultConfig,
+    ...overrideConfig
   };
 
   console.log('⚙️ Final Amplify config:', {
-    userPoolId: overrideConfig.Auth.Cognito.userPoolId,
-    userPoolClientId: overrideConfig.Auth.Cognito.userPoolClientId,
-    endpoint: overrideConfig.API.GraphQL.endpoint,
-    region: overrideConfig.API.GraphQL.region
+    userPoolId: config.Auth.Cognito.userPoolId || defaultConfig.Auth.Cognito.userPoolId || '',
+    userPoolClientId: config.Auth.Cognito.userPoolClientId || defaultConfig.Auth.Cognito.userPoolClientId || '',
+    endpoint: config.API.GraphQL.endpoint || defaultConfig.API.GraphQL.endpoint || '',
+    region: config.API.GraphQL.region || defaultConfig.API.GraphQL.region || ''
   });
+
+  // Validate required configuration
+  if (!config.Auth.Cognito.userPoolId) {
+    throw new Error('User Pool ID is required');
+  }
+  if (!config.Auth.Cognito.userPoolClientId) {
+    throw new Error('User Pool Client ID is required');
+  }
+  if (!config.API.GraphQL.endpoint) {
+    throw new Error('GraphQL endpoint is required');
+  }
 
   // Configure Amplify with our configuration
   try {
-    Amplify.configure(overrideConfig);
+    Amplify.configure(config);
     console.log('✅ Amplify configured successfully');
 
     // Generate GraphQL client to ensure it's ready for post-confirmation Lambda
@@ -117,4 +134,22 @@ async function testAmplifySetup() {
   } catch (error) {
     console.error('❌ Error testing Amplify setup:', error);
   }
-} 
+}
+
+const getUserPoolId = () => {
+  return typeof window !== 'undefined'
+    ? (window as any).__ENV?.NEXT_PUBLIC_USER_POOL_ID || process.env.NEXT_PUBLIC_USER_POOL_ID
+    : process.env.NEXT_PUBLIC_USER_POOL_ID;
+};
+
+const getUserPoolClientId = () => {
+  return typeof window !== 'undefined'
+    ? (window as any).__ENV?.NEXT_PUBLIC_USER_POOL_CLIENT_ID || process.env.NEXT_PUBLIC_USER_POOL_CLIENT_ID
+    : process.env.NEXT_PUBLIC_USER_POOL_CLIENT_ID;
+};
+
+const getGraphQLEndpoint = () => {
+  return typeof window !== 'undefined'
+    ? (window as any).__ENV?.NEXT_PUBLIC_GRAPHQL_ENDPOINT || process.env.NEXT_PUBLIC_GRAPHQL_ENDPOINT
+    : process.env.NEXT_PUBLIC_GRAPHQL_ENDPOINT;
+}; 

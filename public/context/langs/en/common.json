@@ -1,0 +1,350 @@
+{
+  "title": "Calendar",
+  "signIn": "Log In",
+  "signOut": "Log Out",
+  "dashboard": "Dashboard",
+  "date": "Date",
+  "startTime": "Start Time",
+  "endTime": "End Time",
+  "street": "Street",
+  "city": "City",
+  "state": "State",
+  "zip": "Zip Code",
+  "addRoute": "Add Route",
+  "routeScheduler": "Route Scheduler",
+  "allDay": "All Day",
+  "previous": "Previous",
+  "next": "Next",
+  "today": "Today",
+  "month": "Month",
+  "week": "Week",
+  "day": "Day",
+  "agenda": "Agenda",
+  "showMore": "Show More",
+  "noEventsInRange": "No Routes in this range",
+  "event": "Route",
+  "routesForTomorrow": "Routes for Tomorrow",
+  "noRoutesForTomorrow": "No Routes for Tomorrow",
+  "settings": "Settings",
+  "name": "Name",
+  "language": "Language",
+  "english": "English",
+  "spanish": "Spanish",
+  "calendar": "Calendar",
+  "home": "Home",
+  "welcome": "Welcome",
+  "heroTitle": "Path Xpress AI",
+  "heroTitle2": "AI Route Optimization Software",
+  "heroSubtitle": "Reduce delivery times by up to 40% with real-time AI-powered logistics planning and traffic-aware routing",
+  "featuresTagline": "Intelligent Route Optimization",
+  "featuresTitle": "Key Features of Our Route Optimization Software",
+  "featuresSubtitle": "Transform your logistics operations with our cutting-edge AI technology. Our platform seamlessly integrates real-time data analytics with advanced route optimization to maximize efficiency and reduce operational costs.",
+  "pricingTitle": "Transparent Pricing Plans for Logistics Optimization",
+  "pricingSubtitle": "Start optimizing delivery routes today with our risk-free trial. Cancel anytime.",
+  "startTrial": "Start Free Trial",
+  "getStarted": "Get Started",
+  "mostPopular": "Most Popular",
+  "basicRouting": "Basic routing",
+  "dailyUpdates": "Daily updates",
+  "emailSupport": "Email support",
+  "advancedRouting": "Advanced routing",
+  "unlimitedUpdates": "Unlimited updates",
+  "prioritySupport": "Priority support",
+  "fullFeatures": "Full features",
+  "vipSupport": "VIP support",
+  "teamManagement": "Team management",
+  "betaAccess": "Beta access",
+  "plans": {
+    "free": {
+      "name": "Free",
+      "features": ["Basic routing", "limited Addresses", "Email support"]
+    },
+    "weekly": {
+      "name": "Weekly",
+      "features": ["Basic routing", "limited Addresses", "Email support"]
+    },
+    "monthly": {
+      "name": "Monthly",
+      "features": [
+        "Optimized routing",
+        "Unlimited Addresses",
+        "Priority support"
+      ]
+    },
+    "yearly": {
+      "name": "Yearly",
+      "features": ["Full features", "VIP support", "Beta access"]
+    }
+  },
+  "features": {
+    "aiRouting": {
+      "title": "AI-Powered Routing",
+      "description": "Real-time traffic analysis and dynamic route optimization"
+    },
+    "multiStop": {
+      "title": "Multi-Stop Planning",
+      "description": "Efficiently schedule unlimited stops with smart sequencing"
+    },
+    "mobileSync": {
+      "title": "Mobile Sync",
+      "description": "Seamless integration with companion mobile app (coming soon)"
+    },
+    "liveUpdates": {
+      "title": "Live Updates",
+      "description": "Continuous route adjustments based on changing conditions"
+    },
+    "fleetOptimization": {
+      "title": "Fleet Route Optimization",
+      "description": "Efficiently manage and optimize routes for entire fleets with AI-powered scheduling and real-time adjustments. (coming soon)"
+    }
+  },
+  "footer": {
+    "contactUs": "Contact Us",
+    "termsAndConditions": "Terms & Conditions",
+    "privacyPolicy": "Privacy Policy",
+    "copyright": "All Rights Reserved Trident Innovations & Investments LLC",
+    "title": "Path Xpress Ai"
+  },
+  "contactTitle": "Let's optimize your routes",
+  "contactSubtitle": "We'd love to hear from you! Our team is ready to help optimize your delivery routes and improve your logistics efficiency.",
+  "emailAddress": "Email Address",
+  "emailPlaceholder": "your.email@example.com",
+  "message": "Message",
+  "messagePlaceholder": "Tell us about your logistics needs...",
+  "send": "Send",
+  "firstName": "First Name",
+  "lastName": "Last Name",
+  "lastNamePlaceholder": "Your last name",
+  "firstNamePlaceholder": "Your first name",
+  "sendMessage": "Send Message",
+  "termsTitle": "Terms and Conditions",
+  "termsSections": {
+    "acceptanceOfTerms": "Acceptance of Terms",
+    "serviceDescription": "Service Description",
+    "userResponsibilities": "User Responsibilities",
+    "paymentTerms": "Payment Terms",
+    "ipRights": "Intellectual Property Rights",
+    "disclaimer": "Disclaimer of Warranties",
+    "liability": "Limitation of Liability",
+    "termination": "Termination",
+    "governingLaw": "Governing Law",
+    "changes": "Changes to Terms",
+    "dataUsage": "Data Collection and Usage",
+    "subscriptionTerms": "Subscription Terms",
+    "userFeedback": "User Feedback"
+  },
+  "termsContent": {
+    "acceptanceOfTerms": [
+      "By using our services, you agree to the collection and processing of:",
+      "Real-time location data for route optimization",
+      "Historical routing data to improve AI models"
+    ],
+    "serviceDescription": [
+      "We provide a platform for scheduling and optimizing delivery routes using AI technology.",
+      "Our services are designed to help you manage your delivery operations more efficiently.",
+      "You can schedule routes, view real-time updates, and receive automated route suggestions."
+    ],
+    "dataUsage": [
+      "By using our services, you agree to the collection and processing of:",
+      "Real-time location data for route optimization",
+      "Vehicle specifications for fuel efficiency calculations",
+      "Historical routing data to improve AI models"
+    ],
+    "subscriptionTerms": [
+      "All plans auto-renew until canceled",
+      "Cancellations must be made 48 hours before renewal",
+      "No refunds for partial billing periods",
+      "Price changes communicated 30 days in advance"
+    ],
+    "userFeedback": [
+      "Voluntary feedback provided through our platform becomes our exclusive property. By submitting feedback, you grant us a perpetual, royalty-free license to use, modify, and incorporate it into our services without compensation.",
+      "You waive any rights to attribution or compensation for feedback used in service improvements or feature development."
+    ],
+    "userResponsibilities": [
+      "Provide accurate location and vehicle information",
+      "Maintain proper insurance coverage for commercial operations",
+      "Comply with all local traffic laws and regulations"
+    ]
+  },
+  "privacy_policy": {
+    "title": "Privacy Policy",
+    "sections": [
+      {
+        "title": "Introduction",
+        "content": "At Path Xpress Ai, we are committed to protecting the privacy of our users and customers. This Privacy Policy explains how we collect, store, and use personal information about individuals who interact with our website, services, or products."
+      },
+      {
+        "title": "What Information Do We Collect?",
+        "content": "We may collect personal information from you in various ways, including:",
+        "subcontent": [
+          "1) Visitors to our website: When you visit our website, we may collect information such as your IP address, browser type, and operating system.",
+          "2) Users of our services: If you use our services or products, we may collect additional information such as:",
+          "• Contact information (name, email address, phone number)",
+          "• Demographic information (age, gender, location)",
+          "• Usage data (data on how you interact with our services or products)",
+          "3) Customers: When you purchase a product or service from us, we may collect additional information such as:",
+          "• Payment and billing information",
+          "• Order history and details"
+        ]
+      },
+      {
+        "title": "How Do We Use Your Information?",
+        "content": "We use your personal information to:",
+        "subcontent": [
+          "1) Improve our services: We analyze usage data and customer feedback to improve our products and services.",
+          "2) Provide support: We use contact information to respond to inquiries, resolve issues, and provide general support.",
+          "3) Marketing and advertising: We may use demographic information and usage data to tailor marketing messages and ads to your interests.",
+          "4) Comply with legal obligations: We may share information with regulatory bodies or authorities as required by law."
+        ]
+      },
+      {
+        "title": "How Do We Protect Your Information?",
+        "content": "We take the security and confidentiality of your personal information seriously. To protect it:",
+        "subcontent": [
+          "1) Secure servers: We store information on secure servers protected by robust security measures.",
+          "2) Encryption: We use encryption to safeguard sensitive data (e.g., payment information).",
+          "3) Access controls: We limit access to personal information based on job responsibilities and need-to-know."
+        ]
+      },
+      {
+        "title": "Your Rights and Choices",
+        "content": "You have the right to:",
+        "subcontent": [
+          "1) Request access: Obtain a copy of your personal information.",
+          "2) Correct errors: Update or correct inaccurate information.",
+          "3) Delete data: Request that we delete your personal information (subject to legal and regulatory requirements).",
+          "4) Object to processing: Express concerns about how we use your information."
+        ]
+      },
+      {
+        "title": "Changes to This Policy",
+        "content": "We may update this Privacy Policy from time to time. We will notify you of any changes by posting an updated version on our website and/or by sending you a notice via email."
+      },
+      {
+        "title": "Contact Us",
+        "content": "If you have questions, concerns, or requests related to this Privacy Policy, please contact us at:",
+        "subcontent": ["Email: customerservice@pathxpressai.com"]
+      },
+      {
+        "title": "Effective Date",
+        "content": "This Privacy Policy is effective as of 01.01.2025 and applies to all personal information collected by Path Xpress Ai."
+      }
+    ]
+  },
+  "pricing": {
+    "per": "per"
+  },
+  "duration": {
+    "week": "week",
+    "month": "month",
+    "year": "year"
+  },
+  "login": {
+    "title": "AI Route Optimization",
+    "email": "Email",
+    "password": "Password",
+    "signIn": "Sign In",
+    "description": "Start optimizing your routes with AI-powered precision."
+  },
+  "signUp": "Sign Up",
+  "dontHaveAccount": "Don't have an account?",
+  "alreadyHaveAccount": "Already have an account?",
+  "signup": {
+    "title": "Create Account",
+    "description": "Start optimizing your routes with AI-powered precision",
+    "name": "Full Name",
+    "homeBase": "Home Base Address",
+    "addressPlaceholder": "Enter your primary operation address",
+    "confirmPassword": "Confirm Password",
+    "address": "Street Address",
+    "city": "City",
+    "cityPlaceholder": "Orlando",
+    "state": "State",
+    "statePlaceholder": "FL",
+    "zip": "ZIP Code",
+    "zipPlaceholder": "12345"
+  },
+  "errors": {
+    "invalidEmail": "Invalid email address",
+    "passwordLength": "Password must be at least 8 characters",
+    "nameLength": "Name must be at least 2 characters",
+    "addressLength": "Please enter a valid address",
+    "passwordMismatch": "Passwords do not match"
+  },
+  "comingSoon": "Coming Soon",
+  "loading": "Loading...",
+  "redirecting": "Redirecting",
+  
+  "onboarding": {
+    "steps": {
+      "profile": "Your Profile",
+      "address": "Home Base Address",
+      "subscription": "Subscription Plan",
+      "review": "Review & Confirm"
+    },
+    "continue": "Continue",
+    "complete": "Complete Setup",
+    "saving": "Saving...",
+    "creatingAccount": "Creating Account...",
+    "loading": "Loading",
+    "skipWaiting": "Skip Waiting and Continue",
+    "redirecting": "Redirecting",
+    "back": "Back",
+    "submit": "Submit",
+    
+    "profile": {
+      "title": "Welcome to Path Xpress AI",
+      "description": "Let's set up your profile to get started. Tell us what to call you.",
+      "name": "Your Name",
+      "namePlaceholder": "Enter your full name",
+      "selectLanguage": "Select your preferred language"
+    },
+    
+    "address": {
+      "title": "Set Your Home Base Address",
+      "description": "We need your address to help optimize your routes and calculate distances.",
+      "street": "Street Address",
+      "streetPlaceholder": "Enter your street address",
+      "city": "City",
+      "cityPlaceholder": "Enter your city",
+      "state": "State",
+      "statePlaceholder": "Select your state",
+      "zip": "ZIP Code",
+      "zipPlaceholder": "Enter your ZIP code"
+    },
+    
+    "subscription": {
+      "title": "Choose a Subscription Plan",
+      "description": "Select the plan that best fits your needs. You can change it later.",
+      "tier": "Subscription Tier"
+    },
+    
+    "review": {
+      "title": "Review Your Information",
+      "description": "Please review your information and accept our terms before continuing."
+    },
+    
+    "complete": {
+      "title": "Setup Complete!",
+      "description": "Your account is ready to use. Let's start optimizing your routes.",
+      "goToDashboard": "Go to Dashboard",
+      "creatingAccount": "Creating Account...",
+      "success": "Account created successfully!",
+      "error": "Error Creating Account",
+      "errorDescription": "There was a problem creating your account. Please try again."
+    }
+  },
+  "nav": {
+    "dashboard": "Dashboard",
+    "routes": "Routes",
+    "calendar": "Calendar",
+    "settings": "Settings",
+    "welcome": "Welcome"
+  },
+  "auth": {
+    "signOut": "Sign Out",
+    "signingOut": "Signing Out...",
+    "signOutSuccess": "Signed out successfully",
+    "signOutError": "Error signing out"
+  }
+}

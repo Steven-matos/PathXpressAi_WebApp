@@ -8,6 +8,7 @@ import {
   selectApiLastFetched,
   clearApiData
 } from '@/store/apiDataSlice';
+import type { ApiData } from '@/store/apiDataSlice';
 
 interface UseApiDataOptions {
   autoFetch?: boolean;
@@ -16,7 +17,7 @@ interface UseApiDataOptions {
 }
 
 export function useApiData<T = any>(
-  endpoint: string, 
+  endpoint: keyof ApiData, 
   params?: Record<string, any>,
   options: UseApiDataOptions = {}
 ) {

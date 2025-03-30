@@ -1,6 +1,7 @@
-'use client';
+"use client";
 
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import { Amplify } from 'aws-amplify';
 import { configureAmplify } from '@/lib/amplifyConfig';
 import Script from 'next/script';
 import { preloadAllTranslations } from '@/lib/translationLoader';
@@ -17,35 +18,33 @@ const envScript = `
   console.log("Environment variables exposed to client:", window.__ENV);
 `;
 
-export default function AmplifyClientProvider({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
-  // Initialize Amplify and preload translations on component mount
-  useEffect(() => {
-    // Configure Amplify with specific PathXpressAI API settings
-    try {
-      configureAmplify();
-      console.log('✅ PathXpressAI API connection configured successfully');
-    } catch (error) {
-      console.error('❌ Failed to configure PathXpressAI API connection:', error);
-    }
-    
-    // Preload translations for faster access
-    preloadAllTranslations().then(() => {
-      console.log('✅ Translations preloaded successfully');
-    }).catch(err => {
-      console.warn('⚠️ Error preloading translations:', err);
-    });
+export function AmplifyClientProvider({ children }: { children: React.ReactNode }) {
+  const [isInitialized, setIsInitialized] = useState(false);
 
-    // Log a reminder about required environment variables
-    if (!process.env['NEXT_PUBLIC_USER_POOL_ID'] || 
-        !process.env['NEXT_PUBLIC_USER_POOL_CLIENT_ID'] || 
-        !process.env['NEXT_PUBLIC_GRAPHQL_ENDPOINT']) {
-      console.warn('⚠️ Missing required environment variables for PathXpressAI API. Check your .env file.');
-    }
+  useEffect(() => {
+    const initAmplify = async () => {
+      try {
+        // Configure Amplify with specific PathXpressAI API settings
+        await configureAmplify();
+        
+        // Verify configuration
+        if (!Amplify.getConfig().Auth?.Cognito?.userPoolId) {
+          throw new Error('Amplify Auth configuration is missing');
+        }
+        
+        setIsInitialized(true);
+        console.log('✅ PathXpressAI API connection configured successfully');
+      } catch (error) {
+        console.error('❌ Failed to configure PathXpressAI API connection:', error);
+      }
+    };
+
+    initAmplify();
   }, []);
+
+  if (!isInitialized) {
+    return null; // or a loading spinner
+  }
 
   return (
     <>

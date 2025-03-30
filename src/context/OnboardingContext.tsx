@@ -8,9 +8,52 @@ import { toast } from '@/components/ui/use-toast';
 
 // Define the subscription tier options
 export type SubscriptionTier = 'free' | 'monthly' | 'yearly';
+export interface SubscriptionPlan {
+  id: string;
+  type: SubscriptionTier;
+}
 
 // Define the onboarding steps
 export type OnboardingStep = 'profile' | 'address' | 'subscription' | 'review' | 'complete';
+
+interface OnboardingData {
+  name: string;
+  language: "en" | "es";
+  address: string;
+  city: string;
+  state: string;
+  zip: string;
+  subscriptionPlan: SubscriptionPlan;
+  terms: boolean;
+  privacy_policy: boolean;
+}
+
+interface UserResponse {
+  id: string;
+  email: string;
+  name: string;
+  homeBase: string;
+  language: string;
+  preferences: string;
+  subscriptionTier: SubscriptionTier;
+  createdAt: string;
+  updatedAt: string;
+}
+
+interface GraphQLResponse<T> {
+  data: {
+    [key: string]: T;
+  };
+  errors?: Array<{
+    message: string;
+    locations: Array<{
+      line: number;
+      column: number;
+    }>;
+    path: string[];
+    extensions?: Record<string, any>;
+  }>;
+}
 
 interface OnboardingContextType {
   // Current status
@@ -18,20 +61,10 @@ interface OnboardingContextType {
   isOnboardingComplete: boolean;
   
   // User data collected during onboarding
-  userData: {
-    name: string;
-    language: 'en' | 'es';
-    address: string;
-    city: string;
-    state: string;
-    zip: string;
-    subscriptionTier: SubscriptionTier;
-    terms: boolean;
-    privacy_policy: boolean;
-  };
+  userData: OnboardingData;
   
   // Methods to update onboarding
-  updateUserData: (data: Partial<OnboardingContextType['userData']>) => void;
+  updateUserData: (data: Partial<OnboardingData>) => void;
   completeCurrentStep: () => void;
   setOnboardingComplete: () => void;
   checkUserExists: () => Promise<boolean>;
@@ -43,14 +76,17 @@ interface OnboardingContextType {
   setCurrentStep: (step: OnboardingStep) => void;
 }
 
-const defaultUserData = {
+const defaultUserData: OnboardingData = {
   name: '',
-  language: 'en' as 'en' | 'es',
+  language: 'en',
   address: '',
   city: '',
   state: '',
   zip: '',
-  subscriptionTier: 'free' as SubscriptionTier,
+  subscriptionPlan: {
+    id: '1',
+    type: 'free'
+  },
   terms: false,
   privacy_policy: false,
 };
@@ -239,79 +275,49 @@ export function OnboardingProvider({ children }: { children: ReactNode }) {
     let tempClient = null;
     
     try {
-      // First check - if no user, return false immediately 
       if (!user || !user.username) {
         return false;
       }
       
-      // Extract email from user object
       const email = user.username;
       
-      // Add extra protection against API errors
       try {
-        // Try to generate client outside of the main GraphQL operation
-        // This isolates client generation errors
         tempClient = generateClient();
         
-        // Additional safety check before proceeding with GraphQL operation
         if (!tempClient) {
           return false;
         }
         
-        // Try to make the GraphQL query with timeout protection
-        const queryPromise = tempClient.graphql({
+        const response = await tempClient.graphql({
           query: getUserQuery,
           variables: { 
             input: { email } 
           }
-        });
+        }) as unknown as GraphQLResponse<UserResponse>;
         
-        // Set a timeout to prevent hanging on API calls
-        const timeoutPromise = new Promise<any>(resolve => {
+        const timeoutPromise = new Promise<{ timedOut: true }>(resolve => {
           setTimeout(() => {
             resolve({ timedOut: true });
-          }, 3000); // 3 second timeout
+          }, 3000);
         });
         
-        // Race between actual query and timeout
-        const response = await Promise.race([queryPromise, timeoutPromise]);
+        const result = await Promise.race([response, timeoutPromise]);
         
-        // If we got a timeout result, return false
-        if (response && 'timedOut' in response) {
+        if ('timedOut' in result) {
           return false;
         }
         
-        // Extra safety checks for response structure
-        if (response && 
-            typeof response === 'object' && 
-            'data' in response && 
-            response.data && 
-            typeof response.data === 'object') {
-          // Safely check if user exists in the response
-          if (response.data && 
-              'getUser' in response.data) {
-            const userExists = !!response.data.getUser;
-            return userExists;
-          }
-          
-          return false;
-        }
-        
-        return false;
+        return !!result.data['getUser'];
       } catch (graphqlError) {
-        // Check for specific error types
         const error = graphqlError as { name?: string };
         if (error.name === 'ApiError' || 
             error.name === 'NetworkError' || 
             error.name === 'UnauthorizedException') {
           return false;
         }
-        
-        // For other errors, return false to continue the flow
         return false;
       }
     } catch (error) {
-      // Catch-all for any unexpected errors
       return false;
     }
   };
@@ -321,26 +327,21 @@ export function OnboardingProvider({ children }: { children: ReactNode }) {
     let tempClient = null;
     
     try {
-      // Validate user exists
       if (!user || !user.username) {
         throw new Error('No authenticated user available');
       }
       
       const email = user.username;
-      
-      // Prepare user data for creation
       const homeBase = `${userData.address}, ${userData.city}, ${userData.state} ${userData.zip}`;
       
       try {
-        // Generate client with error handling
         tempClient = generateClient();
         
         if (!tempClient) {
           throw new Error('Failed to initialize GraphQL client');
         }
         
-        // Set up a timeout to prevent hanging operations
-        const mutationPromise = tempClient.graphql({
+        const response = await tempClient.graphql({
           query: createUserMutation,
           variables: { 
             input: {
@@ -348,33 +349,34 @@ export function OnboardingProvider({ children }: { children: ReactNode }) {
               name: userData.name,
               homeBase,
               language: userData.language,
-              subscriptionTier: userData.subscriptionTier,
-              preferences: '{}'  // Default empty preferences
+              subscriptionPlan: userData.subscriptionPlan,
+              preferences: '{}'
             }
           }
-        });
+        }) as unknown as GraphQLResponse<UserResponse>;
         
-        // Create a timeout promise
-        const timeoutPromise = new Promise<any>((_, reject) => {
+        const timeoutPromise = new Promise<never>((_, reject) => {
           setTimeout(() => {
             reject(new Error('GraphQL operation timed out'));
-          }, 5000); // 5 second timeout
+          }, 5000);
         });
         
-        // Race between the actual operation and timeout
-        await Promise.race([mutationPromise, timeoutPromise]);
-        
+        await Promise.race([response, timeoutPromise]);
       } catch (graphqlError) {
-        // Re-throw for the caller to handle
         throw graphqlError;
       }
     } catch (error) {
       throw error;
     }
   };
-
-  const updateUserData = (data: Partial<OnboardingContextType['userData']>) => {
-    setUserData(prevData => ({ ...prevData, ...data }));
+  const updateUserData = (data: Partial<OnboardingData>) => {
+    setUserData(prevData => {
+      if (!prevData) return data as OnboardingData;
+      return {
+        ...prevData,
+        ...data
+      };
+    });
   };
 
   const completeCurrentStep = () => {
