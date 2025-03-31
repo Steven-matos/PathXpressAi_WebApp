@@ -1,39 +1,25 @@
 import { Amplify } from 'aws-amplify';
-import awsconfig from '../aws-exports';
 
 // Initialize Amplify configuration
 export function configureAmplify() {
   console.log('🔄 Configuring Amplify...');
   
-  // In a client component, access environment variables via window
-  const userPoolId = typeof window !== 'undefined' 
-    ? (window as any).__ENV?.NEXT_PUBLIC_USER_POOL_ID || process.env.NEXT_PUBLIC_USER_POOL_ID
-    : process.env.NEXT_PUBLIC_USER_POOL_ID;
-    
-  const userPoolClientId = typeof window !== 'undefined'
-    ? (window as any).__ENV?.NEXT_PUBLIC_USER_POOL_CLIENT_ID || process.env.NEXT_PUBLIC_USER_POOL_CLIENT_ID
-    : process.env.NEXT_PUBLIC_USER_POOL_CLIENT_ID;
-    
-  const graphqlEndpoint = typeof window !== 'undefined'
-    ? (window as any).__ENV?.NEXT_PUBLIC_GRAPHQL_ENDPOINT || process.env.NEXT_PUBLIC_GRAPHQL_ENDPOINT
-    : process.env.NEXT_PUBLIC_GRAPHQL_ENDPOINT;
+  // Get configuration from environment variables
+  const userPoolId = process.env.NEXT_PUBLIC_USER_POOL_ID;
+  const userPoolClientId = process.env.NEXT_PUBLIC_USER_POOL_CLIENT_ID;
+  const graphqlEndpoint = process.env.NEXT_PUBLIC_GRAPHQL_ENDPOINT;
+  const region = process.env.NEXT_PUBLIC_REGION || 'us-east-1';
 
   console.log('🔐 User Pool ID:', userPoolId || 'Not found');
   console.log('🔑 User Pool Client ID:', userPoolClientId || 'Not found');
   console.log('🌐 GraphQL Endpoint:', graphqlEndpoint || 'Not found');
 
-  // Hard-coded fallback values as a last resort (for development only)
-  const finalUserPoolId = userPoolId || awsconfig.aws_user_pools_id || 'us-east-1_ZNwA1XBAt';
-  const finalUserPoolClientId = userPoolClientId || awsconfig.aws_user_pools_web_client_id || '1mlmpcdgqovg1i55vvfki35b1v';
-  const finalGraphqlEndpoint = graphqlEndpoint || awsconfig.aws_appsync_graphqlEndpoint || 'https://fqhs2y3vlvfndk46swuyvklnrm.appsync-api.us-east-1.amazonaws.com/graphql';
-  const region = awsconfig.aws_appsync_region || 'us-east-1';
-
-  // Configuration with our best attempt at getting the values
-  const overrideConfig = {
+  // Configuration with environment variables
+  const config = {
     Auth: {
       Cognito: {
-        userPoolId: finalUserPoolId,
-        userPoolClientId: finalUserPoolClientId,
+        userPoolId: userPoolId,
+        userPoolClientId: userPoolClientId,
         loginWith: {
           email: true,
         },
@@ -41,13 +27,11 @@ export function configureAmplify() {
     },
     API: {
       GraphQL: {
-        endpoint: finalGraphqlEndpoint,
+        endpoint: graphqlEndpoint,
         region: region,
         defaultAuthMode: 'userPool',
       },
     },
-    // Providing all required configurations to avoid Lambda validation errors
-    // during the post-confirmation process
     Storage: {
       S3: {
         region: region
@@ -56,15 +40,15 @@ export function configureAmplify() {
   };
 
   console.log('⚙️ Final Amplify config:', {
-    userPoolId: overrideConfig.Auth.Cognito.userPoolId,
-    userPoolClientId: overrideConfig.Auth.Cognito.userPoolClientId,
-    endpoint: overrideConfig.API.GraphQL.endpoint,
-    region: overrideConfig.API.GraphQL.region
+    userPoolId: config.Auth.Cognito.userPoolId,
+    userPoolClientId: config.Auth.Cognito.userPoolClientId,
+    endpoint: config.API.GraphQL.endpoint,
+    region: config.API.GraphQL.region
   });
 
   // Configure Amplify with our configuration
   try {
-    Amplify.configure(overrideConfig);
+    Amplify.configure(config);
     console.log('✅ Amplify configured successfully');
 
     // Generate GraphQL client to ensure it's ready for post-confirmation Lambda
