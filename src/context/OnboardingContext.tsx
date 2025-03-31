@@ -5,6 +5,8 @@ import { useRouter } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
 import { generateClient } from 'aws-amplify/api';
 import { toast } from '@/components/ui/use-toast';
+import { checkAmplifyConfig, testAmplifyConnection } from '../lib/amplifyHelpers';
+import { signIn } from 'aws-amplify/auth';
 
 // Define the subscription tier options
 export type SubscriptionTier = 'free' | 'monthly' | 'yearly';
@@ -330,6 +332,26 @@ export function OnboardingProvider({ children }: { children: ReactNode }) {
       if (!user || !user.username) {
         throw new Error('No authenticated user available');
       }
+
+      // Check Amplify configuration
+      const { isConfigured, missingValues } = checkAmplifyConfig();
+      if (!isConfigured) {
+        throw new Error(`Amplify configuration is missing: ${missingValues.join(', ')}`);
+      }
+
+      // Test the connection
+      const { success, message } = await testAmplifyConnection();
+      if (!success) {
+        throw new Error(`Amplify connection failed: ${message}`);
+      }
+
+      // Try to refresh the session
+      try {
+        await signIn({ username: user.username });
+      } catch (error) {
+        console.error('Failed to refresh session:', error);
+        throw new Error('Authentication session expired. Please sign in again.');
+      }
       
       const email = user.username;
       const homeBase = `${userData.address}, ${userData.city}, ${userData.state} ${userData.zip}`;
@@ -363,9 +385,11 @@ export function OnboardingProvider({ children }: { children: ReactNode }) {
         
         await Promise.race([response, timeoutPromise]);
       } catch (graphqlError) {
-        throw graphqlError;
+        console.error('GraphQL error:', graphqlError);
+        throw new Error('Failed to create user record. Please try again.');
       }
     } catch (error) {
+      console.error('Error in createUserInDatabase:', error);
       throw error;
     }
   };

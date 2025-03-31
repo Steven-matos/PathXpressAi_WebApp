@@ -48,7 +48,12 @@ const fallbackTranslations = {
         success: "Onboarding Complete",
         description: "Your account has been successfully created.",
         error: "Error Creating Account",
-        errorDescription: "There was a problem creating your account. Please try again."
+        errorDescription: "There was an error creating your account. Please try again.",
+        authError: "Authentication failed. Please sign in again.",
+        credentialsError: "Unable to access your account. Please check your credentials and try again.",
+        sessionError: "Your session has expired. Please sign in again.",
+        creatingAccount: "Creating your account...",
+        goToDashboard: "Go to Dashboard"
       }
     },
     profile: {
