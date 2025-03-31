@@ -7,13 +7,45 @@ import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { fetchAuthSession, getCurrentUser } from 'aws-amplify/auth';
+import { useToast } from '@/components/ui/use-toast';
+
+interface SignUpData {
+  username: string;
+  password: string;
+  email: string;
+}
+
+interface SignInData {
+  username: string;
+  password: string;
+}
+
+interface ConfirmSignUpData {
+  username: string;
+  code: string;
+}
 
 export function CognitoTester() {
+  const { toast } = useToast();
   const [userPoolId, setUserPoolId] = useState('');
   const [clientId, setClientId] = useState('');
   const [status, setStatus] = useState<'idle' | 'testing' | 'success' | 'error'>('idle');
   const [resultMessage, setResultMessage] = useState('');
   const [showForm, setShowForm] = useState(false);
+  const [signUpData, setSignUpData] = useState<SignUpData>({
+    username: '',
+    password: '',
+    email: ''
+  });
+  const [signInData, setSignInData] = useState<SignInData>({
+    username: '',
+    password: ''
+  });
+  const [confirmSignUpData, setConfirmSignUpData] = useState<ConfirmSignUpData>({
+    username: '',
+    code: ''
+  });
+  const [isLoading, setIsLoading] = useState(false);
 
   const testCurrentConfig = async () => {
     setStatus('testing');
@@ -75,6 +107,123 @@ export function CognitoTester() {
       } catch (error) {
         console.error('Error getting config details:', error);
       }
+    }
+  };
+
+  const handleSignUp = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsLoading(true);
+    try {
+      await signUp({
+        username: signUpData.username,
+        password: signUpData.password,
+        options: {
+          userAttributes: {
+            email: signUpData.email
+          }
+        }
+      });
+      toast({
+        title: 'Success',
+        description: 'Please check your email for the confirmation code.'
+      });
+    } catch (error) {
+      console.error('Error signing up:', error);
+      toast({
+        title: 'Error',
+        description: error instanceof Error ? error.message : 'Failed to sign up',
+        variant: 'destructive'
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleSignIn = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsLoading(true);
+    try {
+      await signIn({
+        username: signInData.username,
+        password: signInData.password
+      });
+      toast({
+        title: 'Success',
+        description: 'Signed in successfully!'
+      });
+    } catch (error) {
+      console.error('Error signing in:', error);
+      toast({
+        title: 'Error',
+        description: error instanceof Error ? error.message : 'Failed to sign in',
+        variant: 'destructive'
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleConfirmSignUp = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsLoading(true);
+    try {
+      await confirmSignUp({
+        username: confirmSignUpData.username,
+        confirmationCode: confirmSignUpData.code
+      });
+      toast({
+        title: 'Success',
+        description: 'Email confirmed successfully!'
+      });
+    } catch (error) {
+      console.error('Error confirming sign up:', error);
+      toast({
+        title: 'Error',
+        description: error instanceof Error ? error.message : 'Failed to confirm sign up',
+        variant: 'destructive'
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleSignOut = async () => {
+    setIsLoading(true);
+    try {
+      await signOut();
+      toast({
+        title: 'Success',
+        description: 'Signed out successfully!'
+      });
+    } catch (error) {
+      console.error('Error signing out:', error);
+      toast({
+        title: 'Error',
+        description: error instanceof Error ? error.message : 'Failed to sign out',
+        variant: 'destructive'
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleCheckAuth = async () => {
+    setIsLoading(true);
+    try {
+      const user = await getCurrentUser();
+      toast({
+        title: 'Success',
+        description: `Currently signed in as: ${user.username}`
+      });
+    } catch (error) {
+      console.error('Error checking auth:', error);
+      toast({
+        title: 'Error',
+        description: error instanceof Error ? error.message : 'Failed to check auth status',
+        variant: 'destructive'
+      });
+    } finally {
+      setIsLoading(false);
     }
   };
 

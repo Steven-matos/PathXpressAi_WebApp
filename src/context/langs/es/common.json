@@ -285,5 +285,63 @@
   "liveChat": "Chat en vivo",
   "chatAvailability": "Nuestro equipo está disponible Lun-Vie, 9am-6pm EST",
   "startChat": "Iniciar conversación",
-  "comingSoon": "Próximamente"
+  "comingSoon": "Próximamente",
+  "loading": "Cargando...",
+  "redirecting": "Redirigiendo",
+  
+  "onboarding": {
+    "steps": {
+      "profile": "Tu Perfil",
+      "address": "Dirección Base",
+      "subscription": "Plan de Suscripción",
+      "review": "Revisar y Confirmar"
+    },
+    "continue": "Continuar",
+    "complete": "Completar configuración",
+    "saving": "Guardando...",
+    "creatingAccount": "Creando cuenta...",
+    "loading": "Cargando",
+    "skipWaiting": "Omitir espera y continuar",
+    "redirecting": "Redirigiendo",
+    "back": "Atrás",
+    "submit": "Enviar",
+    
+    "profile": {
+      "title": "Bienvenido a Path Xpress AI",
+      "description": "Configuremos tu perfil para comenzar. Dinos cómo debemos llamarte.",
+      "name": "Tu Nombre",
+      "namePlaceholder": "Ingresa tu nombre completo",
+      "selectLanguage": "Selecciona tu idioma preferido"
+    },
+    
+    "address": {
+      "title": "Establece tu Dirección Base",
+      "description": "Necesitamos tu dirección para ayudar a optimizar tus rutas y calcular distancias.",
+      "street": "Dirección",
+      "streetPlaceholder": "Ingresa tu dirección",
+      "city": "Ciudad",
+      "cityPlaceholder": "Ingresa tu ciudad",
+      "state": "Estado",
+      "statePlaceholder": "Selecciona tu estado",
+      "zip": "Código Postal",
+      "zipPlaceholder": "Ingresa tu código postal"
+    },
+    
+    "subscription": {
+      "title": "Elige un Plan de Suscripción",
+      "description": "Selecciona el plan que mejor se adapte a tus necesidades. Puedes cambiarlo más tarde.",
+      "tier": "Nivel de Suscripción"
+    },
+    
+    "review": {
+      "title": "Revisa tu Información",
+      "description": "Por favor, revisa tu información y acepta nuestros términos antes de continuar."
+    },
+    
+    "complete": {
+      "title": "¡Configuración Completa!",
+      "description": "Tu cuenta está lista para usar. Comencemos a optimizar tus rutas.",
+      "goToDashboard": "Ir al Panel"
+    }
+  }
 }

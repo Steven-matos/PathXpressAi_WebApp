@@ -1,12 +1,16 @@
-import { TermsAndConditions } from "@/components/page-components/terms-and-conditions";
-import { Header } from "@/components/header";
-import { Footer } from "@/components/footer";
+import { LegalContent } from "@/features/legal-content/LegalContent";
+import { Header } from "@/components/layout/header";
+import { Footer } from "@/components/layout/footer";
+import { termsAndConditions } from "@/content/policies";
 
 export default function Page() {
   return (
     <>
       <Header />
-      <TermsAndConditions />
+      <LegalContent 
+        content={termsAndConditions}
+        title="Terms and Conditions"
+      />
       <Footer />
     </>
   );

@@ -5,13 +5,11 @@ import { Disclosure } from "@headlessui/react";
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 import Link from "next/link";
 import { useTranslation } from "@/context/TranslationContext";
-import { LanguageSwitcher } from "./language-switcher";
-import { useToast } from "@/hooks/use-toast";
+import { LanguageSwitcher } from "@/features/i18n";
 
 export function Header() {
   const { t } = useTranslation();
   const videoRef = useRef<HTMLVideoElement>(null);
-  const { toast } = useToast();
 
   useEffect(() => {
     // Play video once when component mounts
@@ -19,16 +17,6 @@ export function Header() {
       videoRef.current.play();
     }
   }, []);
-
-  const handleSignupClick = (e: React.MouseEvent) => {
-    e.preventDefault();
-    toast({
-      title: "Product Not Live",
-      description:
-        "Product not live yet. Feel free to reach out via email for any questions.",
-      duration: 5000,
-    });
-  };
 
   return (
     <Disclosure as="nav" className="bg-white shadow fixed w-full top-0 z-50">
@@ -46,7 +34,7 @@ export function Header() {
                       playsInline
                       muted
                     >
-                      <source src="/logo-video.mp4" type="video/mp4" />
+                      <source src="/assets/videos/logo-video.mp4" type="video/mp4" />
                     </video>
                   </div>
                 </Link>
@@ -62,9 +50,8 @@ export function Header() {
                   {t("signIn")}
                 </Link>
                 <Link
-                  href="#"
+                  href="/signup"
                   className="rounded-md bg-accent px-3.5 py-2 text-sm font-semibold text-white shadow-sm hover:bg-primary transition-colors duration-300"
-                  onClick={handleSignupClick}
                 >
                   {t("signUp")}
                 </Link>
@@ -98,9 +85,8 @@ export function Header() {
                   {t("signIn")}
                 </Link>
                 <Link
-                  href="#"
+                  href="/signup"
                   className="w-full rounded-md bg-accent px-3.5 py-2 text-sm font-semibold text-white shadow-sm hover:bg-primary transition-colors duration-300 text-center"
-                  onClick={handleSignupClick}
                 >
                   {t("signUp")}
                 </Link>

@@ -1,0 +1,360 @@
+{
+  "title": "Calendario",
+  "signIn": "Iniciar sesión",
+  "signOut": "Cerrar sesión",
+  "dashboard": "Tablero",
+  "date": "Fecha",
+  "startTime": "Hora de inicio",
+  "endTime": "Hora de fin",
+  "street": "Calle",
+  "city": "Ciudad",
+  "state": "Estado",
+  "zip": "Código postal",
+  "addRoute": "Agregar ruta",
+  "routeScheduler": "Programador de Rutas",
+  "allDay": "Todo el día",
+  "previous": "Anterior",
+  "next": "Siguiente",
+  "today": "Hoy",
+  "month": "Mes",
+  "week": "Semana",
+  "day": "Día",
+  "agenda": "Agenda",
+  "showMore": "Mostrar más",
+  "noEventsInRange": "No hay rutas en este rango",
+  "event": "Ruta",
+  "routesForTomorrow": "Rutas para el día siguiente",
+  "noRoutesForTomorrow": "No hay rutas para el día siguiente",
+  "settings": "Configuración",
+  "name": "Nombre",
+  "language": "Idioma",
+  "english": "Inglés",
+  "spanish": "Español",
+  "calendar": "Calendario",
+  "home": "Inicio",
+  "welcome": "Bienvenido",
+  "heroTitle": "Path Xpress AI",
+  "heroTitle2": "Software de optimización de rutas con IA",
+  "heroSubtitle": "Optimiza tus rutas en tiempo real con IA, adaptándote al tráfico, clima y tu horario",
+  "featuresTitle": "Características clave de nuestro software de optimización de rutas",
+  "featuresTagline": "Optimización de rutas con IA",
+  "featuresSubtitle": "Transforma tus operaciones logísticas con nuestra tecnología de IA. Nuestra plataforma integra análisis de datos en tiempo real con optimización de rutas avanzada para maximizar la eficiencia y reducir costos operativos.",
+  "pricingTitle": "Precios transparentes para la optimización de rutas",
+  "pricingSubtitle": "Comienza a optimizar tus rutas hoy con nuestra prueba gratuita. Cancela cuando quieras.",
+  "startTrial": "Comienza Prueba Gratis",
+  "getStarted": "Comenzar",
+  "mostPopular": "Más popular",
+  "basicRouting": "Rutas básicas",
+  "dailyUpdates": "Actualizaciones diarias",
+  "emailSupport": "Soporte por correo electrónico",
+  "advancedRouting": "Rutas avanzadas",
+  "unlimitedUpdates": "Actualizaciones ilimitadas",
+  "prioritySupport": "Soporte prioritario",
+  "fullFeatures": "Todas las funciones",
+  "vipSupport": "Soporte VIP",
+  "teamManagement": "Gestión de equipos",
+  "betaAccess": "Acceso beta",
+  "plans": {
+    "free": {
+      "name": "Gratuito",
+      "features": [
+        "Rutas básicas",
+        "Direcciones limitadas",
+        "Soporte por correo"
+      ]
+    },
+    "weekly": {
+      "name": "Semanal",
+      "features": [
+        "Rutas básicas",
+        "Direcciones limitadas",
+        "Soporte por correo"
+      ]
+    },
+    "monthly": {
+      "name": "Mensual",
+      "features": [
+        "Rutas optimizadas",
+        "Direcciones ilimitadas",
+        "Soporte prioritario"
+      ]
+    },
+    "yearly": {
+      "name": "Anual",
+      "features": ["Todas las funciones", "Soporte VIP", "Acceso beta"]
+    }
+  },
+  "features": {
+    "aiRouting": {
+      "title": "Rutas con IA",
+      "description": "Análisis de tráfico en tiempo real y optimización dinámica de rutas"
+    },
+    "multiStop": {
+      "title": "Planificación Multi-Parada",
+      "description": "Programa paradas ilimitadas con secuenciación inteligente"
+    },
+    "mobileSync": {
+      "title": "Sincronización Móvil",
+      "description": "Integración perfecta con la aplicación móvil (próximamente)"
+    },
+    "liveUpdates": {
+      "title": "Actualizaciones en Vivo",
+      "description": "Ajustes continuos de ruta basados en condiciones cambiantes"
+    },
+    "fleetOptimization": {
+      "title": "Optimización de Flota",
+      "description": "Gestiona y optimiza rutas para flotas completas con programación basada en IA y ajustes en tiempo real. (próximamente)"
+    }
+  },
+  "footer": {
+    "contactUs": "Contactanos",
+    "termsAndConditions": "Términos y condiciones",
+    "privacyPolicy": "Política de privacidad",
+    "copyright": "Todos los derechos reservados Trident Innovations & Investments LLC",
+    "title": "Path Xpress AI"
+  },
+  "contactTitle": "Optimicemos tus rutas",
+  "contactSubtitle": "¡Nos encantaría saber de ti! Nuestro equipo está listo para ayudarte a optimizar tus rutas de entrega y mejorar la eficiencia de tu logística.",
+  "emailAddress": "Correo Electrónico",
+  "emailPlaceholder": "tu.correo@ejemplo.com",
+  "message": "Mensaje",
+  "messagePlaceholder": "Cuéntanos sobre tus necesidades logísticas...",
+  "send": "Enviar",
+  "firstName": "Nombre",
+  "lastName": "Apellido",
+  "lastNamePlaceholder": "Tu apellido",
+  "firstNamePlaceholder": "Tu nombre",
+  "sendMessage": "Enviar Mensaje",
+  "termsTitle": "Términos y Condiciones",
+  "termsSections": {
+    "acceptanceOfTerms": "Aceptación de los Términos",
+    "serviceDescription": "Descripción del Servicio",
+    "userResponsibilities": "Responsabilidades del Usuario",
+    "paymentTerms": "Términos de Pago",
+    "ipRights": "Derechos de Propiedad Intelectual",
+    "disclaimer": "Renuncia de Garantías",
+    "liability": "Limitación de Responsabilidad",
+    "termination": "Terminación",
+    "governingLaw": "Ley Aplicable",
+    "changes": "Cambios en los Términos",
+    "dataUsage": "Recopilación y Uso de Datos",
+    "subscriptionTerms": "Términos de Suscripción",
+    "userFeedback": "Comentarios de Usuarios"
+  },
+  "termsContent": {
+    "dataUsage": [
+      "Al usar nuestros servicios, acepta la recopilación y procesamiento de:",
+      "Datos de ubicación en tiempo real para optimización de rutas",
+      "Datos históricos de rutas para mejorar modelos de IA"
+    ],
+    "subscriptionTerms": [
+      "Todos los planes se renuevan automáticamente hasta ser cancelados",
+      "Las cancelaciones deben realizarse 48 horas antes de la renovación",
+      "No hay reembolsos por períodos de facturación parciales",
+      "Cambios de precio comunicados con 30 días de anticipación"
+    ],
+    "userFeedback": [
+      "Los comentarios voluntarios proporcionados a través de nuestra plataforma se convierten en propiedad exclusiva nuestra. Al enviar comentarios, nos otorga una licencia perpetua y libre de regalías para usar, modificar e incorporarlos en nuestros servicios sin compensación.",
+      "Usted renuncia a cualquier derecho de atribución o compensación por comentarios utilizados en mejoras de servicios o desarrollo de funciones."
+    ],
+    "userResponsibilities": [
+      "Proporcionar información de ubicación y vehículo exacta",
+      "Mantener cobertura de seguros adecuada para operaciones comerciales",
+      "Cumplir con todas las leyes y regulaciones de tráfico locales"
+    ],
+    "acceptanceOfTerms": [
+      "Al usar nuestros servicios, acepta la recopilación y procesamiento de:",
+      "Datos de ubicación en tiempo real para optimización de rutas",
+      "Especificaciones del vehículo para cálculos de eficiencia de combustible",
+      "Datos históricos de rutas para mejorar modelos de IA"
+    ],
+    "serviceDescription": [
+      "Nosotros nos esforzamos por proporcionar una experiencia de usuario fluida y eficiente. Al usar nuestros servicios, acepta que:",
+      "Podemos registrar y almacenar datos de uso de la aplicación",
+      "Podemos mostrar anuncios y promociones en la aplicación",
+      "Podemos usar datos de ubicación para mejorar nuestros servicios"
+    ]
+  },
+  "privacy_policy": {
+    "title": "Política de Privacidad",
+    "sections": [
+      {
+        "title": "Introducción",
+        "content": "En Path Xpress Ai, estamos comprometidos a proteger la privacidad de nuestros usuarios y clientes. Esta Política de Privacidad explica cómo recopilamos, almacenamos y utilizamos la información personal de las personas que interactúan con nuestro sitio web, servicios o productos."
+      },
+      {
+        "title": "¿Qué información recopilamos?",
+        "content": "Podemos recopilar información personal de usted de varias maneras, incluyendo:",
+        "subcontent": [
+          "1) Visitantes de nuestro sitio web: Cuando visita nuestro sitio web, podemos recopilar información como su dirección IP, tipo de navegador y sistema operativo.",
+          "2) Usuarios de nuestros servicios: Si utiliza nuestros servicios o productos, podemos recopilar información adicional como:",
+          "• Información de contacto (nombre, dirección de correo electrónico, número de teléfono)",
+          "• Información demográfica (edad, género, ubicación)",
+          "• Datos de uso (información sobre cómo interactúa con nuestros servicios o productos)",
+          "3) Clientes: Cuando compra un producto o servicio de nosotros, podemos recopilar información adicional como:",
+          "• Información de pago y facturación",
+          "• Historial y detalles de pedidos"
+        ]
+      },
+      {
+        "title": "¿Cómo utilizamos su información?",
+        "content": "Utilizamos su información personal para:",
+        "subcontent": [
+          "1) Mejorar nuestros servicios: Analizamos datos de uso y comentarios de clientes para mejorar nuestros productos y servicios.",
+          "2) Brindar soporte: Utilizamos información de contacto para responder consultas, resolver problemas y brindar asistencia general.",
+          "3) Marketing y publicidad: Podemos utilizar información demográfica y datos de uso para personalizar mensajes publicitarios y anuncios según sus intereses.",
+          "4) Cumplir con obligaciones legales: Podemos compartir información con organismos reguladores o autoridades según lo exija la ley."
+        ]
+      },
+      {
+        "title": "¿Cómo protegemos su información?",
+        "content": "Tomamos en serio la seguridad y confidencialidad de su información personal. Para protegerla:",
+        "subcontent": [
+          "1) Servidores seguros: Almacenamos información en servidores seguros protegidos con medidas robustas de seguridad.",
+          "2) Encriptación: Utilizamos encriptación para proteger datos sensibles (ej. información de pago).",
+          "3) Controles de acceso: Limitamos el acceso a información personal según responsabilidades laborales y necesidad de conocer."
+        ]
+      },
+      {
+        "title": "Sus derechos y opciones",
+        "content": "Usted tiene derecho a:",
+        "subcontent": [
+          "1) Solicitar acceso: Obtener una copia de su información personal.",
+          "2) Corregir errores: Actualizar o corregir información inexacta.",
+          "3) Eliminar datos: Solicitar que eliminemos su información personal (sujeto a requisitos legales y regulatorios).",
+          "4) Oponerse al procesamiento: Expresar inquietudes sobre cómo utilizamos su información."
+        ]
+      },
+      {
+        "title": "Cambios a esta política",
+        "content": "Podemos actualizar esta Política de Privacidad periódicamente. Le notificaremos cualquier cambio publicando una versión actualizada en nuestro sitio web y/o enviándole un aviso por correo electrónico."
+      },
+      {
+        "title": "Contáctenos",
+        "content": "Si tiene preguntas, inquietudes o solicitudes relacionadas con esta Política de Privacidad, contáctenos en:",
+        "subcontent": ["Correo electrónico: customerservice@pathxpressai.com"]
+      },
+      {
+        "title": "Fecha de vigencia",
+        "content": "Esta Política de Privacidad es efectiva a partir del 01.01.2025 y se aplica a toda la información personal recopilada por Path Xpress Ai."
+      }
+    ]
+  },
+  "pricing": {
+    "per": "por"
+  },
+  "duration": {
+    "week": "semana",
+    "month": "mes",
+    "year": "año"
+  },
+  "login": {
+    "title": "Iniciar sesión",
+    "email": "Correo electrónico",
+    "password": "Contraseña",
+    "signIn": "Iniciar sesión",
+    "description": "Comienza a optimizar tus rutas con precisión AI."
+  },
+  "signUp": "Registrarse",
+  "dontHaveAccount": "No tienes una cuenta?",
+  "alreadyHaveAccount": "¿Ya tienes una cuenta?",
+  "signup": {
+    "title": "Crear Cuenta",
+    "description": "Comience a optimizar sus rutas con precisión impulsada por IA",
+    "name": "Nombre Completo",
+    "homeBase": "Dirección de Base Principal",
+    "addressPlaceholder": "Calle Principal 123",
+    "confirmPassword": "Confirmar Contraseña",
+    "address": "Dirección",
+    "city": "Ciudad",
+    "cityPlaceholder": "Orlando",
+    "state": "Estado",
+    "statePlaceholder": "FL",
+    "zip": "Código Postal",
+    "zipPlaceholder": "12345"
+  },
+  "errors": {
+    "invalidEmail": "Dirección de correo electrónico inválida",
+    "passwordLength": "La contraseña debe tener al menos 8 caracteres",
+    "nameLength": "El nombre debe tener al menos 2 caracteres",
+    "addressLength": "Por favor ingrese una dirección válida",
+    "passwordMismatch": "Las contraseñas no coinciden"
+  },
+  "emailUs": "Envíanos un correo",
+  "emailResponse": "Responderemos dentro de 24 horas",
+  "liveChat": "Chat en vivo",
+  "chatAvailability": "Nuestro equipo está disponible Lun-Vie, 9am-6pm EST",
+  "startChat": "Iniciar conversación",
+  "comingSoon": "Próximamente",
+  "loading": "Cargando...",
+  "redirecting": "Redirigiendo",
+  
+  "onboarding": {
+    "steps": {
+      "profile": "Tu Perfil",
+      "address": "Dirección Base",
+      "subscription": "Plan de Suscripción",
+      "review": "Revisar y Confirmar"
+    },
+    "continue": "Continuar",
+    "complete": "Completar configuración",
+    "saving": "Guardando...",
+    "creatingAccount": "Creando cuenta...",
+    "loading": "Cargando",
+    "skipWaiting": "Omitir espera y continuar",
+    "redirecting": "Redirigiendo",
+    "back": "Atrás",
+    "submit": "Enviar",
+    
+    "profile": {
+      "title": "Bienvenido a Path Xpress AI",
+      "description": "Configuremos tu perfil para comenzar. Dinos cómo debemos llamarte.",
+      "name": "Tu Nombre",
+      "namePlaceholder": "Ingresa tu nombre completo",
+      "selectLanguage": "Selecciona tu idioma preferido"
+    },
+    
+    "address": {
+      "title": "Establece tu Dirección Base",
+      "description": "Necesitamos tu dirección para ayudar a optimizar tus rutas y calcular distancias.",
+      "street": "Dirección",
+      "streetPlaceholder": "Ingresa tu dirección",
+      "city": "Ciudad",
+      "cityPlaceholder": "Ingresa tu ciudad",
+      "state": "Estado",
+      "statePlaceholder": "Selecciona tu estado",
+      "zip": "Código Postal",
+      "zipPlaceholder": "Ingresa tu código postal"
+    },
+    
+    "subscription": {
+      "title": "Elige un Plan de Suscripción",
+      "description": "Selecciona el plan que mejor se adapte a tus necesidades. Puedes cambiarlo más tarde.",
+      "tier": "Nivel de Suscripción"
+    },
+    
+    "review": {
+      "title": "Revisa tu Información",
+      "description": "Por favor, revisa tu información y acepta nuestros términos antes de continuar."
+    },
+    
+    "complete": {
+      "title": "¡Configuración Completa!",
+      "description": "Tu cuenta está lista para usar. Comencemos a optimizar tus rutas.",
+      "goToDashboard": "Ir al Panel"
+    }
+  },
+  "nav": {
+    "dashboard": "Panel",
+    "routes": "Rutas",
+    "calendar": "Calendario",
+    "settings": "Configuración",
+    "welcome": "Bienvenido"
+  },
+  "auth": {
+    "signOut": "Cerrar Sesión",
+    "signingOut": "Cerrando Sesión...",
+    "signOutSuccess": "Sesión cerrada exitosamente",
+    "signOutError": "Error al cerrar sesión"
+  }
+}

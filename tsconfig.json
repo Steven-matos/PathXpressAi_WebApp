@@ -40,11 +40,9 @@
       }
     ],
     "paths": {
-      "@/*": [
-        "*"
-      ]
+      "@/*": ["./src/*"]
     },
-    "baseUrl": "src"
+    "baseUrl": "."
   },
   "include": [
     "next-env.d.ts",
@@ -52,7 +50,8 @@
     "**/*.tsx",
     ".next/types/**/*.ts",
     "next.config.ts",
-    "src/context/translationConfig.ts"
+    "src/**/*.ts",
+    "src/**/*.tsx"
   ],
   "exclude": [
     "node_modules"

@@ -15,8 +15,8 @@ export function useResponsiveVideo() {
   }, []);
 
   const videoSources = {
-    webm: isMobile ? '/city_intersection-mobile.webm' : '/city_intersection.webm',
-    mp4: isMobile ? '/city_intersection-mobile.mp4' : '/city_intersection.mp4',
+    webm: isMobile ? '/assets/videos/city_intersection-mobile.webm' : '/assets/videos/city_intersection.webm',
+    mp4: isMobile ? '/assets/videos/city_intersection-mobile.mp4' : '/assets/videos/city_intersection.mp4',
   };
 
   return videoSources;

@@ -1,26 +1,18 @@
 "use client";
-import { Footer } from "@/components/footer";
-import { Header } from "@/components/header";
-import { LegalSection } from "@/components/page-components/legal-section";
-import { useTranslation } from "@/context/TranslationContext";
+import { Footer } from "@/components/layout/footer";
+import { Header } from "@/components/layout/header";
+import { LegalContent } from "@/features/legal-content/LegalContent";
+import { privacyPolicy } from "@/content/policies";
 
-function PrivacyPolicyContent() {
-  const { t } = useTranslation();
-
+export default function Page() {
   return (
-    <div className="min-h-screen flex flex-col">
+    <>
       <Header />
-      <main className="container mx-auto px-4 py-8 md:py-12 flex-1">
-        <h1 className="mb-8 text-3xl font-bold tracking-tight md:text-4xl underline">
-          {t("privacy_policy.title")}
-        </h1>
-        <LegalSection content="privacy_policy" />
-      </main>
+      <LegalContent 
+        content={privacyPolicy}
+        title="Privacy Policy"
+      />
       <Footer />
-    </div>
+    </>
   );
-}
-
-export default function PrivacyPolicy() {
-  return <PrivacyPolicyContent />;
 }

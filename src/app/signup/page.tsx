@@ -1,10 +1,9 @@
 "use client";
-import { AuthForm } from "@/components/auth/auth-form";
+import { AuthForm, AmplifyStatus } from "@/features/auth";
 import { Suspense } from "react";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { useTranslation } from "@/context/TranslationContext";
 import Link from "next/link";
-import AmplifyStatus from "@/components/AmplifyStatus";
 
 export default function SignupPage() {
   const { t } = useTranslation();
@@ -16,7 +15,7 @@ export default function SignupPage() {
         <div className="hidden md:block w-1/2 relative">
           <div
             className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-            style={{ backgroundImage: 'url("/gps.jpg")' }}
+            style={{ backgroundImage: 'url("/assets/images/gps.jpg")' }}
           />
           <div className="absolute inset-0 backdrop-blur-sm" />
           <div className="relative h-full flex items-center justify-center p-12">

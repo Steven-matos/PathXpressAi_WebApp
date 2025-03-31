@@ -1,54 +1,69 @@
 "use client";
 
-import { useParams } from "next/navigation";
-import { useAuth } from "@/context/AuthContext";
-import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
-import { useSelector } from "react-redux";
-import { RootState } from "@/store/store";
+import { useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
+import { RootState } from '@/store/clientStore';
+import { useRouter } from 'next/navigation';
+import { useAuth } from '@/context/AuthContext';
 import { useTranslation } from "@/context/TranslationContext";
-import Navigation from "@/components/Navigation";
-import { UserProfile } from "@/components/auth/UserProfile";
-import AmplifyStatus from "@/components/AmplifyStatus";
-import { CognitoTester } from "@/components/CognitoTester";
+import Navigation from "@/features/navigation";
+import { UserProfile, AmplifyStatus, CognitoTester } from "@/features/auth";
 
-export default function DashboardUserPage() {
-  const params = useParams();
-  const { isAuthenticated, isLoading, user } = useAuth();
+interface Route {
+  id: string;
+  title: string;
+  start: string;
+  end: string;
+  status: 'pending' | 'in_progress' | 'completed';
+  driver?: string;
+  vehicle?: string;
+}
+
+interface UserState {
+  name: string;
+  email: string;
+  role: string;
+}
+
+interface RoutesState {
+  tomorrow: Route[];
+  today: Route[];
+  past: Route[];
+}
+
+export default function DashboardUserPage({ params }: { params: { userId: string } }) {
+  const { user, isLoading: authLoading } = useAuth();
   const router = useRouter();
   const { t } = useTranslation();
-  const username = useSelector((state: RootState) => state.user.name);
-  const routes = useSelector((state: RootState) => state.routes.tomorrow);
-  const userId = params.userId as string;
+  const [isClient, setIsClient] = useState(false);
+
+  // Get user data from Redux store
+  const username = useSelector((state: RootState) => state.auth.user?.username);
+  const routes = useSelector((state: RootState) => state.routes.tomorrow) as Route[];
+  const routesLoading = useSelector((state: RootState) => state.routes.isLoading);
+  const routesError = useSelector((state: RootState) => state.routes.error);
+  const userId = params.userId;
 
   useEffect(() => {
-    // Verify authentication
-    if (!isLoading && !isAuthenticated) {
-      router.push("/login");
-      return;
-    }
+    setIsClient(true);
+  }, []);
 
-    // If user is authenticated but userId in URL doesn't match current user
-    if (!isLoading && isAuthenticated && user && userId !== user.username) {
-      console.log('URL user ID doesn\'t match authenticated user, redirecting...');
-      // Redirect to correct user dashboard
-      router.push(`/dashboard/${user.username}`);
+  useEffect(() => {
+    if (!authLoading && !user) {
+      router.push('/login');
     }
-  }, [isAuthenticated, isLoading, router, user, userId]);
+  }, [user, authLoading, router]);
 
-  if (isLoading) {
-    return (
-      <div className="flex items-center justify-center h-screen">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
-          <p>{t("loading")}</p>
-        </div>
-      </div>
-    );
+  if (!isClient || authLoading || routesLoading) {
+    return <div>Loading...</div>;
   }
 
-  if (!isAuthenticated) {
+  if (!user) {
     return null;
+  }
+
+  if (routesError) {
+    return <div>Error loading routes: {routesError}</div>;
   }
 
   return (
@@ -66,7 +81,7 @@ export default function DashboardUserPage() {
           {/* Routes Preview */}
           <div className="md:col-span-2 bg-secondary shadow-lg rounded-lg p-6">
             <h1 className="text-2xl font-bold">
-              {t("welcome")}, {user?.username || username}!
+              {t("welcome")}, {username || user.username}!
             </h1>
             <h2 className="text-xl mt-4">{t("routesForTomorrow")}</h2>
             {routes.length > 0 ? (
@@ -76,14 +91,16 @@ export default function DashboardUserPage() {
                     <th>{t("route")}</th>
                     <th>{t("startTime")}</th>
                     <th>{t("endTime")}</th>
+                    <th>{t("status")}</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {routes.map((route, index) => (
-                    <tr key={index}>
+                  {routes.map((route) => (
+                    <tr key={route.id}>
                       <td>{route.title}</td>
                       <td>{route.start}</td>
                       <td>{route.end}</td>
+                      <td>{t(`status.${route.status}`)}</td>
                     </tr>
                   ))}
                 </tbody>

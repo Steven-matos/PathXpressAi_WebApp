@@ -1,7 +1,41 @@
 import { Amplify } from 'aws-amplify';
 
+interface AmplifyConfig {
+  Auth: {
+    Cognito: {
+      userPoolId: string;
+      userPoolClientId: string;
+      signUpVerificationMethod: string;
+    };
+  };
+  API: {
+    GraphQL: {
+      endpoint: string;
+      region: string;
+      authenticationType: string;
+    };
+  };
+}
+
+const defaultConfig: AmplifyConfig = {
+  Auth: {
+    Cognito: {
+      userPoolId: process.env.NEXT_PUBLIC_USER_POOL_ID || '',
+      userPoolClientId: process.env.NEXT_PUBLIC_USER_POOL_CLIENT_ID || '',
+      signUpVerificationMethod: 'code',
+    },
+  },
+  API: {
+    GraphQL: {
+      endpoint: process.env.NEXT_PUBLIC_GRAPHQL_ENDPOINT || '',
+      region: process.env.NEXT_PUBLIC_REGION || 'us-east-1',
+      authenticationType: 'AMAZON_COGNITO_USER_POOLS',
+    },
+  },
+};
+
 // Initialize Amplify configuration
-export function configureAmplify() {
+export function configureAmplify(overrideConfig?: Partial<AmplifyConfig>) {
   console.log('🔄 Configuring Amplify...');
   
   // Get configuration from environment variables
@@ -45,6 +79,17 @@ export function configureAmplify() {
     endpoint: config.API.GraphQL.endpoint,
     region: config.API.GraphQL.region
   });
+
+  // Validate required configuration
+  if (!config.Auth.Cognito.userPoolId) {
+    throw new Error('User Pool ID is required');
+  }
+  if (!config.Auth.Cognito.userPoolClientId) {
+    throw new Error('User Pool Client ID is required');
+  }
+  if (!config.API.GraphQL.endpoint) {
+    throw new Error('GraphQL endpoint is required');
+  }
 
   // Configure Amplify with our configuration
   try {
@@ -101,4 +146,22 @@ async function testAmplifySetup() {
   } catch (error) {
     console.error('❌ Error testing Amplify setup:', error);
   }
-} 
+}
+
+const getUserPoolId = () => {
+  return typeof window !== 'undefined'
+    ? (window as any).__ENV?.NEXT_PUBLIC_USER_POOL_ID || process.env.NEXT_PUBLIC_USER_POOL_ID
+    : process.env.NEXT_PUBLIC_USER_POOL_ID;
+};
+
+const getUserPoolClientId = () => {
+  return typeof window !== 'undefined'
+    ? (window as any).__ENV?.NEXT_PUBLIC_USER_POOL_CLIENT_ID || process.env.NEXT_PUBLIC_USER_POOL_CLIENT_ID
+    : process.env.NEXT_PUBLIC_USER_POOL_CLIENT_ID;
+};
+
+const getGraphQLEndpoint = () => {
+  return typeof window !== 'undefined'
+    ? (window as any).__ENV?.NEXT_PUBLIC_GRAPHQL_ENDPOINT || process.env.NEXT_PUBLIC_GRAPHQL_ENDPOINT
+    : process.env.NEXT_PUBLIC_GRAPHQL_ENDPOINT;
+}; 

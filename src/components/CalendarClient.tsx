@@ -1,6 +1,6 @@
 "use client";
 
-import { Calendar } from "./page-components/Calendar";
+import { Calendar } from "@/features/calendar";
 import { ReduxProvider } from "@/providers/redux-provider";
 
 export function CalendarClient() {

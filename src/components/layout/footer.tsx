@@ -2,9 +2,9 @@
 
 import Link from "next/link";
 import { useTranslation } from "@/context/TranslationContext";
-import { LanguageSwitcher } from "./language-switcher";
+import { LanguageSwitcher } from "@/features/i18n";
 import Image from "next/image";
-import LogoPhase1 from "../../public/logo_phase1.png";
+import LogoPhase1 from "../../../public/assets/images/logo_phase1.png";
 
 export function Footer(): JSX.Element {
   const { t } = useTranslation();
