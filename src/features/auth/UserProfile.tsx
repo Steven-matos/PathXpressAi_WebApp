@@ -24,14 +24,14 @@ export function UserProfile() {
         setError(null);
       } catch (err) {
         console.error("Error fetching user attributes:", err);
-        setError(err instanceof Error ? err.message : "Failed to fetch user attributes");
+        setError(err instanceof Error ? err.message : t("profile.error"));
       } finally {
         setLoading(false);
       }
     }
 
     getUserAttributes();
-  }, [isAuthenticated]);
+  }, [isAuthenticated, t]);
 
   if (loading) {
     return (
@@ -72,7 +72,7 @@ export function UserProfile() {
         <div className="space-y-4">
           <div>
             <h3 className="text-sm font-medium text-gray-500">{t("profile.email")}</h3>
-            <p className="mt-1">{userAttributes?.email || user?.username}</p>
+            <p className="mt-1">{userAttributes?.email || user?.username || t("profile.notProvided")}</p>
           </div>
           
           <div>

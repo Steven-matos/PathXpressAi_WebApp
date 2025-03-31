@@ -327,7 +327,24 @@
     "complete": {
       "title": "Setup Complete!",
       "description": "Your account is ready to use. Let's start optimizing your routes.",
-      "goToDashboard": "Go to Dashboard"
+      "goToDashboard": "Go to Dashboard",
+      "creatingAccount": "Creating Account...",
+      "success": "Account created successfully!",
+      "error": "Error Creating Account",
+      "errorDescription": "There was a problem creating your account. Please try again."
     }
+  },
+  "nav": {
+    "dashboard": "Dashboard",
+    "routes": "Routes",
+    "calendar": "Calendar",
+    "settings": "Settings",
+    "welcome": "Welcome"
+  },
+  "auth": {
+    "signOut": "Sign Out",
+    "signingOut": "Signing Out...",
+    "signOutSuccess": "Signed out successfully",
+    "signOutError": "Error signing out"
   }
 }

@@ -1,212 +1,181 @@
-import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
-import { RootState } from "./store";
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import { RootState } from "./clientStore";
 import { generateClient } from 'aws-amplify/api';
 
-// Define a type for the API data state
-export interface ApiDataState {
-  data: Record<string, any>;
-  loading: Record<string, boolean>;
-  error: Record<string, string | null>;
-  lastFetched: Record<string, number | null>;
+interface ApiResponse<T> {
+  data: {
+    [key: string]: T;
+  };
+  errors?: Array<{
+    message: string;
+    locations: Array<{
+      line: number;
+      column: number;
+    }>;
+    path: string[];
+    extensions?: Record<string, any>;
+  }>;
 }
 
-// Initial state
+interface ApiDataState {
+  data: Record<keyof ApiData, any>;
+  loading: Record<keyof ApiData, boolean>;
+  error: Record<keyof ApiData, string | null>;
+  lastFetched: Record<keyof ApiData, number | null>;
+}
+
+interface RouteHistory {
+  id: string;
+  title: string;
+  start: string;
+  end: string;
+  status: 'pending' | 'in_progress' | 'completed';
+  driver?: string;
+  vehicle?: string;
+}
+
+interface DailyRoutes {
+  date: string;
+  routes: RouteHistory[];
+}
+
+interface CalendarEvent {
+  id: string;
+  title: string;
+  start: string;
+  end: string;
+  type: string;
+}
+
+interface User {
+  id: string;
+  name: string;
+  email: string;
+  role: string;
+}
+
+interface SubUser {
+  id: string;
+  name: string;
+  email: string;
+  role: string;
+}
+
+interface Vehicle {
+  id: string;
+  name: string;
+  type: string;
+  status: string;
+}
+
+interface ApiData {
+  getRouteHistory: RouteHistory[];
+  getDailyRoutes: DailyRoutes[];
+  getCalendarEvents: CalendarEvent[];
+  getUser: User;
+  getSubUsers: SubUser[];
+  getVehicles: Vehicle[];
+}
+
 const initialState: ApiDataState = {
-  data: {},
-  loading: {},
-  error: {},
-  lastFetched: {},
+  data: {} as Record<keyof ApiData, any>,
+  loading: {} as Record<keyof ApiData, boolean>,
+  error: {} as Record<keyof ApiData, string | null>,
+  lastFetched: {} as Record<keyof ApiData, number | null>
 };
 
-// GraphQL queries based on API Reference
-const queries = {
-  getRouteHistory: /* GraphQL */ `
-    query GetRouteHistory($input: GetRouteHistoryInput!) {
-      getRouteHistory(input: $input) {
-        routes {
-          id
-          name
-          description
-          homeBase
-          status
-          estimatedDuration
-          estimatedDistance
-          createdAt
-        }
-        nextToken
-      }
+const queries: Record<keyof ApiData, string> = {
+  getRouteHistory: `query GetRouteHistory {
+    getRouteHistory {
+      id
+      title
+      start
+      end
+      status
+      driver
+      vehicle
     }
-  `,
-  getDailyRoutes: /* GraphQL */ `
-    query GetDailyRoutes($input: GetDailyRoutesInput!) {
-      getDailyRoutes(input: $input) {
-        routes {
-          route {
-            id
-            name
-            description
-            estimatedDuration
-            estimatedDistance
-          }
-          weatherConditions {
-            temperature
-            condition
-            windSpeed
-            precipitation
-            alerts
-          }
-          personalScore
-          recommendationReason
-        }
-      }
-    }
-  `,
-  getCalendarEvents: /* GraphQL */ `
-    query GetCalendarEvents($input: GetCalendarEventsInput!) {
-      getCalendarEvents(input: $input) {
-        events {
-          id
-          title
-          start
-          end
-          allDay
-          color
-          type
-          calendarId
-          status
-        }
-        routeSchedules {
-          id
-          title
-          start
-          end
-          color
-          type
-          routeId
-          status
-        }
-      }
-    }
-  `,
-  getUser: /* GraphQL */ `
-    query GetUser($input: GetUserInput!) {
-      getUser(input: $input) {
+  }`,
+  getDailyRoutes: `query GetDailyRoutes {
+    getDailyRoutes {
+      date
+      routes {
         id
-        email
-        name
-        homeBase
-        language
-        preferences
-        subscriptionTier
-        createdAt
-        updatedAt
+        title
+        start
+        end
+        status
+        driver
+        vehicle
       }
     }
-  `,
-  getSubUsers: /* GraphQL */ `
-    query GetSubUsers($input: GetSubUsersInput!) {
-      getSubUsers(input: $input) {
-        subUsers {
-          id
-          email
-          name
-          phone
-          role
-          status
-          homeBase
-          assignedVehicle
-          createdAt
-        }
-        nextToken
-      }
+  }`,
+  getCalendarEvents: `query GetCalendarEvents {
+    getCalendarEvents {
+      id
+      title
+      start
+      end
+      type
     }
-  `,
-  getVehicles: /* GraphQL */ `
-    query GetVehicles($input: GetVehiclesInput!) {
-      getVehicles(input: $input) {
-        vehicles {
-          id
-          name
-          make
-          model
-          year
-          licensePlate
-          type
-          status
-          assignedTo
-          mileage
-          createdAt
-        }
-        nextToken
-      }
+  }`,
+  getUser: `query GetUser {
+    getUser {
+      id
+      name
+      email
+      role
     }
-  `,
+  }`,
+  getSubUsers: `query GetSubUsers {
+    getSubUsers {
+      id
+      name
+      email
+      role
+    }
+  }`,
+  getVehicles: `query GetVehicles {
+    getVehicles {
+      id
+      name
+      type
+      status
+    }
+  }`
 };
 
-// Create an async thunk for fetching data from API
 export const fetchApiData = createAsyncThunk(
   'apiData/fetchData',
-  async ({ endpoint, params }: { endpoint: string, params?: any }, { rejectWithValue }) => {
-    try {
-      // Find the matching query
-      const query = queries[endpoint];
-      if (!query) {
-        return rejectWithValue(`Unknown endpoint: ${endpoint}`);
-      }
-      
-      // Create a client for API interaction
-      const client = generateClient();
-      
-      // Execute GraphQL query with Amplify
-      const response = await client.graphql({
-        query,
-        variables: { input: params }
-      });
-      
-      // Extract the data from the response
-      const data = response.data[endpoint];
-      return { endpoint, data };
-    } catch (error: any) {
-      // Handle different types of GraphQL errors
-      if (error.errors) {
-        // GraphQL errors
-        const errorMessages = error.errors.map(err => `${err.errorType}: ${err.message}`).join(', ');
-        return rejectWithValue(errorMessages);
-      } else if (error.message) {
-        // Regular errors
-        return rejectWithValue(error.message);
-      } else {
-        // Unknown error format
-        return rejectWithValue('Unknown error occurred');
-      }
-    }
+  async ({ endpoint, params }: { endpoint: keyof ApiData; params?: Record<string, any> }) => {
+    const client = generateClient();
+    const query = queries[endpoint];
+    
+    const response = await client.graphql({
+      query,
+      variables: params
+    }) as unknown as ApiResponse<ApiData[keyof ApiData]>;
+    
+    return { endpoint, data: response.data[endpoint] };
   }
 );
 
-// Create the slice
 const apiDataSlice = createSlice({
-  name: "apiData",
+  name: 'apiData',
   initialState,
   reducers: {
-    clearApiData: (state, action: PayloadAction<string>) => {
-      const endpoint = action.payload;
-      delete state.data[endpoint];
-      delete state.loading[endpoint];
-      delete state.error[endpoint];
-      delete state.lastFetched[endpoint];
+    clearApiData: (state, action) => {
+      const endpoint = action.payload as keyof ApiData;
+      state.data[endpoint] = null;
+      state.error[endpoint] = null;
     },
     clearAllApiData: (state) => {
-      state.data = {};
-      state.loading = {};
-      state.error = {};
-      state.lastFetched = {};
+      state.data = {} as Record<keyof ApiData, any>;
+      state.error = {} as Record<keyof ApiData, string | null>;
     },
-    setApiData: (state, action: PayloadAction<{ endpoint: string, data: any }>) => {
+    setApiData: (state, action) => {
       const { endpoint, data } = action.payload;
-      state.data[endpoint] = data;
-      state.loading[endpoint] = false;
-      state.error[endpoint] = null;
-      state.lastFetched[endpoint] = Date.now();
+      state.data[endpoint as keyof ApiData] = data;
     }
   },
   extraReducers: (builder) => {
@@ -218,27 +187,23 @@ const apiDataSlice = createSlice({
       })
       .addCase(fetchApiData.fulfilled, (state, action) => {
         const { endpoint, data } = action.payload;
-        state.data[endpoint] = data;
         state.loading[endpoint] = false;
-        state.error[endpoint] = null;
+        state.data[endpoint] = data;
         state.lastFetched[endpoint] = Date.now();
       })
       .addCase(fetchApiData.rejected, (state, action) => {
         const endpoint = action.meta.arg.endpoint;
         state.loading[endpoint] = false;
-        state.error[endpoint] = action.payload as string;
+        state.error[endpoint] = action.error.message || 'An error occurred';
       });
-  },
+  }
 });
 
-// Export actions
 export const { clearApiData, clearAllApiData, setApiData } = apiDataSlice.actions;
 
-// Export selectors
-export const selectApiData = (endpoint: string) => (state: RootState) => state.apiData.data[endpoint];
-export const selectApiLoading = (endpoint: string) => (state: RootState) => state.apiData.loading[endpoint] || false;
-export const selectApiError = (endpoint: string) => (state: RootState) => state.apiData.error[endpoint] || null;
-export const selectApiLastFetched = (endpoint: string) => (state: RootState) => state.apiData.lastFetched[endpoint] || null;
+export const selectApiData = (endpoint: keyof ApiData) => (state: RootState) => state.apiData.data[endpoint];
+export const selectApiLoading = (endpoint: keyof ApiData) => (state: RootState) => state.apiData.loading[endpoint] || false;
+export const selectApiError = (endpoint: keyof ApiData) => (state: RootState) => state.apiData.error[endpoint] || null;
+export const selectApiLastFetched = (endpoint: keyof ApiData) => (state: RootState) => state.apiData.lastFetched[endpoint] || null;
 
-// Export reducer
 export default apiDataSlice.reducer; 

@@ -1,12 +1,8 @@
 import "../styles/globals.css";
 import { Inter } from "next/font/google";
-import { TranslationProvider } from "@/context/TranslationContext";
-import { ReduxProvider } from "@/providers/redux-provider";
-import { AuthProvider } from "@/context/AuthContext";
-import { OnboardingProvider } from "@/context/OnboardingContext";
+import { ClientProviders } from "@/providers/ClientProviders";
 import { Metadata } from "next";
 import { Toaster } from "@/components/ui/toaster";
-import { AmplifyClientProvider } from "@/features/auth";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -23,14 +19,15 @@ const languageDetectorScript = `
       const browserLang = getBrowserLanguage();
       const supportedLanguages = ['en', 'es'];
       
-      // Only set if it's a supported language
-      if (supportedLanguages.includes(browserLang)) {
-        localStorage.setItem('preferredLang', browserLang);
-        document.cookie = \`preferredLang=\${browserLang}; path=/; max-age=31536000\`;
-      }
+      // Set English as default if browser language is not supported
+      const defaultLang = supportedLanguages.includes(browserLang) ? browserLang : 'en';
+      localStorage.setItem('preferredLang', defaultLang);
+      document.cookie = 'preferredLang=' + defaultLang + '; path=/; max-age=31536000';
     }
   } catch (e) {
-    // Ignore errors in language detection
+    // Set English as default if there's an error
+    localStorage.setItem('preferredLang', 'en');
+    document.cookie = 'preferredLang=en; path=/; max-age=31536000';
   }
 `;
 
@@ -94,15 +91,9 @@ export default function RootLayout({
         <script dangerouslySetInnerHTML={{ __html: languageDetectorScript }} />
       </head>
       <body className={inter.className}>
-        <AmplifyClientProvider>
-          <AuthProvider>
-            <OnboardingProvider>
-              <TranslationProvider>
-                <ReduxProvider>{children}</ReduxProvider>
-              </TranslationProvider>
-            </OnboardingProvider>
-          </AuthProvider>
-        </AmplifyClientProvider>
+        <ClientProviders>
+          {children}
+        </ClientProviders>
         <Toaster />
         <meta
           property="og:image"

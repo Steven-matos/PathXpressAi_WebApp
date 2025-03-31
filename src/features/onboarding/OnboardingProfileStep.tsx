@@ -30,7 +30,7 @@ type ProfileFormValues = z.infer<typeof profileSchema>;
 
 export function OnboardingProfileStep() {
   const { t, setLang } = useTranslation();
-  const { userData, updateUserData, completeCurrentStep, currentStep, resetOnboarding, hardResetOnboarding } = useOnboarding();
+  const { userData, updateUserData, completeCurrentStep, currentStep, resetOnboarding, hardResetOnboarding, goToPreviousStep } = useOnboarding();
   const { user } = useAuth(); // Get the authenticated user from AuthContext
   const { toast } = useToast();
   const [isLoading, setIsLoading] = useState(true);
@@ -143,85 +143,28 @@ export function OnboardingProfileStep() {
       const getUserAttributes = async () => {
         if (user) {
           try {
-            // Try to get attributes from Cognito to use as initial values for our user table
+            // Check if we have cached attributes
+            const cachedAttributes = localStorage.getItem('userAttributes');
+            if (cachedAttributes) {
+              const attributes = JSON.parse(cachedAttributes);
+              console.log("Using cached user attributes:", attributes);
+              return attributes;
+            }
+
+            // If no cache, fetch from Cognito
             const attributes = await fetchUserAttributes();
-            console.log("Auth user attributes to use as initial values:", attributes);
+            console.log("Fetched user attributes from Cognito:", attributes);
             
-            // Map of Cognito attributes to check for initial values
-            const attributesToCheck = {
-              // Name-related attributes
-              given_name: "Found given_name from Cognito:",
-              name: "Found name from Cognito:",
-              preferred_username: "Found preferred_username from Cognito:",
-              
-              // Address-related attributes (if present in Cognito)
-              address: "Found address from Cognito:",
-              'custom:homeBase': "Found custom homeBase from Cognito:",
-              'custom:address': "Found custom address from Cognito:",
-              
-              // Language preference - only look for standard locale attribute
-              locale: "Found locale from Cognito:"
-            };
+            // Cache the attributes
+            localStorage.setItem('userAttributes', JSON.stringify(attributes));
             
-            // Check for attributes in priority order for name
-            for (const [attrName, logMessage] of Object.entries(attributesToCheck)) {
-              if (attributes[attrName]) {
-                if (attrName === 'given_name' || attrName === 'name' || attrName === 'preferred_username') {
-                  console.log(logMessage, attributes[attrName]);
-                  nameToUse = attributes[attrName];
-                  break;
-                }
-                
-                // Handle only standard locale attribute if found
-                if (attrName === 'locale') {
-                  const localeValue = attributes[attrName];
-                  console.log(logMessage, localeValue);
-                  
-                  // If locale starts with a supported language code, use it
-                  if (localeValue && typeof localeValue === 'string') {
-                    const langCode = localeValue.split('-')[0]?.toLowerCase();
-                    if (langCode === 'en' || langCode === 'es') {
-                      langToUse = langCode;
-                      console.log("Using locale-derived language:", langToUse);
-                    }
-                  }
-                }
-                
-                // Log other found attributes for debugging
-                if (attrName.includes('address') || attrName.includes('homeBase')) {
-                  console.log(logMessage, attributes[attrName]);
-                  // Store these for potential use in the address step
-                  // We'll just log these for now, as we're on the profile step
-                }
-              }
-            }
-            
-            // If we found a name, return true
-            if (nameToUse) {
-              return true;
-            }
-            
-            console.log("No name attributes found in Cognito, falling back to email");
+            return attributes;
           } catch (error) {
             console.error("Error fetching auth user attributes:", error);
-            // Continue with fallback logic
-          }
-          
-          // Fallback to email extraction if given_name not available
-          const usernameOrEmail = user.username || "";
-          
-          // If username is an email, extract the part before @
-          if (usernameOrEmail && usernameOrEmail.includes('@')) {
-            const emailParts = usernameOrEmail.split('@');
-            nameToUse = emailParts[0] || "";
-            // Capitalize first letter 
-            nameToUse = nameToUse.charAt(0).toUpperCase() + nameToUse.slice(1);
-          } else {
-            nameToUse = usernameOrEmail || "";
+            return null;
           }
         }
-        
-        return false;
+        return null;
       };
       
       // If we already have data in context, use that (might have been set during signup)
@@ -442,92 +385,70 @@ export function OnboardingProfileStep() {
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-        <div className="space-y-4">
-          <h2 className="text-2xl font-bold">{t("onboarding.profile.title")}</h2>
-          <p className="text-muted-foreground">
-            {t("onboarding.profile.description")}
-          </p>
-
-          <FormField
-            control={form.control}
-            name="name"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>{t("onboarding.profile.name")}</FormLabel>
-                <FormControl>
-                  <Input
-                    {...field}
-                    placeholder={t("onboarding.profile.namePlaceholder")}
-                    disabled={isLoading && !skipLoadingPermanently}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          <FormField
-            control={form.control}
-            name="language"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>{t("language")}</FormLabel>
-                <FormControl>
-                  <SimpleSelect
-                    value={field.value}
-                    options={languageOptions}
-                    onChange={(value) => {
-                      field.onChange(value);
-                      handleLanguageChange(value);
-                    }}
-                    placeholder={t("onboarding.profile.selectLanguage")}
-                    disabled={isLoading && !skipLoadingPermanently}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-        </div>
-        
-        {loadingError && !skipLoadingPermanently && (
-          <div className="space-y-2">
-            <Button
-              type="button"
-              variant="outline" 
-              className="w-full"
-              onClick={skipWaiting}
-            >
-              {t("onboarding.skipWaiting")}
-            </Button>
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 w-full mx-auto">
+        <div className="w-full">
+          <div className="text-center mb-8">
+            <h2 className="text-2xl font-semibold mb-4">
+              {t("onboarding.profile.title") || "Welcome to Path Xpress AI"}
+            </h2>
+            <p className="text-muted-foreground text-lg">
+              {t("onboarding.profile.description") || "Let's set up your profile to get started. Tell us how we should address you."}
+            </p>
           </div>
-        )}
-        
-        <Button
-          type="submit" 
-          className="w-full" 
-          disabled={isLoading && !skipLoadingPermanently}
-        >
-          {isLoading && !skipLoadingPermanently 
-            ? t("onboarding.loading") 
-            : t("onboarding.continue")}
-        </Button>
-        
-        {/* Hidden debug button */}
-        <div className="pt-10 opacity-20 hover:opacity-100">
-          <Button
-            type="button"
-            variant="destructive"
-            size="sm"
-            className="text-xs"
-            onClick={() => {
-              if (confirm("This will COMPLETELY reset the onboarding process. Continue?")) {
-                hardResetOnboarding();
-              }
-            }}
+
+          <div className="space-y-6">
+            <FormField
+              control={form.control}
+              name="name"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="text-lg">{t("onboarding.profile.name") || "Your Name"}</FormLabel>
+                  <FormControl>
+                    <Input
+                      {...field}
+                      placeholder={t("onboarding.profile.namePlaceholder") || "Enter your full name"}
+                      className="h-12 text-lg"
+                      disabled={isLoading}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="language"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="text-lg">{t("onboarding.profile.selectLanguage") || "Select your preferred language"}</FormLabel>
+                  <FormControl>
+                    <SimpleSelect
+                      value={field.value}
+                      onChange={(value) => {
+                        field.onChange(value);
+                        handleLanguageChange(value);
+                      }}
+                      options={languageOptions}
+                      disabled={isLoading}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
+        </div>
+
+        <div className="flex gap-4">
+          <Button 
+            type="submit" 
+            className="w-full text-white text-lg py-6" 
+            disabled={isLoading || form.formState.isSubmitting}
           >
-            Reset Onboarding (Debug)
+            {form.formState.isSubmitting 
+              ? t("saving")
+              : t("continue")}
           </Button>
         </div>
       </form>

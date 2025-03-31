@@ -91,7 +91,7 @@ type AddressFormValues = z.infer<typeof addressSchema>;
 
 export function OnboardingAddressStep() {
   const { t } = useTranslation();
-  const { userData, updateUserData, completeCurrentStep } = useOnboarding();
+  const { userData, updateUserData, completeCurrentStep, goToPreviousStep } = useOnboarding();
   const { toast } = useToast();
   const [isLoading, setIsLoading] = useState(true);
   const [loadingError, setLoadingError] = useState(false);
@@ -129,8 +129,10 @@ export function OnboardingAddressStep() {
           form.setValue("zip", userData.zip);
         }
       } catch (error) {
-        setIsLoading(false);
+        console.error("Error loading address:", error);
         setLoadingError(true);
+      } finally {
+        setIsLoading(false);
       }
     }
 
@@ -144,20 +146,28 @@ export function OnboardingAddressStep() {
       // Format full address for Cognito
       const fullAddress = `${values.address}, ${values.city}, ${values.state} ${values.zip}`;
       
-      // Save to Cognito
-      await updateUserAttributes({
-        userAttributes: {
-          address: fullAddress,
-        },
-      });
-      
-      // Update local state
+      // Update local state first
       updateUserData({
         address: values.address,
         city: values.city,
         state: values.state,
         zip: values.zip,
       });
+      
+      // Update Cognito attributes
+      await updateUserAttributes({
+        userAttributes: {
+          address: fullAddress,
+        },
+      });
+      
+      // Update cached attributes
+      const cachedAttributes = localStorage.getItem('userAttributes');
+      if (cachedAttributes) {
+        const attributes = JSON.parse(cachedAttributes);
+        attributes.address = fullAddress;
+        localStorage.setItem('userAttributes', JSON.stringify(attributes));
+      }
       
       toast({
         title: "Address Updated",
@@ -168,6 +178,7 @@ export function OnboardingAddressStep() {
       // Move to next step
       completeCurrentStep();
     } catch (error) {
+      console.error("Error updating address:", error);
       toast({
         title: "Error",
         description: "There was a problem updating your address. Please try again.",
@@ -181,89 +192,29 @@ export function OnboardingAddressStep() {
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-        <div className="space-y-4">
-          <h2 className="text-2xl font-bold">{t("onboarding.address.title")}</h2>
-          <p className="text-muted-foreground">
-            {t("onboarding.address.description")}
-          </p>
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 w-full mx-auto">
+        <div className="w-full">
+          <div className="text-center mb-8">
+            <h2 className="text-2xl font-semibold mb-4">
+              {t("onboarding.address.title") || "Set Your Home Base Address"}
+            </h2>
+            <p className="text-muted-foreground text-lg">
+              {t("onboarding.address.description") || "We need your address to help optimize your routes and calculate distances."}
+            </p>
+          </div>
 
-          <FormField
-            control={form.control}
-            name="address"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>{t("onboarding.address.street")}</FormLabel>
-                <FormControl>
-                  <Input 
-                    {...field} 
-                    placeholder={t("onboarding.address.streetPlaceholder")}
-                    disabled={isLoading}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          <FormField
-            control={form.control}
-            name="city"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>{t("onboarding.address.city")}</FormLabel>
-                <FormControl>
-                  <Input 
-                    {...field} 
-                    placeholder={t("onboarding.address.cityPlaceholder")}
-                    disabled={isLoading}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          <div className="grid grid-cols-2 gap-4">
+          <div className="space-y-6">
             <FormField
               control={form.control}
-              name="state"
+              name="address"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>{t("onboarding.address.state")}</FormLabel>
-                  <Select
-                    disabled={isLoading}
-                    onValueChange={field.onChange}
-                    defaultValue={field.value}
-                  >
-                    <FormControl>
-                      <SelectTrigger>
-                        <SelectValue placeholder={t("onboarding.address.statePlaceholder")} />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      {US_STATES.map((state) => (
-                        <SelectItem key={state.code} value={state.code}>
-                          {state.name}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="zip"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>{t("onboarding.address.zip")}</FormLabel>
+                  <FormLabel className="text-lg">{t("onboarding.address.street") || "Street Address"}</FormLabel>
                   <FormControl>
                     <Input 
                       {...field} 
-                      placeholder={t("onboarding.address.zipPlaceholder")}
+                      placeholder={t("onboarding.address.streetPlaceholder") || "Enter your street address"}
+                      className="h-12 text-lg"
                       disabled={isLoading}
                     />
                   </FormControl>
@@ -271,18 +222,97 @@ export function OnboardingAddressStep() {
                 </FormItem>
               )}
             />
+
+            <FormField
+              control={form.control}
+              name="city"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="text-lg">{t("onboarding.address.city") || "City"}</FormLabel>
+                  <FormControl>
+                    <Input 
+                      {...field} 
+                      placeholder={t("onboarding.address.cityPlaceholder") || "Enter your city"}
+                      className="h-12 text-lg"
+                      disabled={isLoading}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <div className="grid grid-cols-2 gap-6">
+              <FormField
+                control={form.control}
+                name="state"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-lg">{t("onboarding.address.state") || "State"}</FormLabel>
+                    <Select
+                      disabled={isLoading}
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                    >
+                      <FormControl>
+                        <SelectTrigger className="h-12 text-lg">
+                          <SelectValue placeholder={t("onboarding.address.statePlaceholder") || "Select state"} />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        {US_STATES.map((state) => (
+                          <SelectItem key={state.code} value={state.code}>
+                            {state.name} ({state.code})
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="zip"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-lg">{t("onboarding.address.zip") || "ZIP Code"}</FormLabel>
+                    <FormControl>
+                      <Input 
+                        {...field} 
+                        placeholder={t("onboarding.address.zipPlaceholder") || "Enter ZIP code"}
+                        className="h-12 text-lg"
+                        disabled={isLoading}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
           </div>
         </div>
 
-        <Button 
-          type="submit" 
-          className="w-full" 
-          disabled={isLoading || form.formState.isSubmitting}
-        >
-          {form.formState.isSubmitting 
-            ? t("onboarding.saving") 
-            : t("onboarding.continue")}
-        </Button>
+        <div className="flex gap-4">
+          <Button 
+            type="button"
+            variant="outline"
+            className="flex-1 text-lg py-6"
+            onClick={() => goToPreviousStep()}
+          >
+            {t("back") || "Back"}
+          </Button>
+          <Button 
+            type="submit" 
+            className="flex-1 text-white text-lg py-6" 
+            disabled={isLoading || form.formState.isSubmitting}
+          >
+            {form.formState.isSubmitting 
+              ? t("saving")
+              : t("continue")}
+          </Button>
+        </div>
       </form>
     </Form>
   );

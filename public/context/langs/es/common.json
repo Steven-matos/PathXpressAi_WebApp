@@ -343,5 +343,18 @@
       "description": "Tu cuenta está lista para usar. Comencemos a optimizar tus rutas.",
       "goToDashboard": "Ir al Panel"
     }
+  },
+  "nav": {
+    "dashboard": "Panel",
+    "routes": "Rutas",
+    "calendar": "Calendario",
+    "settings": "Configuración",
+    "welcome": "Bienvenido"
+  },
+  "auth": {
+    "signOut": "Cerrar Sesión",
+    "signingOut": "Cerrando Sesión...",
+    "signOutSuccess": "Sesión cerrada exitosamente",
+    "signOutError": "Error al cerrar sesión"
   }
 }

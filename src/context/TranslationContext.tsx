@@ -1,106 +1,115 @@
 "use client";
 
 // src/context/TranslationContext.tsx
-import React, {
-  createContext,
-  useContext,
-  useState,
-  useEffect,
-  useMemo,
-} from "react";
-import { translationConfig } from "./translationConfig";
-import type { Translations } from './types';
-
-// Pre-import all translations at build time for faster loading
-import enTranslations from './langs/en/common.json';
-import esTranslations from './langs/es/common.json';
-
-// Static translations map for instant access
-const STATIC_TRANSLATIONS: Translations = {
-  en: enTranslations,
-  es: esTranslations,
-};
-
-type Language = (typeof translationConfig.languages)[number];
+import React, { createContext, useContext, useState, useEffect } from 'react';
+import { useDispatch } from 'react-redux';
+import { setLanguage, loadTranslations } from '@/store/languageSlice';
+import { getCachedTranslation, preloadTranslations } from '@/lib/translationLoader';
+import { translationConfig } from './translationConfig';
 
 interface TranslationContextType {
-  language: string;
-  setLang: (lang: string) => void;
   t: (key: string) => string;
+  setLang: (lang: string) => void;
+  language: string;
   isLoaded: boolean;
 }
 
-// Default translations for immediate rendering
-const initialTranslations: Translations = {
-  en: enTranslations,
-  es: esTranslations,
-};
+const TranslationContext = createContext<TranslationContextType | undefined>(undefined);
 
-// Create a localStorage key for caching translations
-const TRANSLATIONS_CACHE_KEY = 'cached_translations';
-const LANGUAGE_PREFERENCE_KEY = 'preferredLang';
+export function TranslationProvider({ children }: { children: React.ReactNode }) {
+  const dispatch = useDispatch();
+  const [language, setLanguageState] = useState('en');
+  const [isClient, setIsClient] = useState(false);
+  const [isLoaded, setIsLoaded] = useState(false);
 
-const TranslationContext = createContext<TranslationContextType>({
-  language: 'en',
-  setLang: () => {},
-  t: (key) => key,
-  isLoaded: false,
-});
-
-export function TranslationProvider({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
-  // Try to get initial language from localStorage for SSR compatibility
-  const getInitialLanguage = (): Language => {
-    if (typeof window !== 'undefined') {
-      return (localStorage.getItem(LANGUAGE_PREFERENCE_KEY) as Language) || translationConfig.defaultLanguage;
-    }
-    return translationConfig.defaultLanguage;
-  };
-
-  const [language, setLanguage] = useState<Language>(getInitialLanguage());
-  const [translations, setTranslations] = useState<Translations>(initialTranslations);
-  const [isLoaded, setIsLoaded] = useState(true); // Start true since we have static translations
-
-  // Handle language changes
-  const setLang = (lang: string) => {
-    if (translationConfig.languages.includes(lang as Language)) {
-      setLanguage(lang as Language);
-      if (typeof window !== "undefined") {
-        localStorage.setItem(LANGUAGE_PREFERENCE_KEY, lang);
-        document.cookie = `preferredLang=${lang}; path=/; max-age=31536000`;
+  useEffect(() => {
+    setIsClient(true);
+    const initializeTranslations = async () => {
+      try {
+        // Load initial language from cookie or localStorage
+        const langFromCookie = document.cookie.match(/preferredLang=([^;]+)/)?.[1];
+        const langFromStorage = localStorage.getItem('preferredLang');
+        const initialLang = langFromCookie || langFromStorage || 'en';
+        
+        setLanguageState(initialLang);
+        dispatch(setLanguage(initialLang as 'en' | 'es'));
+        
+        // Preload all translations
+        await preloadTranslations();
+        
+        // Load translations into Redux store
+        const translations = {
+          en: getCachedTranslation('en'),
+          es: getCachedTranslation('es')
+        };
+        dispatch(loadTranslations(translations));
+        setIsLoaded(true);
+      } catch (error) {
+        console.error('Error initializing translations:', error);
       }
-    }
-  };
-
-  // Translation function with memoization for performance
-  const t = useMemo(() => {
-    return (key: string): string => {
-      const keys = key.split(".");
-      let result: unknown = translations[language] || {};
-  
-      for (const k of keys) {
-        if (!result || typeof result !== 'object') break;
-        result = (result as Record<string, unknown>)[k];
-      }
-  
-      return (result as string) || key;
     };
-  }, [translations, language]);
+
+    initializeTranslations();
+  }, [dispatch]);
+
+  const setLang = async (lang: string) => {
+    setLanguageState(lang);
+    dispatch(setLanguage(lang as 'en' | 'es'));
+    localStorage.setItem('preferredLang', lang);
+    document.cookie = `preferredLang=${lang}; path=/; max-age=31536000`;
+    
+    // Reload translations for the new language
+    try {
+      await preloadTranslations();
+      const translations = {
+        en: getCachedTranslation('en'),
+        es: getCachedTranslation('es')
+      };
+      dispatch(loadTranslations(translations));
+    } catch (error) {
+      console.error('Error reloading translations:', error);
+    }
+  };
+
+  const t = (key: string): string => {
+    if (!isClient) return key;
+    
+    const translations = getCachedTranslation(language);
+    const keys = key.split('.');
+    let result: any = translations;
+    
+    for (const k of keys) {
+      if (!result) return key;
+      result = result[k];
+      if (result === undefined) return key;
+    }
+    
+    return String(result);
+  };
+
+  // Show loading state while translations are being loaded
+  if (!isLoaded) {
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
+          <p>Loading translations...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
-    <TranslationContext.Provider value={{ language, setLang, t, isLoaded }}>
+    <TranslationContext.Provider value={{ t, setLang, language, isLoaded }}>
       {children}
     </TranslationContext.Provider>
   );
 }
 
-export const useTranslation = () => {
+export function useTranslation() {
   const context = useContext(TranslationContext);
-  if (!context) {
-    throw new Error("useTranslation must be used within a TranslationProvider");
+  if (context === undefined) {
+    throw new Error('useTranslation must be used within a TranslationProvider');
   }
   return context;
-};
+}
