@@ -7,10 +7,11 @@ import { Button } from "@/components/ui/button";
 import { useOnboarding } from "@/context/OnboardingContext";
 import { useToast } from "@/components/ui/use-toast";
 import { useState, useEffect } from "react";
+import { signIn } from 'aws-amplify/auth';
 
 export function OnboardingCompleteStep() {
   const { t } = useTranslation();
-  const { user } = useAuth();
+  const { user, isAuthenticated } = useAuth();
   const router = useRouter();
   const { setOnboardingComplete } = useOnboarding();
   const { toast } = useToast();
@@ -34,6 +35,24 @@ export function OnboardingCompleteStep() {
 
     try {
       setIsLoading(true);
+
+      // Ensure user is authenticated
+      if (!isAuthenticated) {
+        try {
+          await signIn({ username: user.username });
+        } catch (error) {
+          console.error("Authentication error:", error);
+          toast({
+            title: t("onboarding.complete.error"),
+            description: t("onboarding.complete.authError"),
+            variant: "destructive",
+            duration: 5000,
+          });
+          return;
+        }
+      }
+
+      // Attempt to complete onboarding
       await setOnboardingComplete();
       
       toast({
@@ -46,11 +65,20 @@ export function OnboardingCompleteStep() {
       setTimeout(() => {
         router.push(`/dashboard/${user.username}`);
       }, 100);
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error completing onboarding:", error);
+      
+      // Handle specific error cases
+      let errorMessage = t("onboarding.complete.errorDescription");
+      if (error.message?.includes("No credentials")) {
+        errorMessage = t("onboarding.complete.credentialsError");
+      } else if (error.message?.includes("Authentication session expired")) {
+        errorMessage = t("onboarding.complete.sessionError");
+      }
+
       toast({
         title: t("onboarding.complete.error"),
-        description: t("onboarding.complete.errorDescription"),
+        description: errorMessage,
         variant: "destructive",
         duration: 5000,
       });
