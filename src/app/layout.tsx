@@ -11,21 +11,18 @@ const languageDetectorScript = `
   try {
     const getBrowserLanguage = () => {
       const userLang = navigator.language || navigator.userLanguage;
-      return userLang.split('-')[0]; // Get primary language code
+      return userLang.split('-')[0];
     };
 
     const savedLang = localStorage.getItem('preferredLang');
     if (!savedLang) {
       const browserLang = getBrowserLanguage();
       const supportedLanguages = ['en', 'es'];
-      
-      // Set English as default if browser language is not supported
       const defaultLang = supportedLanguages.includes(browserLang) ? browserLang : 'en';
       localStorage.setItem('preferredLang', defaultLang);
       document.cookie = 'preferredLang=' + defaultLang + '; path=/; max-age=31536000';
     }
   } catch (e) {
-    // Set English as default if there's an error
     localStorage.setItem('preferredLang', 'en');
     document.cookie = 'preferredLang=en; path=/; max-age=31536000';
   }
