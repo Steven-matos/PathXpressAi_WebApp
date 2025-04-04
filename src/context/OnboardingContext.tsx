@@ -5,14 +5,35 @@ import { useRouter } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
 import { generateClient } from 'aws-amplify/api';
 import { toast } from '@/components/ui/use-toast';
-import { checkAmplifyConfig, testAmplifyConnection } from '../lib/amplifyHelpers';
-import { signIn } from 'aws-amplify/auth';
+import { signIn, signOut, fetchAuthSession } from 'aws-amplify/auth';
 
 // Define the subscription tier options
 export type SubscriptionTier = 'free' | 'monthly' | 'yearly';
 export interface SubscriptionPlan {
   id: string;
   type: SubscriptionTier;
+}
+
+// Define the subscription plan structure for the server
+export interface ServerSubscriptionPlan {
+  current: {
+    planId: string;
+    tier: SubscriptionTier;
+    startDate: string;
+    endDate: string | null;
+    status: 'ACTIVE' | 'INACTIVE' | 'CANCELLED' | 'EXPIRED';
+  };
+  history: any[];
+}
+
+// Define the user preferences structure
+export interface UserPreferences {
+  fleetManagementEnabled: boolean;
+  notifications: {
+    email: boolean;
+    push: boolean;
+  };
+  theme: 'light' | 'dark';
 }
 
 // Define the onboarding steps
@@ -37,7 +58,9 @@ interface UserResponse {
   homeBase: string;
   language: string;
   preferences: string;
-  subscriptionTier: SubscriptionTier;
+  subscriptionPlans: ServerSubscriptionPlan;
+  onboarded: boolean;
+  isEnterprise: boolean;
   createdAt: string;
   updatedAt: string;
 }
@@ -58,14 +81,9 @@ interface GraphQLResponse<T> {
 }
 
 interface OnboardingContextType {
-  // Current status
   currentStep: OnboardingStep;
   isOnboardingComplete: boolean;
-  
-  // User data collected during onboarding
   userData: OnboardingData;
-  
-  // Methods to update onboarding
   updateUserData: (data: Partial<OnboardingData>) => void;
   completeCurrentStep: () => void;
   setOnboardingComplete: () => void;
@@ -102,8 +120,11 @@ const getUserQuery = /* GraphQL */ `
       name
       homeBase
       language
+      authUserId
       preferences
-      subscriptionTier
+      subscriptionPlans
+      onboarded
+      isEnterprise
       createdAt
       updatedAt
     }
@@ -118,8 +139,11 @@ const createUserMutation = /* GraphQL */ `
       name
       homeBase
       language
+      authUserId
       preferences
-      subscriptionTier
+      subscriptionPlans
+      onboarded
+      isEnterprise
       createdAt
       updatedAt
     }
@@ -138,24 +162,17 @@ export function OnboardingProvider({ children }: { children: ReactNode }) {
   const [hasCheckedUserExists, setHasCheckedUserExists] = useState(false);
   const [skipAutoCheck, setSkipAutoCheck] = useState(false);
 
-  // Check if user exists in the database and set onboarding status accordingly
   useEffect(() => {
-    // Skip if we're not authenticated, no user, already checking, already checked, or explicitly skipped
     if (!isAuthenticated || !user || isCheckingUserStatus || hasCheckedUserExists || skipAutoCheck) return;
-
-    // Only proceed if user is fully authenticated (prevent checks during initial render)
     if (!user.username) return;
     
-    // Mark that we're checking to avoid duplicate calls
     setIsCheckingUserStatus(true);
     
     async function checkOnboardingStatus() {
       try {
-        // Check if we have a stored result in localStorage first
         if (typeof window !== 'undefined') {
           const storedResult = localStorage.getItem('userExistsChecked');
           if (storedResult === 'true') {
-            // If we've already checked before, use the stored value
             const storedComplete = localStorage.getItem('onboardingComplete') === 'true';
             setIsOnboardingComplete(storedComplete);
             setHasCheckedUserExists(true);
@@ -164,20 +181,16 @@ export function OnboardingProvider({ children }: { children: ReactNode }) {
           }
         }
         
-        // If no stored result, check the database
         const userExists = await checkUserExists();
         
         if (userExists) {
-          // User exists in the database, so onboarding is complete
           setIsOnboardingComplete(true);
           
-          // Store onboarding state
           if (typeof window !== 'undefined') {
             localStorage.setItem('onboardingComplete', 'true');
             localStorage.setItem('userExistsChecked', 'true');
           }
         } else {
-          // User doesn't exist, needs to go through onboarding
           setIsOnboardingComplete(false);
           
           if (typeof window !== 'undefined') {
@@ -185,23 +198,18 @@ export function OnboardingProvider({ children }: { children: ReactNode }) {
             localStorage.setItem('userExistsChecked', 'true');
           }
         }
-        // Mark that we've checked user existence
         setHasCheckedUserExists(true);
       } catch (error) {
-        // On error, assume onboarding is not complete to be safe
         setIsOnboardingComplete(false);
         
-        // For errors, we still consider the check as attempted
         if (typeof window !== 'undefined') {
           localStorage.setItem('userExistsChecked', 'false');
         }
       } finally {
-        // Reset the checking status flag
         setIsCheckingUserStatus(false);
       }
     }
     
-    // Add a small delay to ensure auth state is fully resolved
     const timer = setTimeout(() => {
       checkOnboardingStatus();
     }, 500);
@@ -209,10 +217,8 @@ export function OnboardingProvider({ children }: { children: ReactNode }) {
     return () => clearTimeout(timer);
   }, [isAuthenticated, user, hasCheckedUserExists, skipAutoCheck]);
 
-  // Check localStorage for onboarding status when the component mounts
   useEffect(() => {
     if (typeof window !== 'undefined') {
-      // Only load saved onboarding state if the user is authenticated
       if (!isAuthenticated || !user) {
         setCurrentStep('profile');
         return;
@@ -226,22 +232,17 @@ export function OnboardingProvider({ children }: { children: ReactNode }) {
         setCurrentStep('profile');
       }
 
-      // Try to load saved onboarding progress
       const storedOnboardingData = localStorage.getItem('onboardingData');
       
       if (storedOnboardingData) {
         try {
           const parsedData = JSON.parse(storedOnboardingData);
 
-          // Only proceed with stored data if onboarding is not complete
           if (storedOnboardingComplete !== 'true') {
-            // Set user data
             setUserData(parsedData.userData || defaultUserData);
             
-            // Set the current step with validation
             const savedStep = parsedData.currentStep;
             if (savedStep) {
-              // Validate that the step is one of our valid steps
               if (['profile', 'address', 'subscription', 'review', 'complete'].includes(savedStep)) {
                 setCurrentStep(savedStep);
               } else {
@@ -261,7 +262,6 @@ export function OnboardingProvider({ children }: { children: ReactNode }) {
     }
   }, [isAuthenticated, user]);
 
-  // Save onboarding data to localStorage whenever it changes
   useEffect(() => {
     if (typeof window !== 'undefined') {
       localStorage.setItem('onboardingData', JSON.stringify({
@@ -272,7 +272,6 @@ export function OnboardingProvider({ children }: { children: ReactNode }) {
     }
   }, [currentStep, userData, isOnboardingComplete]);
 
-  // Function to check if user exists in the database
   const checkUserExists = async (): Promise<boolean> => {
     let tempClient = null;
     
@@ -281,11 +280,12 @@ export function OnboardingProvider({ children }: { children: ReactNode }) {
         return false;
       }
       
-      const email = user.username;
+      console.log('Full Cognito Auth User:', JSON.stringify(user, null, 2));
+      
+      const email = user.signInDetails?.loginId || user.username;
       
       try {
         tempClient = generateClient();
-        
         if (!tempClient) {
           return false;
         }
@@ -323,8 +323,7 @@ export function OnboardingProvider({ children }: { children: ReactNode }) {
       return false;
     }
   };
-  
-  // Function to create user in the database
+
   const createUserInDatabase = async (): Promise<void> => {
     let tempClient = null;
     
@@ -333,66 +332,134 @@ export function OnboardingProvider({ children }: { children: ReactNode }) {
         throw new Error('No authenticated user available');
       }
 
-      // Check Amplify configuration
-      const { isConfigured, missingValues } = checkAmplifyConfig();
-      if (!isConfigured) {
-        throw new Error(`Amplify configuration is missing: ${missingValues.join(', ')}`);
-      }
+      // First, ensure we have a valid session
+      const session = await fetchAuthSession();
+      console.log('Current session:', session);
 
-      // Test the connection
-      const { success, message } = await testAmplifyConnection();
-      if (!success) {
-        throw new Error(`Amplify connection failed: ${message}`);
-      }
-
-      // Try to refresh the session
-      try {
-        await signIn({ username: user.username });
-      } catch (error) {
-        console.error('Failed to refresh session:', error);
-        throw new Error('Authentication session expired. Please sign in again.');
-      }
-      
-      const email = user.username;
-      const homeBase = `${userData.address}, ${userData.city}, ${userData.state} ${userData.zip}`;
-      
-      try {
-        tempClient = generateClient();
-        
-        if (!tempClient) {
-          throw new Error('Failed to initialize GraphQL client');
-        }
-        
-        const response = await tempClient.graphql({
-          query: createUserMutation,
-          variables: { 
-            input: {
-              email,
-              name: userData.name,
-              homeBase,
-              language: userData.language,
-              subscriptionPlan: userData.subscriptionPlan,
-              preferences: '{}'
-            }
+      if (!session.tokens?.idToken) {
+        // If no valid token, try to refresh the session
+        try {
+          await signOut({ global: true });
+          await signIn({ username: user.username });
+          // Get fresh session
+          const newSession = await fetchAuthSession();
+          if (!newSession.tokens?.idToken) {
+            throw new Error('Failed to refresh authentication session');
           }
-        }) as unknown as GraphQLResponse<UserResponse>;
-        
-        const timeoutPromise = new Promise<never>((_, reject) => {
-          setTimeout(() => {
-            reject(new Error('GraphQL operation timed out'));
-          }, 5000);
-        });
-        
-        await Promise.race([response, timeoutPromise]);
-      } catch (graphqlError) {
-        console.error('GraphQL error:', graphqlError);
-        throw new Error('Failed to create user record. Please try again.');
+        } catch (error) {
+          console.error('Authentication refresh failed:', error);
+          throw new Error('Please sign in again to continue.');
+        }
       }
+
+      // Get a fresh session after potential refresh
+      const currentSession = await fetchAuthSession();
+      const idToken = currentSession.tokens?.idToken?.toString();
+      
+      if (!idToken) {
+        throw new Error('No valid authentication token found');
+      }
+
+      const email = user.signInDetails?.loginId || user.username;
+      const homeBase = `${userData.address}, ${userData.city}, ${userData.state} ${userData.zip}`;
+      const authUserId = user.userId;
+
+      if (!authUserId || !email) {
+        throw new Error('Missing required user information');
+      }
+
+      // Create the subscription plans object with proper AWSJSON format
+      const subscriptionPlansData = {
+        current: {
+          planId: userData.subscriptionPlan.id,
+          tier: userData.subscriptionPlan.type.toUpperCase(),
+          startDate: new Date().toISOString(),
+          endDate: null,
+          status: 'ACTIVE'
+        },
+        history: []
+      };
+
+      // Create the preferences object with proper AWSJSON format
+      const preferencesData = {
+        notifications: {
+          email: true,
+          push: true
+        },
+        theme: 'light',
+        timezone: Intl.DateTimeFormat().resolvedOptions().timeZone
+      };
+
+      // Create the input data with all required fields
+      const inputData = {
+        email: email,
+        name: userData.name,
+        homeBase,
+        language: userData.language,
+        authUserId: authUserId,
+        preferences: JSON.stringify(preferencesData),
+        onboarded: true,
+        terms: userData.terms || false,
+        privacy_policy: userData.privacy_policy || false,
+        subscriptionPlans: JSON.stringify(subscriptionPlansData),
+        isEnterprise: false,
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString()
+      };
+
+      console.log('Creating user with data:', inputData);
+
+      // Initialize the API client with the current session
+      tempClient = generateClient({
+        authMode: 'userPool',
+        authToken: idToken
+      });
+
+      if (!tempClient) {
+        throw new Error('Failed to initialize GraphQL client');
+      }
+
+      // Make the API call
+      const response = await tempClient.graphql({
+        query: createUserMutation,
+        variables: { input: inputData },
+        authMode: 'userPool',
+        authToken: idToken
+      }) as unknown as GraphQLResponse<UserResponse>;
+
+      console.log('GraphQL response:', response);
+
+      if (response.errors?.length) {
+        console.error('GraphQL errors:', response.errors);
+        const error = response.errors[0];
+        if (error?.message?.includes('Not Authorized')) {
+          throw new Error('Authorization error. Please sign out and sign in again.');
+        }
+        if (error?.message?.includes('already exists')) {
+          throw new Error('User already exists in the database.');
+        }
+        throw new Error(error?.message || 'Unknown error occurred');
+      }
+
+      // Verify the user was created successfully
+      const createdUser = response.data?.['createUser'];
+      if (!createdUser) {
+        throw new Error('Failed to create user in database');
+      }
+
+      // Verify all required fields are present in the response
+      const requiredFields: (keyof UserResponse)[] = ['id', 'email', 'name'];
+      const missingFields = requiredFields.filter(field => !createdUser[field]);
+      if (missingFields.length > 0) {
+        throw new Error(`User creation incomplete. Missing fields: ${missingFields.join(', ')}`);
+      }
+
     } catch (error) {
       console.error('Error in createUserInDatabase:', error);
       throw error;
     }
   };
+
   const updateUserData = (data: Partial<OnboardingData>) => {
     setUserData(prevData => {
       if (!prevData) return data as OnboardingData;
@@ -404,13 +471,9 @@ export function OnboardingProvider({ children }: { children: ReactNode }) {
   };
 
   const completeCurrentStep = () => {
-    // Define the order of steps
     const stepOrder: OnboardingStep[] = ['profile', 'address', 'subscription', 'review', 'complete'];
-    
-    // Find the current step's index
     const currentIndex = stepOrder.indexOf(currentStep);
     
-    // If we're not at the last step, move to the next one
     if (currentIndex < stepOrder.length - 1) {
       const nextStep = stepOrder[currentIndex + 1];
       if (nextStep) {
@@ -420,13 +483,9 @@ export function OnboardingProvider({ children }: { children: ReactNode }) {
   };
 
   const goToPreviousStep = () => {
-    // Define the order of steps
     const stepOrder: OnboardingStep[] = ['profile', 'address', 'subscription', 'review', 'complete'];
-    
-    // Find the current step's index
     const currentIndex = stepOrder.indexOf(currentStep);
     
-    // If we're not at the first step, move to the previous one
     if (currentIndex > 0) {
       const prevStep = stepOrder[currentIndex - 1];
       if (prevStep) {
@@ -437,50 +496,94 @@ export function OnboardingProvider({ children }: { children: ReactNode }) {
 
   const setOnboardingComplete = async () => {
     try {
-      // Create user in database first
+      // Check if user is authenticated
+      const session = await fetchAuthSession();
+      if (!session.tokens?.idToken) {
+        throw new Error('You must be signed in to complete onboarding');
+      }
+
+      // Create user in database
       await createUserInDatabase();
       
-      // Set onboarding as complete
+      // Verify user creation with retries
+      let userExists = false;
+      let retryCount = 0;
+      const maxRetries = 3;
+      
+      while (!userExists && retryCount < maxRetries) {
+        try {
+          userExists = await checkUserExists();
+          if (userExists) break;
+          
+          // Wait before retrying
+          await new Promise(resolve => setTimeout(resolve, 1000 * (retryCount + 1)));
+          retryCount++;
+        } catch (error) {
+          console.error(`Error checking user existence (attempt ${retryCount + 1}):`, error);
+          retryCount++;
+        }
+      }
+      
+      if (!userExists) {
+        throw new Error('Failed to verify user creation. Please try again.');
+      }
+
+      // Update state and storage
       setIsOnboardingComplete(true);
+      
       if (typeof window !== 'undefined') {
         localStorage.setItem('onboardingComplete', 'true');
-        
-        // Clean up temporary data
         localStorage.removeItem('onboardingData');
         localStorage.removeItem('userAttributes');
       }
       
-      // Redirect to dashboard after completion if we have a user
-      if (user) {
-        router.push(`/dashboard/${user.username}`);
+      // Navigate to dashboard
+      if (user?.username) {
+        try {
+          await router.push(`/dashboard/${user.username}`);
+        } catch (routerError) {
+          console.error('Router navigation error:', routerError);
+          // Fallback to direct navigation
+          window.location.href = `/dashboard/${user.username}`;
+        }
       }
     } catch (error) {
       console.error("Error completing onboarding:", error);
+      
+      // Show error toast
       toast({
         title: "Error",
-        description: "There was a problem creating your account. Please try again.",
+        description: error instanceof Error 
+          ? error.message 
+          : "There was a problem creating your account. Please try again.",
         variant: "destructive",
         duration: 5000,
       });
-      // Don't proceed with completion if database creation failed
-      return;
+      
+      // Reset state
+      setIsOnboardingComplete(false);
+      if (typeof window !== 'undefined') {
+        localStorage.setItem('onboardingComplete', 'false');
+      }
+      
+      // Don't throw the error to prevent unhandled promise rejection
+      // Instead, return a success flag
+      return false;
     }
+    
+    return true;
   };
 
-  // Force a check of user existence regardless of previous checks
   const forceCheckUserExists = async (): Promise<boolean> => {
-    // Skip the automatic check since we're doing it manually
     setSkipAutoCheck(true);
     
     try {
       setIsCheckingUserStatus(true);
       const userExists = await checkUserExists();
       
-      // Update state based on result
       setIsOnboardingComplete(userExists);
       setHasCheckedUserExists(true);
       
-      // Store in localStorage
       if (typeof window !== 'undefined') {
         localStorage.setItem('onboardingComplete', userExists ? 'true' : 'false');
         localStorage.setItem('userExistsChecked', 'true');
@@ -488,9 +591,7 @@ export function OnboardingProvider({ children }: { children: ReactNode }) {
       
       return userExists;
     } catch (error) {
-      // Default to false if there's an error
       setIsOnboardingComplete(false);
-      
       return false;
     } finally {
       setIsCheckingUserStatus(false);
@@ -498,12 +599,10 @@ export function OnboardingProvider({ children }: { children: ReactNode }) {
   };
 
   const resetOnboarding = () => {
-    // Reset to initial state
     setCurrentStep('profile');
     setUserData(defaultUserData);
     setIsOnboardingComplete(false);
     
-    // Clear all onboarding data from localStorage
     if (typeof window !== 'undefined') {
       localStorage.removeItem('onboardingData');
       localStorage.removeItem('onboardingComplete');
@@ -511,28 +610,21 @@ export function OnboardingProvider({ children }: { children: ReactNode }) {
     }
   };
 
-  // Hard reset function that can be used to completely reset all state
-  // This is more aggressive than the normal reset and should only be used
-  // for troubleshooting severe issues
   const hardResetOnboarding = () => {
     console.log("PERFORMING HARD RESET OF ALL ONBOARDING STATE");
     
-    // Reset all state
     setCurrentStep('profile');
     setUserData(defaultUserData);
     setIsOnboardingComplete(false);
     setHasCheckedUserExists(false);
     setSkipAutoCheck(false);
     
-    // Clear all localStorage related to onboarding
     if (typeof window !== 'undefined') {
       try {
-        // Clear specific onboarding keys
         localStorage.removeItem('onboardingData');
         localStorage.removeItem('onboardingComplete');
         localStorage.removeItem('userExistsChecked');
         
-        // Force a page reload to ensure clean state
         console.log("Hard reset complete - reloading page");
         window.location.reload();
       } catch (error) {
@@ -570,4 +662,4 @@ export function useOnboarding() {
     throw new Error('useOnboarding must be used within an OnboardingProvider');
   }
   return context;
-} 
+}
